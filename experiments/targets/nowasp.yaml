@@ -1,0 +1,10 @@
+# NoWASP (Mutillidae II via citizenstig image) — vulnerable LAMP app.
+target: http://localhost:8091/database-offline.php
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally:
+      docker run --rm -d -p 8091:80 -p 8092:443 citizenstig/nowasp
+  Mutillidae II port with the database in offline mode by default —
+  the redirect target /database-offline.php is the live entry point.

@@ -1,0 +1,10 @@
+# DVWA (Damn Vulnerable Web Application) — live Docker image.
+target: http://localhost:8090/login.php
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally:
+      docker run --rm -d -p 8090:80 vulnerables/web-dvwa
+  After first run, hit POST /setup.php to seed the DB. Default creds
+  admin/password; security level "low" for reproducible baseline.

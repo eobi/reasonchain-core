@@ -1,0 +1,9 @@
+# BodgeIt Store — vulnerable Java web app (OWASP).
+target: http://localhost:8093/bodgeit/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally:
+      docker run --rm -d -p 8093:8080 psiinon/bodgeit
+  Old-school servlet-based shop with SQLi, XSS, hidden /admin, etc.

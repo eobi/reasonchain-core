@@ -1,0 +1,10 @@
+# PyGoat — Django web app with OWASP Top 10 vulns.
+target: http://localhost:8094/login/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally:
+      docker run --rm -d -p 8094:8000 pygoat/pygoat:latest
+  Django app; root redirects to /login/. After first POST /accounts/
+  registration the dashboard exposes the lesson surface.
