@@ -1,0 +1,11 @@
+# DVWA (Damn Vulnerable Web Application) — local Docker run.
+# Default port for the upstream DVWA Docker image is 80.
+target: http://localhost:8080/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally:
+      docker run --rm -p 8080:80 vulnerables/web-dvwa
+  After login (admin/password), set security level to "low" for a
+  reproducible baseline. Documented setup recorded in paper appendix.

@@ -1,0 +1,10 @@
+# Generic VulnHub-style network target (one host on a private LAN).
+# Replace ``target`` with the box's IP once spun up.
+target: 192.168.56.101
+target_type: ip
+max_steps: 25
+max_depth: 3
+notes: |
+  VulnHub box (e.g. Kioptrix, Mr-Robot, DC-1) running on a host-only
+  network. Take a clean VM snapshot before each run so per-condition
+  comparisons start from identical state.

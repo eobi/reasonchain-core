@@ -1,0 +1,9 @@
+# Generic HackTheBox lab-machine target. Update ``target`` to the box's
+# tunnel IP after connecting to the HTB OpenVPN endpoint.
+target: 10.10.11.1
+target_type: ip
+max_steps: 25
+max_depth: 3
+notes: |
+  HTB Starting Point / Retired Machines work best for reproducible
+  evaluation. Record (machine name, retire date) in the paper appendix.

@@ -37,6 +37,7 @@ experiments = [
   "scipy",
   "matplotlib",
   "jupyter",
+  "pyyaml",
 ]
 dev = [
   "pytest",
