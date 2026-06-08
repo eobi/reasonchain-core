@@ -1,0 +1,22 @@
+{
+  "target": "juiceshop",
+  "condition": "full",
+  "engine_set": "real",
+  "seed": 0,
+  "duration_s": 0.7696,
+  "engines_used": "http_probe,url_crawler,header_vuln_check",
+  "engine_count": 3,
+  "findings_count": 12,
+  "replans": 2,
+  "decisions": 3,
+  "critical": 0,
+  "high": 0,
+  "medium": 10,
+  "low": 0,
+  "info": 2,
+  "decisions_correct": 3,
+  "decisions_suboptimal": 0,
+  "decisions_incorrect": 2,
+  "decisions_total": 5,
+  "aborted": false
+}

@@ -28,9 +28,13 @@ from reasonchain import (
     AblationFlags, AssessmentSpec, HeuristicPlanner, MOCK_ENGINES,
     Orchestrator,
 )
+from reasonchain.annotator import annotate
+from reasonchain.real_engines import REAL_ENGINES
 
 
 CONDITIONS = ("full", "no-replan", "no-fusion", "random-order")
+ENGINE_SETS = {"mock": MOCK_ENGINES, "real": REAL_ENGINES,
+               "all": {**MOCK_ENGINES, **REAL_ENGINES}}
 TARGETS_DIR = Path(__file__).parent / "targets"
 RESULTS_CSV = Path(__file__).parent.parent / "data" / "results.csv"
 
@@ -57,15 +61,19 @@ def _load_target(name: str) -> dict:
     return yaml.safe_load(p.read_text())
 
 
-def _make_orchestrator(flags: AblationFlags) -> Orchestrator:
-    # MOCK_ENGINES is the default offline harness. Real-engine setups
-    # register their own dict here (private Pentagon does this).
+def _make_orchestrator(
+    flags: AblationFlags, engine_set: str = "mock",
+) -> Orchestrator:
+    engines = ENGINE_SETS[engine_set]
     return Orchestrator(
-        engines=MOCK_ENGINES, planner=HeuristicPlanner(), flags=flags,
+        engines=engines, planner=HeuristicPlanner(), flags=flags,
     )
 
 
-def run_one(target_name: str, condition: str, seed: int) -> dict:
+def run_one(
+    target_name: str, condition: str, seed: int,
+    engine_set: str = "mock",
+) -> dict:
     manifest = _load_target(target_name)
     spec = AssessmentSpec(
         target=manifest["target"],
@@ -74,7 +82,7 @@ def run_one(target_name: str, condition: str, seed: int) -> dict:
         max_depth=int(manifest.get("max_depth", 3)),
     )
     flags = _flags_for(condition, seed)
-    orch = _make_orchestrator(flags)
+    orch = _make_orchestrator(flags, engine_set=engine_set)
     t0 = time.perf_counter()
     result = orch.run(spec)
     wall_s = time.perf_counter() - t0
@@ -83,9 +91,13 @@ def run_one(target_name: str, condition: str, seed: int) -> dict:
     for f in result.findings:
         sev_counts[f.severity] = sev_counts.get(f.severity, 0) + 1
 
+    # H3 substrate: label every decision.
+    annotated = annotate(result, engines_registry=orch.engines)
+
     return {
         "target": target_name,
         "condition": condition,
+        "engine_set": engine_set,
         "seed": seed,
         "duration_s": round(wall_s, 4),
         "engines_used": ",".join(result.engines_used),
@@ -98,6 +110,10 @@ def run_one(target_name: str, condition: str, seed: int) -> dict:
         "medium":   sev_counts.get("medium", 0),
         "low":      sev_counts.get("low", 0),
         "info":     sev_counts.get("info", 0),
+        "decisions_correct":    annotated.counts.get("correct", 0),
+        "decisions_suboptimal": annotated.counts.get("suboptimal", 0),
+        "decisions_incorrect":  annotated.counts.get("incorrect", 0),
+        "decisions_total":      annotated.total,
         "aborted":  result.aborted,
     }
 
@@ -119,11 +135,15 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--condition", required=True, choices=CONDITIONS)
     p.add_argument("--seed", type=int, default=0,
                    help="random seed for the random-order condition")
+    p.add_argument("--engines", choices=list(ENGINE_SETS.keys()),
+                   default="mock",
+                   help="engine pool to use (mock | real | all)")
     p.add_argument("--no-csv", action="store_true",
                    help="print result as JSON and skip the CSV append")
     args = p.parse_args(argv)
 
-    row = run_one(args.target, args.condition, args.seed)
+    row = run_one(args.target, args.condition, args.seed,
+                  engine_set=args.engines)
     print(json.dumps(row, indent=2))
     if not args.no_csv:
         _append_csv(row)

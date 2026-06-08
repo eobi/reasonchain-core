@@ -36,12 +36,18 @@ class Planner(Protocol):
         ...
 
 
-# Target-type → ordered list of seed engines.
+# Target-type → ordered list of seed engines. The HeuristicPlanner
+# picks the FIRST entry whose engine is registered, so the same map
+# works whether the orchestrator was built with MOCK_ENGINES,
+# REAL_ENGINES, or a mix.
 _SEEDS: dict[str, list[str]] = {
     "network": ["mock_portscan", "mock_service_probe"],
     "ip":      ["mock_portscan", "mock_service_probe"],
     "domain":  ["mock_portscan", "mock_service_probe"],
-    "web_api": ["mock_crawler", "mock_web_vulnscan"],
+    # http_probe is the real-engine seed; mock_crawler is the offline
+    # smoke seed. The planner queues whichever ones are registered.
+    "web_api": ["http_probe", "url_crawler",
+                "mock_crawler", "mock_web_vulnscan"],
 }
 
 # Predecessor engine → list of follow-up engines (1-hop heuristic chain).
@@ -49,6 +55,10 @@ _CHAINS: dict[str, list[str]] = {
     "mock_portscan":      ["mock_service_probe"],
     "mock_service_probe": ["mock_cve_lookup"],
     "mock_crawler":       ["mock_web_vulnscan"],
+    # Real-engine chain mirrors the mock chain so the H1 ablation
+    # produces a comparable delta on real targets too.
+    "http_probe":         ["url_crawler", "header_vuln_check"],
+    "url_crawler":        ["header_vuln_check"],
 }
 
 

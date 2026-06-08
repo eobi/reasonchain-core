@@ -1,0 +1,13 @@
+# Commix Testbed — multi-language command-injection lab.
+# Default port is 80 inside the container, mapped to 8089 in our setup.
+target: http://localhost:8089/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally:
+      docker run --rm -p 8089:80 commixproject/commix-testbed
+
+  Provides a wide surface of injectable params across PHP, Python,
+  ASP, and Perl scripts — useful for the real-engine ablation matrix
+  because it gives the crawler many same-host hrefs to fan out to.

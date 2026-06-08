@@ -1,0 +1,16 @@
+# OWASP Juice Shop — the canonical deliberately-vulnerable web app.
+# Default port is 3000 when run via Docker.
+target: http://localhost:3000/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally:
+      docker run --rm -p 3000:3000 bkimminich/juice-shop
+
+  Wait ~10s for the server to be ready, then run an ablation:
+      python -m experiments.run_ablation \
+        --target juiceshop --condition full --engines real
+
+  The repo's `scripts/run_matrix.py` automates the full 4-condition
+  sweep against this target with --engines real.
