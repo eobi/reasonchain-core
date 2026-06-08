@@ -25,6 +25,7 @@ Three engines:
 """
 from __future__ import annotations
 
+import os
 import re
 import socket
 import time
@@ -271,20 +272,39 @@ class HeaderVulnCheck:
             ))
 
         # Sensitive-path probe — only on the seed origin.
+        # SPA false-positive guard: fetch a nonsense path first; if it
+        # returns 200, the app is a SPA serving the same shell for every
+        # URL, so we skip the sensitive-path probe entirely (every hit
+        # would be a false positive).
         origin = self._origin_of(target)
-        for path in self._SENSITIVE_PATHS:
-            url = origin + path
-            try:
-                status, _, body = _fetch(url, timeout=3)
-            except (URLError, socket.timeout, ConnectionError):
-                continue
-            if status == 200 and body.strip():
-                findings.append(Finding(
-                    title=f"Sensitive path reachable: {url}",
-                    severity="medium", source=self.name,
-                    evidence={"url": url, "status": status,
-                              "body_excerpt": body[:200]},
-                ))
+        try:
+            decoy_status, _, decoy_body = _fetch(
+                origin + "/__rc_decoy_" + os.urandom(4).hex(), timeout=3,
+            )
+            spa_shell = (decoy_status == 200 and len(decoy_body) > 200)
+        except (URLError, socket.timeout, ConnectionError):
+            spa_shell = False
+        if not spa_shell:
+            for path in self._SENSITIVE_PATHS:
+                url = origin + path
+                try:
+                    status, _, body = _fetch(url, timeout=3)
+                except (URLError, socket.timeout, ConnectionError):
+                    continue
+                if status == 200 and body.strip():
+                    findings.append(Finding(
+                        title=f"Sensitive path reachable: {url}",
+                        severity="medium", source=self.name,
+                        evidence={"url": url, "status": status,
+                                  "body_excerpt": body[:200]},
+                    ))
+        else:
+            findings.append(Finding(
+                title=("SPA detected — sensitive-path probe skipped "
+                       "to avoid false positives"),
+                severity="info", source=self.name,
+                evidence={"detection": "decoy_path_returned_200_with_body"},
+            ))
 
         # Re-probe URL list (one per host-path) for 200s on /admin etc.
         for url in urls_to_probe[1:20]:

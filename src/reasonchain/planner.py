@@ -38,9 +38,12 @@ class Planner(Protocol):
 
 # Target-type → ordered list of seed engines. The HeuristicPlanner
 # picks every entry whose engine is registered in the orchestrator,
-# preserving order.
+# preserving order. nmap is FIRST because its open_ports + tech_versions
+# unlock everything downstream; nuclei is the heavy-hitting templated
+# vuln scanner; the urllib pair (http_probe + url_crawler) is light
+# recon that runs in parallel.
 _SEEDS: dict[str, list[str]] = {
-    "web_api": ["http_probe", "url_crawler"],
+    "web_api": ["nmap", "http_probe", "url_crawler", "nuclei"],
 }
 
 # Predecessor engine → list of follow-up engines (1-hop heuristic
@@ -48,8 +51,13 @@ _SEEDS: dict[str, list[str]] = {
 # condition; ablating replanning (H1) cuts this whole map out of
 # the run.
 _CHAINS: dict[str, list[str]] = {
-    "http_probe":  ["url_crawler", "header_vuln_check"],
-    "url_crawler": ["header_vuln_check"],
+    "nmap":          ["nmap_vuln", "nuclei", "nikto"],
+    "nmap_vuln":     ["nuclei"],
+    "http_probe":    ["url_crawler", "header_vuln_check", "nuclei"],
+    "url_crawler":   ["header_vuln_check", "feroxbuster", "dirsearch"],
+    "nuclei":        ["nikto", "header_vuln_check"],
+    "feroxbuster":   ["nuclei", "header_vuln_check"],
+    "dirsearch":     ["nuclei", "header_vuln_check"],
 }
 
 

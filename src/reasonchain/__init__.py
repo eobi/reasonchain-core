@@ -22,6 +22,10 @@ from reasonchain.planner import HeuristicPlanner, NullPlanner, Planner
 from reasonchain.real_engines import (
     HeaderVulnCheck, HttpProbe, REAL_ENGINES, UrlCrawler,
 )
+from reasonchain.subprocess_engines import (
+    CLI_ENGINES, DirsearchEngine, FeroxbusterEngine, NiktoEngine,
+    NmapEngine, NucleiEngine,
+)
 
 __version__ = "0.2.0"
 
@@ -50,4 +54,11 @@ __all__ = [
     "StubLLMClient",
     "UrlCrawler",
     "annotate",
+    # Subprocess engines that wrap real CLI tools
+    "CLI_ENGINES",
+    "DirsearchEngine",
+    "FeroxbusterEngine",
+    "NiktoEngine",
+    "NmapEngine",
+    "NucleiEngine",
 ]

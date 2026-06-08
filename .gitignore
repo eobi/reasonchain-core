@@ -36,3 +36,6 @@ data/raw/
 .env
 *.pem
 *.key
+
+# Kali SSH profile — local credentials, never commit
+kali_profile.ini
