@@ -1,0 +1,11 @@
+# WebGoat — OWASP educational vulnerable web application (Java).
+target: http://localhost:8080/WebGoat/login
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally:
+      docker run --rm -d -p 8080:8080 -p 9090:9090 webgoat/webgoat
+  WebGoat ships with a built-in tutorial; for ablation work the
+  unauthenticated landing page is enough — discovers /login, /register,
+  /css/, /js/, etc.

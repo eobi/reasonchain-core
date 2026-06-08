@@ -35,6 +35,19 @@ from reasonchain.real_engines import REAL_ENGINES
 CONDITIONS = ("full", "no-replan", "no-fusion", "random-order")
 ENGINE_SETS = {"mock": MOCK_ENGINES, "real": REAL_ENGINES,
                "all": {**MOCK_ENGINES, **REAL_ENGINES}}
+PLANNERS = ("heuristic", "anthropic", "openai")
+
+
+def _make_planner(planner_name: str):
+    if planner_name == "heuristic":
+        return HeuristicPlanner()
+    if planner_name == "anthropic":
+        from reasonchain.llm_planner import AnthropicClient, LLMPlanner
+        return LLMPlanner(client=AnthropicClient())
+    if planner_name == "openai":
+        from reasonchain.llm_planner import LLMPlanner, OpenAIClient
+        return LLMPlanner(client=OpenAIClient())
+    raise SystemExit(f"unknown planner: {planner_name}")
 TARGETS_DIR = Path(__file__).parent / "targets"
 RESULTS_CSV = Path(__file__).parent.parent / "data" / "results.csv"
 
@@ -63,16 +76,17 @@ def _load_target(name: str) -> dict:
 
 def _make_orchestrator(
     flags: AblationFlags, engine_set: str = "mock",
+    planner_name: str = "heuristic",
 ) -> Orchestrator:
     engines = ENGINE_SETS[engine_set]
     return Orchestrator(
-        engines=engines, planner=HeuristicPlanner(), flags=flags,
+        engines=engines, planner=_make_planner(planner_name), flags=flags,
     )
 
 
 def run_one(
     target_name: str, condition: str, seed: int,
-    engine_set: str = "mock",
+    engine_set: str = "mock", planner_name: str = "heuristic",
 ) -> dict:
     manifest = _load_target(target_name)
     spec = AssessmentSpec(
@@ -82,7 +96,9 @@ def run_one(
         max_depth=int(manifest.get("max_depth", 3)),
     )
     flags = _flags_for(condition, seed)
-    orch = _make_orchestrator(flags, engine_set=engine_set)
+    orch = _make_orchestrator(
+        flags, engine_set=engine_set, planner_name=planner_name,
+    )
     t0 = time.perf_counter()
     result = orch.run(spec)
     wall_s = time.perf_counter() - t0
@@ -98,6 +114,7 @@ def run_one(
         "target": target_name,
         "condition": condition,
         "engine_set": engine_set,
+        "planner": planner_name,
         "seed": seed,
         "duration_s": round(wall_s, 4),
         "engines_used": ",".join(result.engines_used),
@@ -138,12 +155,15 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--engines", choices=list(ENGINE_SETS.keys()),
                    default="mock",
                    help="engine pool to use (mock | real | all)")
+    p.add_argument("--planner", choices=PLANNERS, default="heuristic",
+                   help="planner to drive picks. anthropic/openai need "
+                        "their respective API key in env.")
     p.add_argument("--no-csv", action="store_true",
                    help="print result as JSON and skip the CSV append")
     args = p.parse_args(argv)
 
     row = run_one(args.target, args.condition, args.seed,
-                  engine_set=args.engines)
+                  engine_set=args.engines, planner_name=args.planner)
     print(json.dumps(row, indent=2))
     if not args.no_csv:
         _append_csv(row)

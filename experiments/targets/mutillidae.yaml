@@ -1,0 +1,10 @@
+# Mutillidae II — OWASP Mutillidae II vulnerable LAMP stack.
+target: http://localhost:8082/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally (compose has db + lamp):
+      docker run --rm -d -p 8082:80 webpwnized/mutillidae:latest
+  Browse /index.php?page=home.php once to seed sessions before the
+  ablation run.

@@ -1,0 +1,11 @@
+# VAmPI — Vulnerable API written to OWASP API Top-10.
+target: http://localhost:5002/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally:
+      docker run --rm -d -p 5002:5000 erev0s/vampi:latest
+  REST API with deliberate broken auth, mass assignment, BOLA, etc.
+  Crawler-friendly /users, /books, /me endpoints make for a clean
+  H1/H2 ablation chain.

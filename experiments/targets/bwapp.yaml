@@ -1,0 +1,9 @@
+# bWAPP — buggy web application (PHP) covering 100+ OWASP issues.
+target: http://localhost:8081/portal.php
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally:
+      docker run --rm -d -p 8081:80 raesene/bwapp
+  After first boot, visit /install.php to seed the DB (one click).

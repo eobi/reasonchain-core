@@ -37,7 +37,7 @@ sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from experiments.run_ablation import (  # noqa: E402
-    CONDITIONS, ENGINE_SETS, run_one,
+    CONDITIONS, ENGINE_SETS, PLANNERS, run_one,
 )
 
 
@@ -86,6 +86,7 @@ def main(argv: list[str] | None = None) -> int:
                    help="condition (repeat); empty = all 4")
     p.add_argument("--engines", choices=list(ENGINE_SETS.keys()),
                    default="mock")
+    p.add_argument("--planner", choices=PLANNERS, default="heuristic")
     p.add_argument("--seeds", type=int, default=1,
                    help="how many random-order seeds to sample (1..N)")
     p.add_argument("--all", action="store_true",
@@ -124,12 +125,15 @@ def main(argv: list[str] | None = None) -> int:
             n_done += 1
             try:
                 row = run_one(
-                    target, condition, seed, engine_set=args.engines,
+                    target, condition, seed,
+                    engine_set=args.engines,
+                    planner_name=args.planner,
                 )
             except Exception as e:
                 row = {
                     "target": target, "condition": condition,
-                    "engine_set": args.engines, "seed": seed,
+                    "engine_set": args.engines, "planner": args.planner,
+                    "seed": seed,
                     "error": f"{type(e).__name__}: {e}",
                 }
             row.setdefault("error", "")

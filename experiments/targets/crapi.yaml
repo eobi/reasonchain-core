@@ -1,0 +1,10 @@
+# crAPI — completely ridiculous API (OWASP API Top-10 reference).
+target: http://localhost:8888/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally via the official compose:
+      git clone https://github.com/OWASP/crAPI
+      docker-compose -f deploy/docker/docker-compose.yml --compatibility up -d
+  Then test against http://localhost:8888/ (UI) or :8025 (MailHog).

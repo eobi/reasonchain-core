@@ -18,6 +18,9 @@ from reasonchain.models import (
 )
 from reasonchain.orchestrator import AblationFlags, Orchestrator
 from reasonchain.planner import HeuristicPlanner, NullPlanner, Planner
+from reasonchain.llm_planner import (
+    AnthropicClient, LLMPlanner, MockLLMClient, OpenAIClient,
+)
 from reasonchain.real_engines import (
     HeaderVulnCheck, HttpProbe, REAL_ENGINES, UrlCrawler,
 )
@@ -27,6 +30,7 @@ __version__ = "0.1.0"
 __all__ = [
     "AblationFlags",
     "AnnotatedRun",
+    "AnthropicClient",
     "AssessmentResult",
     "AssessmentSpec",
     "DecisionRecord",
@@ -37,13 +41,16 @@ __all__ = [
     "HeaderVulnCheck",
     "HeuristicPlanner",
     "HttpProbe",
+    "LLMPlanner",
     "MOCK_ENGINES",
     "MockCveLookup",
+    "MockLLMClient",
     "MockPortScanner",
     "MockServiceProbe",
     "MockUrlCrawler",
     "MockWebVulnScanner",
     "NullPlanner",
+    "OpenAIClient",
     "Orchestrator",
     "Pick",
     "PickLabel",

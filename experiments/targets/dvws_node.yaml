@@ -1,0 +1,10 @@
+# DVWS-Node — Damn Vulnerable Web Services (Node.js port).
+target: http://localhost:8084/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Spin up locally:
+      docker run --rm -d -p 8084:80 thedeadwood/dvws-node
+  Covers BOLA, BFLA, mass assignment, JWT issues. Good fit for the
+  real-engine crawler + header check.
