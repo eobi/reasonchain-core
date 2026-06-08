@@ -46,14 +46,28 @@ TARGET + TOOLS + CVE Intel
 
 ## Quickstart
 
+Every engine in this repo makes real network requests; there are no
+mock engines and no synthetic data. To run an ablation you need a
+live target. The easiest is OWASP Juice Shop via Docker:
+
 ```bash
-pip install -e .
-python -m experiments.run_ablation --target dvwa --condition full
-python -m experiments.run_ablation --target dvwa --condition no-replan
-python -m experiments.run_ablation --target dvwa --condition no-fusion
-python -m experiments.run_ablation --target dvwa --condition random-order
+pip install -e ".[experiments]"
+
+# Spin up a live target (Juice Shop on port 3000).
+docker run --rm -d -p 3000:3000 --name juice-shop bkimminich/juice-shop
+
+# Four conditions against the live target.
+python -m experiments.run_ablation --target juiceshop --condition full
+python -m experiments.run_ablation --target juiceshop --condition no-replan
+python -m experiments.run_ablation --target juiceshop --condition no-fusion
+python -m experiments.run_ablation --target juiceshop --condition random-order
+
+# Open the analysis notebook.
 jupyter notebook notebooks/h1_h2_h3_analysis.ipynb
 ```
+
+To sweep all 10 bundled OWASP target manifests, see the recipe in
+[`paper/preliminary_results.md`](paper/preliminary_results.md).
 
 ## License
 

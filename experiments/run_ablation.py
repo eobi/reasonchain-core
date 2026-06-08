@@ -1,17 +1,17 @@
 """H1/H2/H3 ablation runner.
 
 Usage:
-    python -m experiments.run_ablation --target dvwa --condition full
-    python -m experiments.run_ablation --target dvwa --condition no-replan
-    python -m experiments.run_ablation --target dvwa --condition no-fusion
-    python -m experiments.run_ablation --target dvwa --condition random-order
+    python -m experiments.run_ablation --target juiceshop --condition full
+    python -m experiments.run_ablation --target juiceshop --condition no-replan
+    python -m experiments.run_ablation --target juiceshop --condition no-fusion
+    python -m experiments.run_ablation --target juiceshop --condition random-order
 
 Writes one CSV row to data/results.csv per (target, condition) pair so
 notebook analysis can aggregate runs across the bundled target manifest.
 
-Defaults to MOCK_ENGINES so the entire harness runs offline (no real
-network probes, no LLM calls). To swap in real engines, register them
-on the returned ``engines`` dict in ``_make_orchestrator``.
+The runner uses the real HTTP engines in ``reasonchain.real_engines``
+to assess a live target — there is no offline mode. Every row in the
+CSV is the result of an actual network round-trip.
 """
 from __future__ import annotations
 
@@ -25,17 +25,16 @@ from pathlib import Path
 import yaml  # type: ignore[import-not-found]
 
 from reasonchain import (
-    AblationFlags, AssessmentSpec, HeuristicPlanner, MOCK_ENGINES,
-    Orchestrator,
+    AblationFlags, AssessmentSpec, HeuristicPlanner, Orchestrator,
+    REAL_ENGINES,
 )
 from reasonchain.annotator import annotate
-from reasonchain.real_engines import REAL_ENGINES
 
 
 CONDITIONS = ("full", "no-replan", "no-fusion", "random-order")
-ENGINE_SETS = {"mock": MOCK_ENGINES, "real": REAL_ENGINES,
-               "all": {**MOCK_ENGINES, **REAL_ENGINES}}
 PLANNERS = ("heuristic", "anthropic", "openai")
+TARGETS_DIR = Path(__file__).parent / "targets"
+RESULTS_CSV = Path(__file__).parent.parent / "data" / "results.csv"
 
 
 def _make_planner(planner_name: str):
@@ -48,8 +47,6 @@ def _make_planner(planner_name: str):
         from reasonchain.llm_planner import LLMPlanner, OpenAIClient
         return LLMPlanner(client=OpenAIClient())
     raise SystemExit(f"unknown planner: {planner_name}")
-TARGETS_DIR = Path(__file__).parent / "targets"
-RESULTS_CSV = Path(__file__).parent.parent / "data" / "results.csv"
 
 
 def _flags_for(condition: str, seed: int) -> AblationFlags:
@@ -75,18 +72,17 @@ def _load_target(name: str) -> dict:
 
 
 def _make_orchestrator(
-    flags: AblationFlags, engine_set: str = "mock",
-    planner_name: str = "heuristic",
+    flags: AblationFlags, planner_name: str = "heuristic",
 ) -> Orchestrator:
-    engines = ENGINE_SETS[engine_set]
     return Orchestrator(
-        engines=engines, planner=_make_planner(planner_name), flags=flags,
+        engines=REAL_ENGINES, planner=_make_planner(planner_name),
+        flags=flags,
     )
 
 
 def run_one(
     target_name: str, condition: str, seed: int,
-    engine_set: str = "mock", planner_name: str = "heuristic",
+    planner_name: str = "heuristic",
 ) -> dict:
     manifest = _load_target(target_name)
     spec = AssessmentSpec(
@@ -96,9 +92,7 @@ def run_one(
         max_depth=int(manifest.get("max_depth", 3)),
     )
     flags = _flags_for(condition, seed)
-    orch = _make_orchestrator(
-        flags, engine_set=engine_set, planner_name=planner_name,
-    )
+    orch = _make_orchestrator(flags, planner_name=planner_name)
     t0 = time.perf_counter()
     result = orch.run(spec)
     wall_s = time.perf_counter() - t0
@@ -113,7 +107,6 @@ def run_one(
     return {
         "target": target_name,
         "condition": condition,
-        "engine_set": engine_set,
         "planner": planner_name,
         "seed": seed,
         "duration_s": round(wall_s, 4),
@@ -152,9 +145,6 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--condition", required=True, choices=CONDITIONS)
     p.add_argument("--seed", type=int, default=0,
                    help="random seed for the random-order condition")
-    p.add_argument("--engines", choices=list(ENGINE_SETS.keys()),
-                   default="mock",
-                   help="engine pool to use (mock | real | all)")
     p.add_argument("--planner", choices=PLANNERS, default="heuristic",
                    help="planner to drive picks. anthropic/openai need "
                         "their respective API key in env.")
@@ -163,7 +153,7 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
 
     row = run_one(args.target, args.condition, args.seed,
-                  engine_set=args.engines, planner_name=args.planner)
+                  planner_name=args.planner)
     print(json.dumps(row, indent=2))
     if not args.no_csv:
         _append_csv(row)

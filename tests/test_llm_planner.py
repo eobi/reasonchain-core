@@ -1,111 +1,114 @@
-"""LLMPlanner — provider-agnostic + offline-testable."""
+"""LLMPlanner — provider-agnostic + offline-testable.
+
+Uses StubLLMClient (a test double that returns canned JSON) so the
+LLMPlanner code path runs without an API key in CI. The engines in
+the orchestrator are the same REAL_ENGINES used in production runs.
+"""
 import pytest
 
 from reasonchain import (
-    AblationFlags, AssessmentSpec, MOCK_ENGINES, Orchestrator,
+    AblationFlags, AssessmentSpec, Orchestrator, REAL_ENGINES,
 )
-from reasonchain.llm_planner import LLMPlanner, MockLLMClient
+from reasonchain.llm_planner import LLMPlanner, StubLLMClient
 from reasonchain.models import EngineResult
 
 
-def test_planner_parses_llm_json_into_picks():
-    client = MockLLMClient(responses=[
-        (r"mock_portscan",
-         '{"picks": [{"engine": "mock_service_probe", "target": "x", '
-         '"rationale": "fingerprint open ports"}]}'),
+def test_planner_parses_llm_json_into_picks(stub_server):
+    client = StubLLMClient(responses=[
+        (r"LAST ENGINE: http_probe",
+         '{"picks": [{"engine": "url_crawler", "target": "X", '
+         '"rationale": "crawl for endpoints"}]}'),
     ])
     planner = LLMPlanner(client=client)
-    spec = AssessmentSpec(target="x", target_type="ip")
+    spec = AssessmentSpec(target=stub_server, target_type="web_api")
     picks = planner.replan(
-        spec=spec, completed=["mock_portscan"],
-        last_result=EngineResult(engine="mock_portscan", target="x"),
-        facts={"open_ports": [80, 443]},
-        available=list(MOCK_ENGINES.keys()),
+        spec=spec, completed=["http_probe"],
+        last_result=EngineResult(engine="http_probe", target=stub_server),
+        facts={"http_status": 200},
+        available=list(REAL_ENGINES.keys()),
     )
     assert len(picks) == 1
-    assert picks[0].engine == "mock_service_probe"
-    assert "fingerprint" in picks[0].rationale
+    assert picks[0].engine == "url_crawler"
+    assert "crawl" in picks[0].rationale
 
 
-def test_planner_falls_back_to_heuristic_on_unparseable_json():
-    client = MockLLMClient(responses=[
-        (r"mock_portscan", "not even close to JSON"),
+def test_planner_falls_back_to_heuristic_on_unparseable_json(stub_server):
+    client = StubLLMClient(responses=[
+        (r"LAST ENGINE: http_probe", "not even close to JSON"),
     ])
     planner = LLMPlanner(client=client)
-    spec = AssessmentSpec(target="x", target_type="ip")
+    spec = AssessmentSpec(target=stub_server, target_type="web_api")
     picks = planner.replan(
-        spec=spec, completed=["mock_portscan"],
-        last_result=EngineResult(engine="mock_portscan", target="x"),
-        facts={}, available=list(MOCK_ENGINES.keys()),
+        spec=spec, completed=["http_probe"],
+        last_result=EngineResult(engine="http_probe", target=stub_server),
+        facts={}, available=list(REAL_ENGINES.keys()),
     )
-    # HeuristicPlanner.replan for mock_portscan suggests mock_service_probe.
-    assert any(p.engine == "mock_service_probe" for p in picks)
+    # HeuristicPlanner.replan for http_probe suggests url_crawler +
+    # header_vuln_check via the chain map.
+    assert any(p.engine == "url_crawler" for p in picks)
 
 
-def test_planner_drops_hallucinated_engines():
-    client = MockLLMClient(responses=[
-        (r"mock_portscan",
+def test_planner_drops_hallucinated_engines(stub_server):
+    client = StubLLMClient(responses=[
+        (r"LAST ENGINE: http_probe",
          '{"picks": [{"engine": "this_engine_does_not_exist", '
-         '"target": "x", "rationale": "vibes"}]}'),
+         '"target": "X", "rationale": "vibes"}]}'),
     ])
     planner = LLMPlanner(client=client)
-    spec = AssessmentSpec(target="x", target_type="ip")
+    spec = AssessmentSpec(target=stub_server, target_type="web_api")
     picks = planner.replan(
-        spec=spec, completed=["mock_portscan"],
-        last_result=EngineResult(engine="mock_portscan", target="x"),
-        facts={}, available=list(MOCK_ENGINES.keys()),
+        spec=spec, completed=["http_probe"],
+        last_result=EngineResult(engine="http_probe", target=stub_server),
+        facts={}, available=list(REAL_ENGINES.keys()),
     )
     assert picks == []
-    # Mock client still got called once (we didn't fall back this time).
     assert client.calls == 1
 
 
-def test_planner_respects_max_calls_budget():
-    client = MockLLMClient(responses=[
+def test_planner_respects_max_calls_budget(stub_server):
+    client = StubLLMClient(responses=[
         (r".*",
-         '{"picks": [{"engine": "mock_service_probe", "target": "x", '
+         '{"picks": [{"engine": "url_crawler", "target": "X", '
          '"rationale": "x"}]}'),
     ])
     planner = LLMPlanner(client=client, max_calls=1)
-    spec = AssessmentSpec(target="x", target_type="ip")
-    last = EngineResult(engine="mock_portscan", target="x")
-    available = list(MOCK_ENGINES.keys())
-    planner.replan(spec, ["mock_portscan"], last, {}, available)
-    planner.replan(spec, ["mock_portscan"], last, {}, available)
-    planner.replan(spec, ["mock_portscan"], last, {}, available)
-    # max_calls=1 → the LLM client should have been hit at most once;
-    # subsequent calls go to the heuristic fallback.
+    spec = AssessmentSpec(target=stub_server, target_type="web_api")
+    last = EngineResult(engine="http_probe", target=stub_server)
+    available = list(REAL_ENGINES.keys())
+    planner.replan(spec, ["http_probe"], last, {}, available)
+    planner.replan(spec, ["http_probe"], last, {}, available)
+    planner.replan(spec, ["http_probe"], last, {}, available)
+    # max_calls=1 → the LLM client is hit at most once.
     assert client.calls == 1
 
 
-def test_planner_in_full_orchestrator_run():
-    """End-to-end: build an orchestrator with LLMPlanner + MockLLMClient
-    and verify it drives the closed loop through to cve_lookup. Regex
-    anchors on "LAST ENGINE: …" so each replan matches its own prompt
-    and not the one before it (the predecessor's name also appears in
-    later prompts under "COMPLETED ENGINES:")."""
-    client = MockLLMClient(responses=[
-        (r"LAST ENGINE: mock_portscan",
-         '{"picks": [{"engine": "mock_service_probe", "target": "x", '
-         '"rationale": "fingerprint"}]}'),
-        (r"LAST ENGINE: mock_service_probe",
-         '{"picks": [{"engine": "mock_cve_lookup", "target": "x", '
-         '"rationale": "search NVD"}]}'),
-        (r"LAST ENGINE: mock_cve_lookup", '{"picks": []}'),
+def test_planner_in_full_orchestrator_run(stub_server):
+    """End-to-end: build an orchestrator with LLMPlanner + StubLLMClient
+    and verify it drives the closed loop through to header_vuln_check.
+    Regex anchors on LAST ENGINE: so each replan matches its own
+    prompt and not the prior one."""
+    client = StubLLMClient(responses=[
+        (r"LAST ENGINE: http_probe",
+         '{"picks": [{"engine": "url_crawler", "target": "'
+         + stub_server + '", "rationale": "crawl"}]}'),
+        (r"LAST ENGINE: url_crawler",
+         '{"picks": [{"engine": "header_vuln_check", "target": "'
+         + stub_server + '", "rationale": "check headers"}]}'),
+        (r"LAST ENGINE: header_vuln_check", '{"picks": []}'),
     ])
     planner = LLMPlanner(client=client)
-    spec = AssessmentSpec(target="x", target_type="ip")
+    spec = AssessmentSpec(target=stub_server, target_type="web_api")
     orch = Orchestrator(
-        engines=MOCK_ENGINES, planner=planner, flags=AblationFlags(),
+        engines=REAL_ENGINES, planner=planner, flags=AblationFlags(),
     )
     result = orch.run(spec)
-    assert "mock_cve_lookup" in result.engines_used
+    assert "header_vuln_check" in result.engines_used
     assert client.calls >= 1
 
 
 def test_anthropic_client_requires_sdk():
-    """Without the anthropic SDK installed (or env var), constructor
-    raises a clean RuntimeError rather than crashing later."""
+    """Constructor surfaces a clean RuntimeError when the SDK is
+    missing or no API key is in env."""
     from reasonchain.llm_planner import AnthropicClient
     try:
         import anthropic  # noqa: F401
@@ -114,7 +117,6 @@ def test_anthropic_client_requires_sdk():
         has_sdk = False
 
     if has_sdk:
-        # SDK present: missing key should raise.
         import os
         key = os.environ.pop("ANTHROPIC_API_KEY", None)
         try:
@@ -124,6 +126,5 @@ def test_anthropic_client_requires_sdk():
             if key:
                 os.environ["ANTHROPIC_API_KEY"] = key
     else:
-        # SDK absent: clear ImportError-style message.
         with pytest.raises(RuntimeError, match="anthropic"):
             AnthropicClient()

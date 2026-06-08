@@ -13,10 +13,11 @@ from typing import Any, Literal
 
 Severity = Literal["critical", "high", "medium", "low", "info"]
 
-# The four target classes the ReasonChain paper evaluates against.
-# Production extensions (ad, k8s, cloud, mobile, llm_model, database)
-# live in the private Pentagon repo.
-TargetType = Literal["web_api", "network", "ip", "domain"]
+# reasonchain-core ships only web-HTTP engines; the paper's H1/H2/H3
+# evaluation runs against OWASP-class deliberately-vulnerable web apps.
+# Production extensions (network, ip, domain, ad, k8s, cloud, mobile,
+# llm_model, database) live in the private Pentagon repo.
+TargetType = Literal["web_api"]
 
 
 @dataclass

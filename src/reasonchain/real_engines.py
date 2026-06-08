@@ -7,7 +7,8 @@ making the live Juice Shop / DVWA experiments reproducible from a
 clean Python 3.10+ install.
 
 Each engine implements the ``reasonchain.engines.Engine`` protocol and
-can be dropped into the orchestrator alongside MOCK_ENGINES.
+is the production engine pool the orchestrator drives in every
+ablation run.
 
 Three engines:
 

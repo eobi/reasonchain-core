@@ -1,19 +1,20 @@
 """Matrix runner — sweeps every (target, condition, seed) combination.
 
 Usage:
-    # Run all bundled targets, both engine sets, all conditions, seeds 0-4
-    python scripts/run_matrix.py --all
+    # Sweep every bundled target × 4 conditions, 5 seeds each
+    python scripts/run_matrix.py --all --seeds 5
 
-    # Just one target × all conditions (one seed)
-    python scripts/run_matrix.py --target juiceshop --engines real
+    # One target × all conditions, default 1 seed
+    python scripts/run_matrix.py --target juiceshop
 
 Writes one row per run into ``data/results.csv``. The H1/H2/H3 stats
 notebook reads that file and computes the paired-t / Cohen's d /
 confusion-matrix figures for the paper.
 
-Pre-flight: if ``--engines real`` is specified, the runner pings each
-target's ``http_probe`` once first; targets that 404 / refuse are
-skipped (so you don't pollute the CSV with unreachable-target zeros).
+Every run is a live network round-trip against the target. The
+pre-flight reachability check pings each target once with a 5s GET;
+targets that don't respond are skipped so the CSV doesn't get
+polluted with unreachable-target zeros.
 """
 from __future__ import annotations
 
@@ -37,7 +38,7 @@ sys.path.insert(0, str(REPO_ROOT))
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from experiments.run_ablation import (  # noqa: E402
-    CONDITIONS, ENGINE_SETS, PLANNERS, run_one,
+    CONDITIONS, PLANNERS, run_one,
 )
 
 
@@ -84,8 +85,6 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--condition", action="append", default=[],
                    choices=CONDITIONS,
                    help="condition (repeat); empty = all 4")
-    p.add_argument("--engines", choices=list(ENGINE_SETS.keys()),
-                   default="mock")
     p.add_argument("--planner", choices=PLANNERS, default="heuristic")
     p.add_argument("--seeds", type=int, default=1,
                    help="how many random-order seeds to sample (1..N)")
@@ -101,7 +100,7 @@ def main(argv: list[str] | None = None) -> int:
         targets = _all_targets()
         conditions = list(CONDITIONS)
 
-    if args.engines in ("real", "all") and not args.skip_reachability:
+    if not args.skip_reachability:
         before = list(targets)
         targets = [
             t for t in targets if _reachable(_read_target_url(t))
@@ -117,7 +116,7 @@ def main(argv: list[str] | None = None) -> int:
     total = len(targets) * len(conditions) * args.seeds
     print(f"running {total} cell(s): "
           f"{len(targets)} target(s) × {len(conditions)} condition(s) "
-          f"× {args.seeds} seed(s) on engines={args.engines}")
+          f"× {args.seeds} seed(s) (planner={args.planner})")
     t0 = time.perf_counter()
     n_done = 0
     for target, condition in itertools.product(targets, conditions):
@@ -126,14 +125,12 @@ def main(argv: list[str] | None = None) -> int:
             try:
                 row = run_one(
                     target, condition, seed,
-                    engine_set=args.engines,
                     planner_name=args.planner,
                 )
             except Exception as e:
                 row = {
                     "target": target, "condition": condition,
-                    "engine_set": args.engines, "planner": args.planner,
-                    "seed": seed,
+                    "planner": args.planner, "seed": seed,
                     "error": f"{type(e).__name__}: {e}",
                 }
             row.setdefault("error", "")

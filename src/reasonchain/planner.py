@@ -11,10 +11,10 @@ The Planner protocol exposes two methods:
 
 We ship a HeuristicPlanner that implements the target-aware seed sets
 + a tiny static chain map. It's enough to run the entire H1/H2/H3
-ablation suite on the bundled mock engines without any LLM calls — so
-the repo runs offline and CI tests are deterministic. Production
-Pentagon swaps in an LLMPlanner that wraps the model client; that class
-lives in the private repo because it carries the production prompts.
+ablation suite against the bundled real HTTP engines, against any
+running OWASP-class web target. Production Pentagon swaps in an
+LLMPlanner that wraps a richer model client; the architecture is
+identical, only the prompt content differs.
 """
 from __future__ import annotations
 
@@ -37,28 +37,19 @@ class Planner(Protocol):
 
 
 # Target-type → ordered list of seed engines. The HeuristicPlanner
-# picks the FIRST entry whose engine is registered, so the same map
-# works whether the orchestrator was built with MOCK_ENGINES,
-# REAL_ENGINES, or a mix.
+# picks every entry whose engine is registered in the orchestrator,
+# preserving order.
 _SEEDS: dict[str, list[str]] = {
-    "network": ["mock_portscan", "mock_service_probe"],
-    "ip":      ["mock_portscan", "mock_service_probe"],
-    "domain":  ["mock_portscan", "mock_service_probe"],
-    # http_probe is the real-engine seed; mock_crawler is the offline
-    # smoke seed. The planner queues whichever ones are registered.
-    "web_api": ["http_probe", "url_crawler",
-                "mock_crawler", "mock_web_vulnscan"],
+    "web_api": ["http_probe", "url_crawler"],
 }
 
-# Predecessor engine → list of follow-up engines (1-hop heuristic chain).
+# Predecessor engine → list of follow-up engines (1-hop heuristic
+# chain). The chain drives the depth-1 picks in the closed-loop
+# condition; ablating replanning (H1) cuts this whole map out of
+# the run.
 _CHAINS: dict[str, list[str]] = {
-    "mock_portscan":      ["mock_service_probe"],
-    "mock_service_probe": ["mock_cve_lookup"],
-    "mock_crawler":       ["mock_web_vulnscan"],
-    # Real-engine chain mirrors the mock chain so the H1 ablation
-    # produces a comparable delta on real targets too.
-    "http_probe":         ["url_crawler", "header_vuln_check"],
-    "url_crawler":        ["header_vuln_check"],
+    "http_probe":  ["url_crawler", "header_vuln_check"],
+    "url_crawler": ["header_vuln_check"],
 }
 
 

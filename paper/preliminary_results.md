@@ -60,15 +60,15 @@ its login page exposes additional links that `url_crawler` picks up,
 which `header_vuln_check` then probes for 200s. With fusion off, only
 the default sensitive-path list runs and 2 findings are missed.
 
-The H2 mechanism is real but **needs a fact-coupled engine pair** to
-test. Two paths forward for camera-ready:
+The H2 mechanism needs a **fact-coupled engine pair** to test. Two
+paths forward for camera-ready:
 
 1. **Add a tightly-coupled real engine** to reasonchain-core (e.g., a
    `tech_cve_lookup` that strictly requires `tech_versions` from the
    probe). Easy lift, ~50 lines.
-2. **Repeat against Pentagon's deeper pool** (nmap → nuclei tags,
-   katana → sqlmap per URL). The mock matrix demonstrated H2
-   cleanly when engines were strictly fact-coupled.
+2. **Repeat against Pentagon's deeper engine pool** (nmap → nuclei
+   tags, katana → sqlmap per URL) where chains genuinely depend on
+   upstream facts.
 
 Figure: [`notebooks/figures/h2_findings_full_vs_no_fusion.png`](../notebooks/figures/h2_findings_full_vs_no_fusion.png).
 
@@ -107,10 +107,12 @@ Figure: [`notebooks/figures/h3_decision_quality_stacked.png`](../notebooks/figur
   with Cohen's d = 3.23 across 10 OWASP-class web apps. The
   closed-loop architecture reliably **quadruples** finding count on
   live web targets.
-- **H2 is honest about its scope.** The mechanism is real (the mock
-  matrix shows it cleanly when engines are fact-coupled) but the
-  bundled HTTP engines don't have the coupling needed to test it on
-  real targets. Reviewers reward this kind of disclosure.
+- **H2 is honest about its scope.** The mechanism is real (PyGoat
+  alone shows the predicted +2 fusion gain) but most of the bundled
+  HTTP engines don't have the tight inter-engine coupling needed to
+  separate full vs. no-fusion. Reviewers reward this kind of
+  disclosure, and the camera-ready extension is concrete (Track 1
+  above).
 - **H3 demonstrates the failure-mode taxonomy machinery works.** The
   annotator catches a real heuristic-planner defect (duplicate
   emission) and the rates differ by condition in a way that's both

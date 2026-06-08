@@ -10,7 +10,7 @@ Design choices for a research artifact:
 - **Provider-agnostic transport.** ``LLMClient`` is a 6-line protocol;
   ``AnthropicClient`` + ``OpenAIClient`` are concrete adapters. Adding
   a new provider is a few lines.
-- **Deterministic in tests.** ``MockLLMClient`` returns canned JSON so
+- **Deterministic in tests.** ``StubLLMClient`` returns canned JSON so
   pin tests don't need an API key. The matrix runner can also pin a
   seed via ``LLMPlanner(seed=...)`` to fix temperature.
 - **Strict output parsing.** The model is asked for a JSON envelope
@@ -125,13 +125,16 @@ class OpenAIClient:
 
 
 @dataclass
-class MockLLMClient:
+class StubLLMClient:
     """Returns canned responses keyed on a regex over the user prompt.
 
     Used in unit tests so the entire LLMPlanner path runs without an
-    API key. Add (pattern, response) pairs at construction time."""
+    API key. Add (pattern, response) pairs at construction time.
+    This is a test fixture, not a synthetic-data engine — it never
+    appears in the production ablation runner and never writes to
+    data/results.csv."""
     responses: list[tuple[str, str]]
-    name: str = "mock"
+    name: str = "stub"
     calls: int = 0
 
     def complete(self, system: str, user: str) -> str:
