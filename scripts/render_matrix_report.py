@@ -251,8 +251,8 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
 
     paths = build_report(Path(args.csv), Path(args.out_stem))
-    print(f"📄 PDF:  {paths['pdf']}")
-    print(f"📄 JSON: {paths['json']}")
+    print(f"PDF:  {paths['pdf']}")
+    print(f"JSON: {paths['json']}")
     return 0
 
 

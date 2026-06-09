@@ -6,7 +6,7 @@ Reference implementation of **ReasonChain** — a closed-loop LLM architecture f
 > *PENTAGON: Can Closed-Loop LLM Reasoning Achieve Autonomous Multi-Tool Cybersecurity Assessment?* (in submission).
 > University of Dayton, Department of Computer Science.
 
-**📄 [Read the paper (PDF)](paper/paper.pdf)** · 📊 [Matrix report](reports/matrix_report.pdf) · 🔍 [Live deep scan](reports/juiceshop_deep.pdf) · 📓 [Analysis notebook](notebooks/h1_h2_h3_analysis.ipynb)
+**[Read the paper (PDF)](paper/paper.pdf)** · [Matrix report](reports/matrix_report.pdf) · [Live deep scan](reports/juiceshop_deep.pdf) · [Analysis notebook](notebooks/h1_h2_h3_analysis.ipynb)
 
 ## TL;DR
 
@@ -55,16 +55,16 @@ TARGET + TOOLS + CVE Intel
 Every engine in this repo makes real network requests; there are no
 mock engines and no synthetic data. Pick a depth:
 
-- [**🚀 30-second smoke**](#1-30-second-smoke) — light HTTP probes against one
+- [**30-second smoke**](#1-30-second-smoke) — light HTTP probes against one
   Juice Shop container.
-- [**🛠 Single live cell** (with Kali)](#2-single-live-cell-with-kali-engines) —
+- [**Single live cell** (with Kali)](#2-single-live-cell-with-kali-engines) —
   one ablation cell against one target, using real `nmap`, `nuclei`, `nikto` over
   SSH.
-- [**📊 Full 17-target matrix**](#3-full-17-target-matrix) — reproduce the
+- [**Full 17-target matrix**](#3-full-17-target-matrix) — reproduce the
   paper's 68-cell H1/H2/H3 ablation.
-- [**🤖 LLM-planner sweep**](#4-llm-planner-sweep) — same orchestrator, planner
+- [**LLM-planner sweep**](#4-llm-planner-sweep) — same orchestrator, planner
   swapped for Anthropic Claude or OpenAI GPT-4o.
-- [**📄 Per-run PDF report**](#5-render-a-pdf-report-of-any-run) — pretty-print
+- [**Per-run PDF report**](#5-render-a-pdf-report-of-any-run) — pretty-print
   any `AssessmentResult` to PDF + JSON.
 
 ### 1. 30-second smoke

@@ -33,8 +33,7 @@ DVWA is an outlier — nikto enumerates hundreds of test endpoints
 because DVWA exposes everything by design. We report stats both with
 and without it.
 
-## H1 — Closed-loop replanning improves coverage ✓
-
+## H1 — Closed-loop replanning improves coverage
 Three tests, same data:
 
 | Test                              | n  | statistic | p-value     | effect size |
@@ -58,7 +57,7 @@ deviation and crushes the t-statistic. For the paper we'd report both.
 Figure: [`notebooks/figures/h1_findings_full_vs_no_replan.png`](../notebooks/figures/h1_findings_full_vs_no_replan.png)
 (log scale so DVWA doesn't crush the y-axis).
 
-## H2 — Cross-tool fusion ✗ no separation on this engine pool
+## H2 — Cross-tool fusion no separation on this engine pool
 
 - mean(full) = mean(no-fusion) = 8 of 10 targets
 - 2 targets show fusion gain: PyGoat (+2) and BodgeIt (+1)
@@ -77,8 +76,7 @@ To get H2 separation:
    scripts target the open_ports nmap discovered, so fusion off →
    nmap_vuln has no port list → fewer findings.
 
-## H3 — Decision-quality stratification ✓
-
+## H3 — Decision-quality stratification
 Stacked-bar across 40 cells (10 targets × 4 conditions):
 
 | Condition    | mean findings | median | mean duration (s) | pct incorrect |

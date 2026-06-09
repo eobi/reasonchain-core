@@ -44,7 +44,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--max-depth", type=int, default=2)
     args = p.parse_args(argv)
 
-    print(f"🔗 Connecting to Kali …", flush=True)
+    print("Connecting to Kali ...", flush=True)
     kali = Kali(KaliProfile.from_ini())
     engines = {**REAL_ENGINES, **build_kali_engines(kali)}
     print(f"   pool ({len(engines)}): {list(engines.keys())}")
@@ -58,21 +58,21 @@ def main(argv: list[str] | None = None) -> int:
         engines=engines, planner=HeuristicPlanner(),
         flags=AblationFlags(),
     )
-    print(f"🎯 {spec.target}")
+    print(f"Target: {spec.target}")
     t0 = time.perf_counter()
     result = orch.run(spec)
     result.duration_s = time.perf_counter() - t0
 
-    print(f"⏱  {result.duration_s:.0f}s · engines ran: {result.engines_used}")
-    print(f"   findings: {len(result.findings)} · "
+    print(f"{result.duration_s:.0f}s | engines ran: {result.engines_used}")
+    print(f"   findings: {len(result.findings)} | "
           f"high+critical: {sum(1 for f in result.findings if f.severity in ('high', 'critical'))}")
     print()
 
     out_dir = REPO_ROOT / args.out_dir
     stem = out_dir / args.name
     paths = render_both(result, stem)
-    print(f"📄 PDF:  {paths['pdf']}")
-    print(f"📄 JSON: {paths['json']}")
+    print(f"PDF:  {paths['pdf']}")
+    print(f"JSON: {paths['json']}")
     kali.close()
     return 0
 
