@@ -53,3 +53,4 @@ reports/*_no-fusion_*_kali-*_seed*.json
 reports/*_random-order_*_kali-*_seed*.pdf
 reports/*_random-order_*_kali-*_seed*.json
 TODO.md
+logs/

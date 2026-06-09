@@ -1,0 +1,7 @@
+target: http://localhost:8107/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  OWASP-SKF micro-lab: js-untrusted-sources-js. Spin up:
+      docker run --rm -d -p 8107:5000 blabla1337/owasp-skf-lab:js-untrusted-sources-js

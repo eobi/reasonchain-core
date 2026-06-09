@@ -1,0 +1,7 @@
+target: http://localhost:8111/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  OWASP-SKF micro-lab: js-rtlo. Spin up:
+      docker run --rm -d -p 8111:5000 blabla1337/owasp-skf-lab:js-rtlo

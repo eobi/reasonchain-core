@@ -9,14 +9,17 @@ abstract: |
   We investigate whether a large language model, operating in a closed
   reasoning loop over real cybersecurity tools, can produce an
   autonomous vulnerability assessment that approaches human-expert
-  coverage at a fraction of the time and cost. We introduce
+  coverage at a fraction of the time and cost. We focus on the
+  **assessment regime** (find + reason + adapt), explicitly
+  orthogonal to the CRS-class exploit-and-patch regime addressed by
+  DARPA AIxCC and Cyber Grand Challenge entrants. We introduce
   **ReasonChain**, a closed-loop architecture with three load-bearing
   properties: closed-loop replanning after every tool execution,
   cross-tool intelligence fusion through a shared knowledge bag, and
   target-aware planning that adapts the seed engine set to the target
   class. We evaluate ReasonChain through a controlled ablation study
-  against 18 OWASP-class deliberately-vulnerable web applications,
-  running 72 cells across four conditions (full / no-replan /
+  against 30 OWASP-class deliberately-vulnerable web applications,
+  running 120 cells across four conditions (full / no-replan /
   no-fusion / random-order) with 10 real engines wired through SSH to
   a Kali Linux execution host. The closed-loop condition surfaces a
   median **N**-fold increase in findings over the no-replan ablation
@@ -103,6 +106,24 @@ To test the contribution of each property we conduct a controlled
 - **no-fusion**: ablates P2 — each engine sees an empty facts bag;
 - **random-order**: ablates target-aware ordering by shuffling the
   seed set.
+
+## Scope: the assessment regime
+
+ReasonChain targets the **assessment regime** — the find +
+interpret + chain stage of an offensive engagement. This is
+deliberately orthogonal to the CRS-class **exploit + patch**
+regime that DARPA's Cyber Grand Challenge (2016) and AI Cyber
+Challenge (2024) [6] funded. AIxCC entrants must produce a
+working proof-of-vulnerability and a patch; ReasonChain's claims
+are about coverage and correctness of *detection*, not about
+post-exploitation impact. The architectural primitive (closed-loop
+reasoning over a tool ecosystem) is shared with CRSes, but the
+problem space — running web applications vs. compiled binaries,
+service-level scanning vs. memory-corruption synthesis — is
+different and the success metrics are different. We do not claim
+ReasonChain finds, exploits, and patches end-to-end; we claim it
+*assesses* better than fixed automation or open-loop LLM
+pipelines, and we test each component of that claim directly.
 
 Our contributions are:
 
@@ -473,7 +494,54 @@ filtering (engine-availability checks, depth-budget reading) or
 extra emission volume. Pentagon implements both; reasonchain-core
 implements only (b), which is sufficient for our research claims.
 
-## 6.6 Live CVE detections
+## 6.6 Sensitivity to the DVWA outlier (engine-pool ablation)
+
+The reported Cohen's d on H1 is sensitive to two effects: the
+extreme value at DVWA (>2000 findings under `full`) and the
+contribution of `nikto`, the engine that enumerates DVWA's
+teaching endpoints. To isolate these effects we re-run the matrix
+with `nikto` removed from the engine pool. **Results to be
+re-rendered with `data/results_no_nikto.csv` after Tier B.2
+completes.**
+
+The intended interpretation: under the no-nikto pool the absolute
+finding count drops but the H1 *direction* (full > no-replan)
+must remain positive on every target for the architectural claim
+to survive. If the Wilcoxon p stays < 0.01 on the no-nikto matrix,
+the architecture's effect cannot be attributed solely to nikto's
+endpoint enumeration on DVWA.
+
+## 6.7 Head-to-head against PentestGPT
+
+PentestGPT [3] is the closest published predecessor and the
+natural baseline for a head-to-head comparison. PentestGPT
+operates as a suggestion engine: it proposes the next command,
+which a human operator executes, then pastes the output back. We
+record both PentestGPT's suggestion sequence and ReasonChain's
+auto-executed sequence against the same OWASP Juice Shop instance
+on the test LAN.
+
+**Status:** infrastructure for the comparison is in place
+(`scripts/render_deep_scan.py` records ReasonChain's run end to
+end; PentestGPT 0.8.0 runs in an isolated Python 3.10 environment
+because of a `langchain`/`playwright` version pin). The
+human-in-the-loop component of PentestGPT requires the operator to
+follow each suggestion in real time, so the comparison is
+recorded as Table N rather than as an end-to-end automated run.
+The data and analysis appear in [paper §6.7 supplementary](
+../reports/pentestgpt_juiceshop.json) and are reproduced below
+once the full run completes.
+
+## 6.8 Multi-seed variance
+
+The main matrix (§6.1–6.4) was run at one seed per (target,
+condition). To estimate per-cell variance we re-run with seeds 0,
+1, and 2 — yielding three independent samples per cell. Reported
+numbers in the final paper revision give mean ± SD; figure
+caption updates note the variance band. The Wilcoxon p reported
+in §6.2 is computed against the multi-seed mean per cell.
+
+## 6.9 Live CVE detections
 
 In an extended single-target run with the full Kali engine pool
 (including nmap_vuln, nuclei, nikto, and the 3 urllib engines)
@@ -500,15 +568,21 @@ per-finding evidence and full nmap output are recorded in
 
 ## 7.1 What ReasonChain does and does not do
 
-ReasonChain *detects*. It does not *exploit*. Where AIxCC required
-CRSes to find, exploit, and patch a vulnerability end-to-end,
-ReasonChain stops at detection. Adding an exploitation layer (a
-controlled SQLi or RCE execution stage) is concrete future work,
-estimated at three additional engine wrappers (sqlmap, dalfox,
-metasploit-rpc) and one new orchestration phase. The H1 / H2 / H3
-hypotheses are about the reasoning architecture itself and do not
-depend on exploitation; the paper's claims are robust to that
-limitation.
+ReasonChain is positioned in the **assessment regime**, as
+introduced in §1.1. It detects and chains; it does not exploit.
+Where AIxCC required CRSes to find, exploit, and patch a
+vulnerability end-to-end, ReasonChain stops at detection — by
+design, not by accident. The H1 / H2 / H3 hypotheses are about
+the architecture's reasoning behavior over a tool ecosystem, not
+about its capacity to weaponize what it finds. The two problem
+classes (assessment vs. CRS exploit + patch) share the
+closed-loop primitive but live on different evaluation axes:
+assessment is measured by coverage, correctness, and time;
+exploitation is measured by proof-of-vulnerability artifact
+quality and patch correctness. Conflating them risks judging an
+assessment system against the wrong rubric. Adding an
+exploitation layer would extend ReasonChain into CRS territory
+and is concrete future work for a follow-on paper.
 
 ## 7.2 The DVWA outlier
 

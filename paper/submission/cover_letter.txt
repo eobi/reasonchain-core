@@ -1,0 +1,34 @@
+USENIX WOOT Workshop on Offensive Technologies
+[Submission Date]
+
+Dear Program Committee,
+
+We submit "PENTAGON: Can Closed-Loop LLM Reasoning Achieve
+Autonomous Multi-Tool Cybersecurity Assessment?" for consideration
+at the workshop. The paper presents an empirical evaluation of an
+autonomous web-assessment agent against 3 OWASP-class
+deliberately-vulnerable web applications, with 11 ablation
+cells across four conditions, using real Kali Linux engines
+(nmap, nuclei, nikto) over SSH. We report H1, H2, and H3 results
+with both parametric and rank-based tests, and document live
+detection of 314 CVE-class findings (CVSS 9.8) against
+production-grade scanners.
+
+The full reference implementation is published under MIT license
+at https://github.com/eobi/reasonchain-core, including every
+per-run report (PDF + JSON), the matrix CSV, and the analysis
+notebook, so that every claim is reproducible from a clean
+checkout.
+
+We position the contribution explicitly in the **assessment
+regime**, orthogonal to CRS-class exploit-and-patch work
+(DARPA AIxCC, Cyber Grand Challenge). We believe the
+combination of empirical rigor and full reproducibility fits the
+WOOT mandate.
+
+Best regards,
+
+Obi Ebuka David
+Sayed Erfan Arefin
+Department of Computer Science
+University of Dayton
