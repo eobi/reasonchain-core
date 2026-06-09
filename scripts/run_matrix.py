@@ -86,6 +86,9 @@ def main(argv: list[str] | None = None) -> int:
                    choices=CONDITIONS,
                    help="condition (repeat); empty = all 4")
     p.add_argument("--planner", choices=PLANNERS, default="heuristic")
+    p.add_argument("--kali", choices=("off", "fast", "all"),
+                   default="off",
+                   help="register Kali engines via SSH for every cell.")
     p.add_argument("--seeds", type=int, default=1,
                    help="how many random-order seeds to sample (1..N)")
     p.add_argument("--all", action="store_true",
@@ -126,11 +129,13 @@ def main(argv: list[str] | None = None) -> int:
                 row = run_one(
                     target, condition, seed,
                     planner_name=args.planner,
+                    kali_mode=args.kali,
                 )
             except Exception as e:
                 row = {
                     "target": target, "condition": condition,
-                    "planner": args.planner, "seed": seed,
+                    "planner": args.planner, "kali": args.kali,
+                    "seed": seed,
                     "error": f"{type(e).__name__}: {e}",
                 }
             row.setdefault("error", "")

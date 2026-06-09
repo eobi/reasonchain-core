@@ -36,6 +36,56 @@ PLANNERS = ("heuristic", "anthropic", "openai")
 TARGETS_DIR = Path(__file__).parent / "targets"
 RESULTS_CSV = Path(__file__).parent.parent / "data" / "results.csv"
 
+# Engines that take too long for matrix-scale runs (nuclei ~6 min,
+# nmap_vuln ~5 min per cell). When --kali is supplied without
+# --slow-engines, these are dropped from the registered pool so a
+# 40-cell matrix completes in under 90 minutes instead of 12+ hours.
+_SLOW_REMOTE_ENGINES = {"nuclei", "nmap_vuln", "sqlmap", "wpscan"}
+
+
+def _kali_engines_fast() -> dict:
+    """Open the Kali profile, build remote engines, drop the slow ones."""
+    from reasonchain.kali_engine import (
+        Kali, KaliProfile, build_kali_engines,
+    )
+    kali = Kali(KaliProfile.from_ini())
+    engines = build_kali_engines(kali)
+    return {n: e for n, e in engines.items()
+            if n not in _SLOW_REMOTE_ENGINES}
+
+
+def _kali_engines_all() -> dict:
+    from reasonchain.kali_engine import (
+        Kali, KaliProfile, build_kali_engines,
+    )
+    kali = Kali(KaliProfile.from_ini())
+    return build_kali_engines(kali)
+
+
+def _lan_ip() -> str:
+    """Best-effort guess of the host's LAN IP so Kali engines have a
+    reachable address. The Kali box can't reach localhost on our mac;
+    when the target manifest says http://localhost:N/, rewrite to
+    http://<lan-ip>:N/ for remote engines."""
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # Doesn't actually send a packet; just resolves the route.
+        s.connect(("8.8.8.8", 80))
+        return s.getsockname()[0]
+    finally:
+        s.close()
+
+
+def _rewrite_target_for_kali(target: str) -> str:
+    """Replace localhost/127.0.0.1 with the LAN IP so a Kali engine
+    over SSH can reach the same Docker lab."""
+    lan = _lan_ip()
+    return (
+        target.replace("//localhost", f"//{lan}")
+              .replace("//127.0.0.1", f"//{lan}")
+    )
+
 
 def _make_planner(planner_name: str):
     if planner_name == "heuristic":
@@ -73,26 +123,37 @@ def _load_target(name: str) -> dict:
 
 def _make_orchestrator(
     flags: AblationFlags, planner_name: str = "heuristic",
+    kali_mode: str = "off",
 ) -> Orchestrator:
+    engines = dict(REAL_ENGINES)
+    if kali_mode == "fast":
+        engines.update(_kali_engines_fast())
+    elif kali_mode == "all":
+        engines.update(_kali_engines_all())
     return Orchestrator(
-        engines=REAL_ENGINES, planner=_make_planner(planner_name),
+        engines=engines, planner=_make_planner(planner_name),
         flags=flags,
     )
 
 
 def run_one(
     target_name: str, condition: str, seed: int,
-    planner_name: str = "heuristic",
+    planner_name: str = "heuristic", kali_mode: str = "off",
 ) -> dict:
     manifest = _load_target(target_name)
+    target_url = manifest["target"]
+    if kali_mode != "off":
+        target_url = _rewrite_target_for_kali(target_url)
     spec = AssessmentSpec(
-        target=manifest["target"],
+        target=target_url,
         target_type=manifest["target_type"],
         max_steps=int(manifest.get("max_steps", 25)),
         max_depth=int(manifest.get("max_depth", 3)),
     )
     flags = _flags_for(condition, seed)
-    orch = _make_orchestrator(flags, planner_name=planner_name)
+    orch = _make_orchestrator(
+        flags, planner_name=planner_name, kali_mode=kali_mode,
+    )
     t0 = time.perf_counter()
     result = orch.run(spec)
     wall_s = time.perf_counter() - t0
@@ -108,6 +169,7 @@ def run_one(
         "target": target_name,
         "condition": condition,
         "planner": planner_name,
+        "kali": kali_mode,
         "seed": seed,
         "duration_s": round(wall_s, 4),
         "engines_used": ",".join(result.engines_used),
@@ -148,12 +210,17 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--planner", choices=PLANNERS, default="heuristic",
                    help="planner to drive picks. anthropic/openai need "
                         "their respective API key in env.")
+    p.add_argument("--kali", choices=("off", "fast", "all"),
+                   default="off",
+                   help="register Kali-hosted engines via SSH. "
+                        "'fast' drops the slow ones (nuclei, nmap_vuln, "
+                        "sqlmap, wpscan) for matrix-scale runs.")
     p.add_argument("--no-csv", action="store_true",
                    help="print result as JSON and skip the CSV append")
     args = p.parse_args(argv)
 
     row = run_one(args.target, args.condition, args.seed,
-                  planner_name=args.planner)
+                  planner_name=args.planner, kali_mode=args.kali)
     print(json.dumps(row, indent=2))
     if not args.no_csv:
         _append_csv(row)

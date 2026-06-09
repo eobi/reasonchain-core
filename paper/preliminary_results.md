@@ -1,126 +1,151 @@
-# Preliminary Results — H1 / H2 / H3
+# Preliminary Results — H1 / H2 / H3 (Kali engine pool)
 
-**200 rows, 100% real data, 10 OWASP-class targets.** Every cell in
-`data/results.csv` is a live HTTP run against a deliberately-vulnerable
-web app running in a local Docker container. No mock engines, no
-synthetic data anywhere.
+**100% real data, Kali engines.** Every row in `data/results.csv` is a
+live ablation run using a 5-engine pool: nmap (Kali via SSH) +
+http_probe (local urllib) + url_crawler (local) + nikto (Kali via SSH)
++ header_vuln_check (local). Slow engines (nuclei, nmap_vuln, sqlmap,
+wpscan) run ad-hoc — see `paper/deep_scan_juiceshop.json` for the
+full 10-engine deep scan against Juice Shop.
 
-- Total rows: **200**
-- Targets: **10** (juiceshop, bWAPP, commix_testbed, VAmPI, WebGoat,
-  DVWA, NoWASP/Mutillidae II, BodgeIt, PyGoat, OWASP-SKF JS-CSRF)
-- Conditions: 4 (full / no-replan / no-fusion / random-order)
-- Seeds per (target, condition): 5
-- Engine pool: `http_probe` → `url_crawler` → `header_vuln_check`
-  (MIT-licensed, urllib-only, defined in `src/reasonchain/real_engines.py`)
+- **Total cells:** 40 (10 targets × 4 conditions × 1 seed)
+- **Wall-clock:** 60 min for the matrix
+- **Engine pool:** 5 for the matrix, 10 for the deep scan
+- **Targets:** juiceshop, bWAPP, commix_testbed, VAmPI, WebGoat, DVWA,
+  NoWASP/Mutillidae II, BodgeIt, PyGoat, OWASP-SKF JS-CSRF — all
+  reached via the host's LAN IP so Kali SSH engines can scan them too
 
-## H1 — Closed-loop replanning improves coverage ✓ very strong
+## Per-target findings table
 
-Paired t-test, `full` vs. `no-replan`, paired by target (n=10):
+| Target          | full | no-replan | no-fusion | random-order |
+|-----------------|-----:|----------:|----------:|-------------:|
+| juiceshop       |   44 |        14 |        44 |           44 |
+| bWAPP           |   33 |        14 |        33 |           33 |
+| commix_testbed  |   39 |        14 |        39 |           39 |
+| VAmPI           |   31 |        14 |        31 |           31 |
+| WebGoat         |   28 |        14 |        28 |           28 |
+| **DVWA**        | **2033** |    14 |      2033 |         2033 |
+| NoWASP          |   40 |        14 |        40 |           40 |
+| BodgeIt         |   29 |        14 |        28 |           29 |
+| PyGoat          |   25 |        14 |        23 |           30 |
+| skf_csrf        |   26 |        14 |        26 |           26 |
 
-- mean(full)      = **8.5** findings
-- mean(no-replan) = **2.0** findings
-- delta           = **+6.5** findings (+325%)
-- **t = 10.207, p ≈ 2 × 10⁻⁶, Cohen's d = 3.23** (huge effect)
+DVWA is an outlier — nikto enumerates hundreds of test endpoints
+because DVWA exposes everything by design. We report stats both with
+and without it.
 
-The effect is positive and large on **all 10 live targets**:
+## H1 — Closed-loop replanning improves coverage ✓
 
-| Target          | full  | no-replan | delta |
-|-----------------|------:|----------:|------:|
-| juiceshop       | 12.0  | 2.0       | +10.0 |
-| bWAPP           | 10.0  | 2.0       | +8.0  |
-| NoWASP          | 10.0  | 2.0       | +8.0  |
-| PyGoat          | 10.0  | 2.0       | +8.0  |
-| DVWA            | 9.0   | 2.0       | +7.0  |
-| commix_testbed  | 8.0   | 2.0       | +6.0  |
-| VAmPI           | 7.0   | 2.0       | +5.0  |
-| BodgeIt         | 7.0   | 2.0       | +5.0  |
-| skf_csrf        | 6.0   | 2.0       | +4.0  |
-| WebGoat         | 6.0   | 2.0       | +4.0  |
+Three tests, same data:
 
-p ≈ 2 × 10⁻⁶ comfortably survives Bonferroni correction for the three
-hypotheses (α/3 = 0.017). This is a defensible paper result.
+| Test                              | n  | statistic | p-value     | effect size |
+|-----------------------------------|----|-----------|-------------|-------------|
+| Paired t (all targets)            | 10 | t = 1.09  | 0.151       | d = 0.35    |
+| **Wilcoxon signed-rank (all)**    | 10 | W = 55    | **0.001**   | n/a         |
+| **Paired t (DVWA excluded)**      |  9 | t = 8.36  | **2 × 10⁻⁵** | **d = 2.79** |
 
-Figure: [`notebooks/figures/h1_findings_full_vs_no_replan.png`](../notebooks/figures/h1_findings_full_vs_no_replan.png).
+**Mean lift (DVWA excluded):** full = 32.8 vs. no-replan = 14.0
+(**+134%**).
 
-## H2 — Cross-tool fusion: directional effect, not yet significant ✗
+The **rank-based** test reaches p < 0.01 across all 10 targets even
+with the DVWA outlier, because Wilcoxon cares about the direction of
+the difference, not its magnitude. Every target shows full > no-replan;
+DVWA just shows a *much* bigger gap than the others.
 
-- mean(full)      = 8.5
-- mean(no-fusion) = 8.4
-- delta           = +0.2 findings
-- t = 1.406, p = 0.097 (one-sided, n=10)
+The **parametric** t-test only reaches significance once DVWA is
+removed because the 2019-finding delta inflates the standard
+deviation and crushes the t-statistic. For the paper we'd report both.
 
-Effect direction is correct on **9 of 10 targets** (only `pygoat` shows
-a 2-finding gain from fusion). The reason most targets tie:
-the three bundled HTTP engines are loosely coupled — `http_probe`
-doesn't need `urls`, `header_vuln_check` runs its own sensitive-path
-probe regardless of what crawler discovered.
+Figure: [`notebooks/figures/h1_findings_full_vs_no_replan.png`](../notebooks/figures/h1_findings_full_vs_no_replan.png)
+(log scale so DVWA doesn't crush the y-axis).
 
-PyGoat is the one target where the chain genuinely depends on fusion:
-its login page exposes additional links that `url_crawler` picks up,
-which `header_vuln_check` then probes for 200s. With fusion off, only
-the default sensitive-path list runs and 2 findings are missed.
+## H2 — Cross-tool fusion ✗ no separation on this engine pool
 
-The H2 mechanism needs a **fact-coupled engine pair** to test. Two
-paths forward for camera-ready:
+- mean(full) = mean(no-fusion) = 8 of 10 targets
+- 2 targets show fusion gain: PyGoat (+2) and BodgeIt (+1)
+- Wilcoxon p = 0.250 — not significant
 
-1. **Add a tightly-coupled real engine** to reasonchain-core (e.g., a
-   `tech_cve_lookup` that strictly requires `tech_versions` from the
-   probe). Easy lift, ~50 lines.
-2. **Repeat against Pentagon's deeper engine pool** (nmap → nuclei
-   tags, katana → sqlmap per URL) where chains genuinely depend on
-   upstream facts.
+**Honest mechanism**: with the current 5-engine pool, the chain is
+shallow. nmap's open_ports inform the chain of *which ports nikto
+scans*, but nikto's findings come from its own logic, not from a
+fusion-dependent prior step. Severing the Facts() bag doesn't break
+anything because nothing downstream strictly requires it.
 
-Figure: [`notebooks/figures/h2_findings_full_vs_no_fusion.png`](../notebooks/figures/h2_findings_full_vs_no_fusion.png).
+To get H2 separation:
+1. Add a fact-coupled real engine (e.g., a tech_cve_lookup that
+   requires `tech_versions` from nmap). Concrete + small.
+2. Or wire in nmap_vuln to the matrix (currently ad-hoc): its NSE
+   scripts target the open_ports nmap discovered, so fusion off →
+   nmap_vuln has no port list → fewer findings.
 
 ## H3 — Decision-quality stratification ✓
 
-Per-condition aggregate over 200 real-target runs:
+Stacked-bar across 40 cells (10 targets × 4 conditions):
 
-| Condition    | mean findings | mean duration (s) | pct incorrect |
-|--------------|--------------:|------------------:|--------------:|
-| full         | 8.5           | 0.041             | 40.0%         |
-| no-replan    | 2.0           | 0.008             | 0.0%          |
-| no-fusion    | 8.4           | 0.030             | 40.0%         |
-| random-order | 8.5           | 0.024             | 28.6%         |
+| Condition    | mean findings | median | mean duration (s) | pct incorrect |
+|--------------|--------------:|-------:|------------------:|--------------:|
+| full         |        233    |     31 |             154   |         34.3% |
+| no-replan    |         14    |     14 |              19   |          0%   |
+| no-fusion    |        233    |     31 |             117   |         34.3% |
+| random-order |        233    |     31 |             103   |         25.6% |
 
-Mechanism:
-- `no-replan` has 0% incorrect — only the seed pair is ever emitted,
-  and seed picks are always feasible.
-- `full` + `no-fusion` carry the same 40% incorrect rate — the
-  HeuristicPlanner re-emits `header_vuln_check` after `url_crawler`,
-  but it was already queued from the seed plan; the annotator flags
-  the duplicate as `duplicate_of_completed`.
-- `random-order` cuts the incorrect rate to 28.6% because shuffling
-  sometimes runs `header_vuln_check` before the duplicate emission.
+Mean is dominated by DVWA's 2033; median (the more honest measure
+here) shows the typical target's behavior. Per-condition the same
+pattern holds:
 
-This is the H3 failure-mode taxonomy the paper proposed: a deterministic
-labeling rule that surfaces a specific planner-side defect (heuristic
-duplicate emission) consistent across conditions. The LLMPlanner is
-expected to lower the incorrect rate by tracking what was already
-emitted — a hypothesis the camera-ready can test.
+- no-replan: 0% incorrect, 14 findings, 19s — only the seed engines fire
+- full / no-fusion: 34.3% incorrect from the duplicate emission;
+  `nikto` produces the bulk of the findings on most targets
+- random-order: 25.6% incorrect because shuffling defuses some duplicates
 
-Figure: [`notebooks/figures/h3_decision_quality_stacked.png`](../notebooks/figures/h3_decision_quality_stacked.png).
+Figure: [`notebooks/figures/h3_decision_quality_stacked.png`](../notebooks/figures/h3_decision_quality_stacked.png)
 
-## Why this matters for the paper
+## Deep scan — 10-engine pool against Juice Shop
 
-- **H1 is a defensible result on real data at n=10.** p ≈ 2 × 10⁻⁶
-  with Cohen's d = 3.23 across 10 OWASP-class web apps. The
-  closed-loop architecture reliably **quadruples** finding count on
-  live web targets.
-- **H2 is honest about its scope.** The mechanism is real (PyGoat
-  alone shows the predicted +2 fusion gain) but most of the bundled
-  HTTP engines don't have the tight inter-engine coupling needed to
-  separate full vs. no-fusion. Reviewers reward this kind of
-  disclosure, and the camera-ready extension is concrete (Track 1
-  above).
-- **H3 demonstrates the failure-mode taxonomy machinery works.** The
-  annotator catches a real heuristic-planner defect (duplicate
-  emission) and the rates differ by condition in a way that's both
-  measurable and interpretable.
+`paper/deep_scan_juiceshop.json` is the full output of:
+```
+nmap → nmap_vuln → nuclei → nikto → http_probe → url_crawler → header_vuln_check
+```
+running once against http://192.168.1.73:3000 (host LAN IP for Juice
+Shop):
+
+- **Duration:** 482s (8 minutes)
+- **Engines that fired:** 7 (sqlmap/dalfox/wpscan target_type-filter
+  skipped because Juice Shop has no WordPress / no obvious injectable
+  params with our crawler)
+- **Total findings:** 336 (314 high, 21 info, 1 low)
+- **High-severity findings:** 314 — all real CVE matches against
+  nginx 1.18.0 (port 80/443) + Apache 2.4.7 (port 8089) + Apache
+  Tomcat (port 8080) discovered on the LAN
+
+Sample high-severity findings (real CVE IDs from nmap_vuln NSE
+scripts):
+
+```
+[high] cpe on port 8089: CVE-2026-44631 (CVSS 9.8)
+[high] cpe on port 8089: CVE-2026-28780 (CVSS 9.8)
+[high] cpe on port 8089: CVE-2024-38476 (CVSS 9.8)  Apache mod_rewrite SSRF
+[high] cpe on port 8089: CVE-2024-38474 (CVSS 9.8)
+[high] cpe on port 8089: CVE-2023-25690 (CVSS 9.8)  HTTP request smuggling
+[high] cpe on port 8089: CVE-2022-31813 (CVSS 9.8)  mod_proxy_ajp X-Forwarded-For
+... +308 more
+```
+
+These are real CVEs against the actual Apache 2.4.7 on the test LAN,
+detected via nmap NSE scripts running over real SSH against real
+Kali. No mock, no synthesis.
 
 ## Reproduction
 
 ```bash
+# Configure the Kali profile (gitignored). Example:
+cat > kali_profile.ini <<EOF
+[kali]
+host = 192.168.1.236
+username = kali
+auth_method = password
+password = <yours>
+EOF
+
 # Spin up all 10 labs.
 docker run --rm -d -p 3000:3000  --name juice-shop      bkimminich/juice-shop
 docker run --rm -d -p 8089:80    --name commix-testbed  commixproject/commix-testbed
@@ -132,36 +157,28 @@ docker run --rm -d -p 8091:80    --name nowasp-lab      citizenstig/nowasp
 docker run --rm -d -p 8093:8080  --name bodgeit-lab     psiinon/bodgeit
 docker run --rm -d -p 8094:8000  --name pygoat-lab      pygoat/pygoat:latest
 docker run --rm -d -p 8095:5000  --name skf-csrf-lab    blabla1337/owasp-skf-lab:js-csrf
-sleep 15  # let them warm up
+sleep 20
 
-# Run the 100% real matrix.
+# Run the matrix (10 × 4 × 1 = 40 cells, ~60 min over SSH).
 rm -f data/results.csv
-python scripts/run_matrix.py \
-    --target juiceshop --target commix_testbed --target webgoat \
-    --target bwapp --target vampi --target dvwa_live --target nowasp \
-    --target bodgeit --target pygoat --target skf_csrf \
-    --engines real --seeds 5
+python scripts/run_matrix.py --all --kali fast
 
 # Refresh figures + summary.
 jupyter nbconvert --to notebook --execute \
     notebooks/h1_h2_h3_analysis.ipynb \
     --output h1_h2_h3_analysis.ipynb
-
-# Optional: run with Claude.
-export ANTHROPIC_API_KEY=sk-…
-python scripts/run_matrix.py --target juiceshop --engines real \
-    --planner anthropic --seeds 3
 ```
 
 ## What's next (camera-ready)
 
-1. **Restore H2 significance** by adding a fact-coupled real engine
-   pair (estimated +50 LoC) or running against Pentagon's engine pool.
-2. **LLM planner across all 10 targets** — currently Claude ran on
-   Juice Shop only. Sweep across all targets × 4 conditions to get an
-   LLM-vs-heuristic H3 stratification (estimated 40 API calls, ~$0.50).
-3. **Scale to 30+ targets** as the proposal specifies — HTB Starting
-   Point + Retired Machines via VPN, more VulnHub VMs.
-4. **Human-baseline runs against 3+ targets** — record via
-   `python -m reasonchain.human_baseline --target juiceshop
-   --expert-id E01 --findings N --duration-minutes M --tools "..."`.
+1. **Wire nmap_vuln + nuclei into the matrix** (currently ad-hoc).
+   This pushes per-cell time from 3 min to ~8 min, so the full matrix
+   moves to ~5 hours. Run overnight.
+2. **Scale targets** — proposal says 30+. Easy paths: 5+ more Docker
+   labs (Hackazon, NodeGoat, Vulnado, OWASP-SKF micro-labs), the HTB
+   Starting Point queue, VulnHub VMs.
+3. **LLM planner across the matrix** — Claude/GPT-4 paid replans
+   instead of HeuristicPlanner. Compare LLM vs heuristic incorrect
+   rate (H3).
+4. **Human-expert baselines** for 3 representative targets — record
+   via `python -m reasonchain.human_baseline …`.
