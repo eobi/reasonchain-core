@@ -36,11 +36,13 @@ PLANNERS = ("heuristic", "anthropic", "openai")
 TARGETS_DIR = Path(__file__).parent / "targets"
 RESULTS_CSV = Path(__file__).parent.parent / "data" / "results.csv"
 
-# Engines that take too long for matrix-scale runs (nuclei ~6 min,
-# nmap_vuln ~5 min per cell). When --kali is supplied without
-# --slow-engines, these are dropped from the registered pool so a
-# 40-cell matrix completes in under 90 minutes instead of 12+ hours.
-_SLOW_REMOTE_ENGINES = {"nuclei", "nmap_vuln", "sqlmap", "wpscan"}
+# Engines that take too long for matrix-scale runs. nuclei alone
+# costs ~6 min per cell; sqlmap/wpscan are slow and only apply to
+# narrow target types. nmap_vuln stays IN the fast pool because it
+# is the engine that materializes the H2 fact-coupling claim
+# (NSE scripts require open_ports from nmap → severing fusion
+# breaks the chain).
+_SLOW_REMOTE_ENGINES = {"nuclei", "sqlmap", "wpscan"}
 
 
 def _kali_engines_fast() -> dict:

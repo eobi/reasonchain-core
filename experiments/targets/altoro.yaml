@@ -1,0 +1,7 @@
+target: http://localhost:8104/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Altoro Mutual — IBM AppScan test banking application.
+  Spin up: docker run --rm -d -p 8104:8080 eystsen/altoro

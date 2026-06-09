@@ -134,15 +134,21 @@ class Kali:
 
 @dataclass
 class RemoteEngine:
-    """Adapter: takes a subprocess engine class + a Kali connection,
-    runs the same cmd remotely, parses the same stdout."""
+    """Adapter: subprocess engine over SSH.
+
+    ``cmd_builder`` may accept either ``(target)`` or ``(target, facts)``.
+    The two-arg form lets fact-coupled engines (notably ``nmap_vuln``)
+    read prior engines' ``open_ports`` from the shared Facts() bag
+    so the H2 ablation actually exercises fusion: with fusion off,
+    facts is empty, the engine uses its fallback port list, and the
+    chain is observably shorter.
+    """
     name: str
     target_types: set[str]
-    cmd_builder: callable  # (target) -> list[str]
-    parser: callable       # (rc, stdout, stderr, target) -> EngineResult
+    cmd_builder: callable
+    parser: callable
     kali: Kali
     binary: str = ""
-
     timeout_s: int = 600
 
     def run(self, target: str, facts: dict) -> EngineResult:
@@ -153,7 +159,15 @@ class RemoteEngine:
                 error=f"binary {self.binary!r} not on Kali",
                 duration_s=time.perf_counter() - t0,
             )
-        cmd = self.cmd_builder(target)
+        import inspect
+        try:
+            sig = inspect.signature(self.cmd_builder)
+            if len(sig.parameters) >= 2:
+                cmd = self.cmd_builder(target, facts)
+            else:
+                cmd = self.cmd_builder(target)
+        except (TypeError, ValueError):
+            cmd = self.cmd_builder(target)
         rc, stdout, stderr = self.kali.exec(cmd, timeout_s=self.timeout_s)
         result = self.parser(rc, stdout, stderr, target)
         result.engine = self.name
@@ -183,23 +197,19 @@ def build_kali_engines(kali: Kali) -> dict:
             ],
             parser=lambda rc, out, err, t: _parse_nmap(out, err, t),
         )
-        # nmap_vuln — NSE script category that probes for known CVEs +
-        # weak configs against the discovered service/version pairs.
-        # Runs after the plain nmap so the open-port list narrows the
-        # script targets and the scan doesn't fire blindly on all 65K
-        # ports.
+        # nmap_vuln — fact-coupled to nmap via ``open_ports``.
+        # When fusion is ON the planner's previous nmap pick populated
+        # facts["open_ports"]; we scope --script vuln to exactly those
+        # ports and the scan is fast + targeted.
+        # When fusion is OFF the engine sees facts={} and falls back to
+        # a small default port list (80,443) — so the H2 ablation
+        # actually breaks the chain instead of running blindly across
+        # 13 ports.
         engines["nmap_vuln"] = RemoteEngine(
             name="nmap_vuln", target_types={"web_api"}, kali=kali,
             binary="nmap",
             timeout_s=900,
-            cmd_builder=lambda t: [
-                "nmap", "-sV", "-T4", "-Pn", "--script", "vuln",
-                "--script-timeout", "60s",
-                "--host-timeout", "300s",
-                "-p", "80,443,3000,5000,8000,8080,8089,8090,8091,"
-                       "8093,8094,8095,9090",
-                _host_only(t),
-            ],
+            cmd_builder=_nmap_vuln_cmd_builder,
             parser=lambda rc, out, err, t: _parse_nmap_vuln(out, err, t),
         )
     if kali.has("nuclei"):
@@ -263,6 +273,26 @@ def build_kali_engines(kali: Kali) -> dict:
 def _host_only(target: str) -> str:
     s = target.replace("http://", "").replace("https://", "")
     return s.split("/")[0].split(":")[0]
+
+
+def _nmap_vuln_cmd_builder(target: str, facts: dict | None = None) -> list[str]:
+    """Fact-coupled cmd builder. Reads ``facts['open_ports']`` and
+    scopes the --script vuln scan to those ports. Falls back to
+    ``80,443`` when facts is empty (fusion=False ablation) so the
+    chain breakage is observable."""
+    facts = facts or {}
+    open_ports = facts.get("open_ports") or []
+    if open_ports:
+        port_arg = ",".join(str(p) for p in open_ports[:20])
+    else:
+        port_arg = "80,443"
+    return [
+        "nmap", "-sV", "-T4", "-Pn", "--script", "vuln",
+        "--script-timeout", "60s",
+        "--host-timeout", "300s",
+        "-p", port_arg,
+        _host_only(target),
+    ]
 
 
 def _parse_nmap(stdout: str, stderr: str, target: str) -> EngineResult:

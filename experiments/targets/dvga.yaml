@@ -1,0 +1,7 @@
+target: http://localhost:5013/
+target_type: web_api
+max_steps: 25
+max_depth: 3
+notes: |
+  Damn Vulnerable GraphQL Application (DVGA).
+  Spin up: docker run --rm -d -p 5013:5013 dolevf/dvga
