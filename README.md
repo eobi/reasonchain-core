@@ -14,6 +14,45 @@ Across 17 OWASP-class web targets and 68 ablation cells, the closed-loop conditi
 
 This repo is the **public, MIT-licensed core** of the architecture. Production extensions, premium engines, multi-tenant auth, SSH-to-Kali execution, and other commercial-only features live in a separate private repository (Pentagon).
 
+## What it finds on a live target
+
+Single live run against **OWASP Juice Shop** on the test LAN, 10-engine Kali pool, 476s wall-clock. Full output: [`reports/juiceshop_deep.pdf`](reports/juiceshop_deep.pdf) · raw JSON: [`reports/juiceshop_deep.json`](reports/juiceshop_deep.json).
+
+| Severity | Count |
+|---|---:|
+| High      | **314** |
+| Medium    | 1 |
+| Low       | 1 |
+| Info      | 29 |
+| **Total** | **345** |
+
+**122 unique CVEs cited**. A sample of the high-severity findings, all real CVE matches surfaced by `nmap --script vuln` against the Apache 2.4.7 instance the agent discovered on port 8089 of the LAN:
+
+| CVE | CVSS | Description |
+|---|---:|---|
+| **CVE-2024-38476** | 9.8 | Apache HTTP Server mod_rewrite — backend selection via crafted requests (SSRF) |
+| **CVE-2024-38474** | 9.8 | Apache HTTP Server mod_rewrite — encoding problem |
+| **CVE-2023-25690** | 9.8 | Apache HTTP Server mod_proxy — HTTP request smuggling |
+| **CVE-2022-31813** | 9.8 | Apache HTTP Server mod_proxy — X-Forwarded-For header omission |
+| **CVE-2022-23943** | 9.8 | Apache HTTP Server mod_sed — buffer overflow |
+| **CVE-2022-22720** | 9.8 | Apache HTTP Server mod_lua — use-after-free |
+| **CVE-2021-44790** | 9.8 | Apache HTTP Server mod_lua — multipart parser buffer overflow |
+| **CVE-2021-39275** | 9.8 | Apache HTTP Server `ap_escape_quotes` — buffer overflow |
+| **CVE-2021-26691** | 9.8 | Apache HTTP Server mod_session — memory corruption |
+| **CVE-2017-3167** | 9.8 | Apache HTTP Server `ap_get_basic_auth_pw` — authentication bypass |
+
+Per-engine contribution:
+
+| Engine | Findings | Notes |
+|---|---:|---|
+| `nmap_vuln` | 314 | NSE `--script vuln` against open ports discovered by upstream `nmap` |
+| `nuclei`    | 16  | Bare-form template scan |
+| `nmap`      | 12  | Service-version probes, populated `open_ports` for `nmap_vuln` |
+| `nikto`     | 1   | Banner audit |
+| `http_probe`, `url_crawler` | 2 | Baseline web recon |
+
+The full assessment data — every per-cell PDF + JSON, the matrix CSV, the live deep-scan JSON with 345 finding records — is regenerable from a clean `git clone` plus a Kali host and `docker run`.
+
 ## Architecture (the three claims under test)
 
 1. **Closed-Loop Reasoning** — after each tool execution, the LLM receives parsed output and re-evaluates the remaining plan.
