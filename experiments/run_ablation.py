@@ -157,6 +157,7 @@ def run_one(
     t0 = time.perf_counter()
     result = orch.run(spec)
     wall_s = time.perf_counter() - t0
+    result.duration_s = wall_s
 
     sev_counts: dict[str, int] = {}
     for f in result.findings:
@@ -164,6 +165,25 @@ def run_one(
 
     # H3 substrate: label every decision.
     annotated = annotate(result, engines_registry=orch.engines)
+
+    # Persist the full AssessmentResult alongside the CSV summary row
+    # so anyone re-reading the experiment can audit every finding.
+    # PDF + JSON pair, named after the cell.
+    try:
+        from reasonchain import render_both
+        from datetime import datetime
+        reports_dir = Path(__file__).parent.parent / "reports"
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        stem = (reports_dir
+                / f"{target_name}_{condition}_{planner_name}"
+                  f"_kali-{kali_mode}_seed{seed}_{ts}")
+        render_both(result, stem)
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning(
+            "report render failed for %s/%s: %s",
+            target_name, condition, e,
+        )
 
     return {
         "target": target_name,

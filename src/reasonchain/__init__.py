@@ -22,6 +22,7 @@ from reasonchain.planner import HeuristicPlanner, NullPlanner, Planner
 from reasonchain.real_engines import (
     HeaderVulnCheck, HttpProbe, REAL_ENGINES, UrlCrawler,
 )
+from reasonchain.report import render_both, render_json, render_pdf
 from reasonchain.subprocess_engines import (
     CLI_ENGINES, DirsearchEngine, FeroxbusterEngine, NiktoEngine,
     NmapEngine, NucleiEngine,
@@ -61,4 +62,8 @@ __all__ = [
     "NiktoEngine",
     "NmapEngine",
     "NucleiEngine",
+    # Report rendering
+    "render_both",
+    "render_json",
+    "render_pdf",
 ]
