@@ -6,8 +6,8 @@ Dear Program Committee,
 We submit "PENTAGON: Can Closed-Loop LLM Reasoning Achieve
 Autonomous Multi-Tool Cybersecurity Assessment?" for consideration
 at the workshop. The paper presents an empirical evaluation of an
-autonomous web-assessment agent against 3 OWASP-class
-deliberately-vulnerable web applications, with 11 ablation
+autonomous web-assessment agent against 30 OWASP-class
+deliberately-vulnerable web applications, with 120 ablation
 cells across four conditions, using real Kali Linux engines
 (nmap, nuclei, nikto) over SSH. We report H1, H2, and H3 results
 with both parametric and rank-based tests, and document live
