@@ -293,12 +293,14 @@ render_both(r, 'reports/my_run')  # writes my_run.pdf + my_run.json
 "
 ```
 
-### What's left
+### Future work
 
-Phases 0 and 1 of the SRF closeout are complete. The remaining
-research extensions (PentestGPT head-to-head, exploitation phase,
-network target class, human-expert baselines, scale to 30+
-targets) live in [`TODO.md`](TODO.md).
+Reasonable directions: a head-to-head against PentestGPT [3],
+extending the engine pool with an exploitation phase (sqlmap +
+dalfox + metasploit-rpc), adding a network target class (CIDR /
+IP seed), recruiting human-expert baselines for direct
+comparison, and scaling to 30+ targets across additional benchmark
+suites. We discuss each in §8 of the paper.
 
 ## License
 
