@@ -223,17 +223,39 @@ caffeinate -i -s -t 14400   # 4-hour ceiling
 ### 4. LLM-planner sweep
 
 Replaces the deterministic `HeuristicPlanner` with `LLMPlanner`
-fronting Anthropic Claude (default) or OpenAI GPT-4o. Costs about
-$1–2 in API calls per 20-cell sweep.
+fronting either **Anthropic Claude** (default, `claude-sonnet-4-6`)
+or **OpenAI GPT-4o-mini**. Costs about $1–2 in API calls per
+20-cell sweep.
+
+**Where to get the key.** You need one of:
+
+- An Anthropic API key from <https://console.anthropic.com/settings/keys>
+  (format: `sk-ant-api03-…`)
+- An OpenAI API key from <https://platform.openai.com/api-keys>
+  (format: `sk-proj-…` or `sk-…`)
+
+You only need one of the two — the `--planner` flag selects which.
+
+**Where to put it.** Drop it into a `.env` file at the repo root.
+This file is **gitignored** (see [.gitignore](.gitignore) — never
+committed, never pushed). The `LLMPlanner` reads
+`ANTHROPIC_API_KEY` or `OPENAI_API_KEY` from the process
+environment at startup.
 
 ```bash
-# Drop your API key into a .env file at the repo root (gitignored).
+# One-time. Pick whichever provider you have.
 cat > .env <<EOF
-ANTHROPIC_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-api03-your-key-here
+# OR:
+# OPENAI_API_KEY=sk-proj-your-key-here
 EOF
 
+# Load the file into the shell, then run.
+set -a && source .env && set +a
+
 # 5 representative targets × 4 conditions = 20 cells.
-python scripts/run_llm_sweep.py
+python scripts/run_llm_sweep.py            # Anthropic (default)
+python scripts/run_llm_sweep.py --planner openai
 
 # Or pick your own subset.
 python scripts/run_llm_sweep.py \
@@ -244,6 +266,13 @@ python scripts/run_llm_sweep.py \
 The sweep writes a separate CSV to `data/llm_sweep.csv` so it
 doesn't disturb the matrix data; the H3 comparison table in
 [paper §6.5](paper/paper.pdf) reads both files.
+
+If you'd rather not store the key on disk, the runtime also
+accepts a one-shot env var:
+
+```bash
+ANTHROPIC_API_KEY=sk-ant-… python scripts/run_llm_sweep.py
+```
 
 ### 5. Render a PDF report of any run
 
