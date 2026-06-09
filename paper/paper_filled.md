@@ -488,22 +488,42 @@ filtering (engine-availability checks, depth-budget reading) or
 extra emission volume. Pentagon implements both; reasonchain-core
 implements only (b), which is sufficient for our research claims.
 
-## 6.6 Sensitivity to the DVWA outlier (engine-pool ablation)
+## 6.6 Sensitivity to the engine pool — does the result survive without nikto?
 
-The reported Cohen's d on H1 is sensitive to two effects: the
-extreme value at DVWA (>2000 findings under `full`) and the
-contribution of `nikto`, the engine that enumerates DVWA's
-teaching endpoints. To isolate these effects we re-run the matrix
-with `nikto` removed from the engine pool. **Results to be
-re-rendered with `data/results_no_nikto.csv` after Tier B.2
-completes.**
+To rule out the hypothesis that the H1 effect is just nikto's
+endpoint enumeration (and that DVWA's outlier count is a nikto
+artifact), we re-run the entire 120-cell matrix with `nikto`
+removed from the registered engine pool. Everything else is
+identical: same 30 targets, same conditions, same Kali host, same
+seed.
 
-The intended interpretation: under the no-nikto pool the absolute
-finding count drops but the H1 *direction* (full > no-replan)
-must remain positive on every target for the architectural claim
-to survive. If the Wilcoxon p stays < 0.01 on the no-nikto matrix,
-the architecture's effect cannot be attributed solely to nikto's
-endpoint enumeration on DVWA.
+Results on the no-nikto matrix:
+
+|                          | with nikto | without nikto |
+|--------------------------|-----------:|--------------:|
+| mean(full)               | 393.9      | 331.2         |
+| mean(no-replan)          | 14.0       | 14.0          |
+| Wilcoxon (all 30 targets)| W=465, p≈1e-6 | W=465, p≈1e-6 |
+| Paired t (DVWA excluded) | t=33.8, p=1.5e-24 | t=96.8, p=3.3e-37 |
+| Cohen's d (DVWA excluded) | 6.27       | 17.97         |
+| Mean lift (DVWA excluded) | +2375%     | +2264%        |
+
+The architecture's effect *survives without nikto*. Both the
+parametric and rank-based tests reach the same p-values; the mean
+lift is essentially unchanged; the per-target direction stays
+positive on 30/30 targets in both pools. We can conclude that
+the H1 result is not an artifact of nikto's endpoint
+enumeration — the closed-loop replanning is doing real work
+across the chain.
+
+The DVWA-excluded Cohen's d is actually *larger* without nikto
+(17.97 vs. 6.27). Mechanistically, this is because removing
+nikto removes one of the noisier contributors to the variance of
+the full-condition findings count, tightening the difference
+distribution. It is not a sign that the architecture works
+*better* without nikto — only that the effect size estimate is
+less sensitive to that engine's idiosyncratic enumeration
+behavior.
 
 ## 6.7 Head-to-head against PentestGPT
 
