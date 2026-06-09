@@ -51,6 +51,17 @@
       }
     },
     {
+      "title": "Open port 8080/tcp \u00b7 http \u00b7 Apache Tomcat (language: en)",
+      "severity": "info",
+      "source": "nmap",
+      "cve_ids": [],
+      "evidence": {
+        "port": 8080,
+        "service": "http",
+        "version": "Apache Tomcat (language: en)"
+      }
+    },
+    {
       "title": "Open port 8089/tcp \u00b7 http \u00b7 Apache httpd 2.4.7 ((Ubuntu))",
       "severity": "info",
       "source": "nmap",
@@ -59,6 +70,72 @@
         "port": 8089,
         "service": "http",
         "version": "Apache httpd 2.4.7 ((Ubuntu))"
+      }
+    },
+    {
+      "title": "Open port 8090/tcp \u00b7 http \u00b7 Apache httpd 2.4.25 ((Debian))",
+      "severity": "info",
+      "source": "nmap",
+      "cve_ids": [],
+      "evidence": {
+        "port": 8090,
+        "service": "http",
+        "version": "Apache httpd 2.4.25 ((Debian))"
+      }
+    },
+    {
+      "title": "Open port 8091/tcp \u00b7 http \u00b7 Apache httpd 2.4.7 ((Ubuntu))",
+      "severity": "info",
+      "source": "nmap",
+      "cve_ids": [],
+      "evidence": {
+        "port": 8091,
+        "service": "http",
+        "version": "Apache httpd 2.4.7 ((Ubuntu))"
+      }
+    },
+    {
+      "title": "Open port 8093/tcp \u00b7 http \u00b7 Apache Tomcat (language: en)",
+      "severity": "info",
+      "source": "nmap",
+      "cve_ids": [],
+      "evidence": {
+        "port": 8093,
+        "service": "http",
+        "version": "Apache Tomcat (language: en)"
+      }
+    },
+    {
+      "title": "Open port 8094/tcp \u00b7 http \u00b7 WSGIServer 0.2 (Python 3.10.4)",
+      "severity": "info",
+      "source": "nmap",
+      "cve_ids": [],
+      "evidence": {
+        "port": 8094,
+        "service": "http",
+        "version": "WSGIServer 0.2 (Python 3.10.4)"
+      }
+    },
+    {
+      "title": "Open port 8095/tcp \u00b7 http \u00b7 Node.js (Express middleware)",
+      "severity": "info",
+      "source": "nmap",
+      "cve_ids": [],
+      "evidence": {
+        "port": 8095,
+        "service": "http",
+        "version": "Node.js (Express middleware)"
+      }
+    },
+    {
+      "title": "Open port 9090/tcp \u00b7 http \u00b7 Apache Tomcat (language: en)",
+      "severity": "info",
+      "source": "nmap",
+      "cve_ids": [],
+      "evidence": {
+        "port": 9090,
+        "service": "http",
+        "version": "Apache Tomcat (language: en)"
       }
     },
     {
@@ -90,7 +167,7 @@
       "cve_ids": [],
       "evidence": {
         "template_id": "swagger-api",
-        "matched_at": "http://192.168.1.73:3000//api-docs/swagger.json",
+        "matched_at": "http://192.168.1.73:3000//api-docs/swagger.yaml",
         "tags": [
           "exposure",
           "api",
@@ -151,6 +228,169 @@
       }
     },
     {
+      "title": "[info] HTTP Missing Security Headers",
+      "severity": "info",
+      "source": "nuclei",
+      "cve_ids": [],
+      "evidence": {
+        "template_id": "http-missing-security-headers",
+        "matched_at": "http://192.168.1.73:3000/",
+        "tags": [
+          "misconfig",
+          "headers",
+          "generic",
+          "vuln"
+        ]
+      }
+    },
+    {
+      "title": "[info] HTTP Missing Security Headers",
+      "severity": "info",
+      "source": "nuclei",
+      "cve_ids": [],
+      "evidence": {
+        "template_id": "http-missing-security-headers",
+        "matched_at": "http://192.168.1.73:3000/",
+        "tags": [
+          "misconfig",
+          "headers",
+          "generic",
+          "vuln"
+        ]
+      }
+    },
+    {
+      "title": "[info] HTTP Missing Security Headers",
+      "severity": "info",
+      "source": "nuclei",
+      "cve_ids": [],
+      "evidence": {
+        "template_id": "http-missing-security-headers",
+        "matched_at": "http://192.168.1.73:3000/",
+        "tags": [
+          "misconfig",
+          "headers",
+          "generic",
+          "vuln"
+        ]
+      }
+    },
+    {
+      "title": "[info] HTTP Missing Security Headers",
+      "severity": "info",
+      "source": "nuclei",
+      "cve_ids": [],
+      "evidence": {
+        "template_id": "http-missing-security-headers",
+        "matched_at": "http://192.168.1.73:3000/",
+        "tags": [
+          "misconfig",
+          "headers",
+          "generic",
+          "vuln"
+        ]
+      }
+    },
+    {
+      "title": "[info] HTTP Missing Security Headers",
+      "severity": "info",
+      "source": "nuclei",
+      "cve_ids": [],
+      "evidence": {
+        "template_id": "http-missing-security-headers",
+        "matched_at": "http://192.168.1.73:3000/",
+        "tags": [
+          "misconfig",
+          "headers",
+          "generic",
+          "vuln"
+        ]
+      }
+    },
+    {
+      "title": "[info] HTTP Missing Security Headers",
+      "severity": "info",
+      "source": "nuclei",
+      "cve_ids": [],
+      "evidence": {
+        "template_id": "http-missing-security-headers",
+        "matched_at": "http://192.168.1.73:3000/",
+        "tags": [
+          "misconfig",
+          "headers",
+          "generic",
+          "vuln"
+        ]
+      }
+    },
+    {
+      "title": "[info] HTTP Missing Security Headers",
+      "severity": "info",
+      "source": "nuclei",
+      "cve_ids": [],
+      "evidence": {
+        "template_id": "http-missing-security-headers",
+        "matched_at": "http://192.168.1.73:3000/",
+        "tags": [
+          "misconfig",
+          "headers",
+          "generic",
+          "vuln"
+        ]
+      }
+    },
+    {
+      "title": "[info] HTTP Missing Security Headers",
+      "severity": "info",
+      "source": "nuclei",
+      "cve_ids": [],
+      "evidence": {
+        "template_id": "http-missing-security-headers",
+        "matched_at": "http://192.168.1.73:3000/",
+        "tags": [
+          "misconfig",
+          "headers",
+          "generic",
+          "vuln"
+        ]
+      }
+    },
+    {
+      "title": "[info] X-Recruiting Header",
+      "severity": "info",
+      "source": "nuclei",
+      "cve_ids": [],
+      "evidence": {
+        "template_id": "x-recruiting-header",
+        "matched_at": "http://192.168.1.73:3000/",
+        "tags": [
+          "miscellaneous",
+          "misc",
+          "hiring",
+          "jobs",
+          "employment",
+          "generic",
+          "vuln"
+        ]
+      }
+    },
+    {
+      "title": "[info] robots.txt endpoint prober",
+      "severity": "info",
+      "source": "nuclei",
+      "cve_ids": [],
+      "evidence": {
+        "template_id": "robots-txt-endpoint",
+        "matched_at": "http://192.168.1.73:3000/robots.txt",
+        "tags": [
+          "miscellaneous",
+          "misc",
+          "generic",
+          "discovery"
+        ]
+      }
+    },
+    {
       "title": "[medium] Prometheus Metrics - Detect",
       "severity": "medium",
       "source": "nuclei",
@@ -168,158 +408,18 @@
       }
     },
     {
-      "title": "[info] HTTP Missing Security Headers",
+      "title": "[info] security.txt File",
       "severity": "info",
       "source": "nuclei",
       "cve_ids": [],
       "evidence": {
-        "template_id": "http-missing-security-headers",
-        "matched_at": "http://192.168.1.73:3000/",
+        "template_id": "security-txt",
+        "matched_at": "http://192.168.1.73:3000/.well-known/security.txt",
         "tags": [
-          "misconfig",
-          "headers",
+          "miscellaneous",
+          "misc",
           "generic",
           "vuln"
-        ]
-      }
-    },
-    {
-      "title": "[info] HTTP Missing Security Headers",
-      "severity": "info",
-      "source": "nuclei",
-      "cve_ids": [],
-      "evidence": {
-        "template_id": "http-missing-security-headers",
-        "matched_at": "http://192.168.1.73:3000/",
-        "tags": [
-          "misconfig",
-          "headers",
-          "generic",
-          "vuln"
-        ]
-      }
-    },
-    {
-      "title": "[info] HTTP Missing Security Headers",
-      "severity": "info",
-      "source": "nuclei",
-      "cve_ids": [],
-      "evidence": {
-        "template_id": "http-missing-security-headers",
-        "matched_at": "http://192.168.1.73:3000/",
-        "tags": [
-          "misconfig",
-          "headers",
-          "generic",
-          "vuln"
-        ]
-      }
-    },
-    {
-      "title": "[info] HTTP Missing Security Headers",
-      "severity": "info",
-      "source": "nuclei",
-      "cve_ids": [],
-      "evidence": {
-        "template_id": "http-missing-security-headers",
-        "matched_at": "http://192.168.1.73:3000/",
-        "tags": [
-          "misconfig",
-          "headers",
-          "generic",
-          "vuln"
-        ]
-      }
-    },
-    {
-      "title": "[info] HTTP Missing Security Headers",
-      "severity": "info",
-      "source": "nuclei",
-      "cve_ids": [],
-      "evidence": {
-        "template_id": "http-missing-security-headers",
-        "matched_at": "http://192.168.1.73:3000/",
-        "tags": [
-          "misconfig",
-          "headers",
-          "generic",
-          "vuln"
-        ]
-      }
-    },
-    {
-      "title": "[info] HTTP Missing Security Headers",
-      "severity": "info",
-      "source": "nuclei",
-      "cve_ids": [],
-      "evidence": {
-        "template_id": "http-missing-security-headers",
-        "matched_at": "http://192.168.1.73:3000/",
-        "tags": [
-          "misconfig",
-          "headers",
-          "generic",
-          "vuln"
-        ]
-      }
-    },
-    {
-      "title": "[info] HTTP Missing Security Headers",
-      "severity": "info",
-      "source": "nuclei",
-      "cve_ids": [],
-      "evidence": {
-        "template_id": "http-missing-security-headers",
-        "matched_at": "http://192.168.1.73:3000/",
-        "tags": [
-          "misconfig",
-          "headers",
-          "generic",
-          "vuln"
-        ]
-      }
-    },
-    {
-      "title": "[info] HTTP Missing Security Headers",
-      "severity": "info",
-      "source": "nuclei",
-      "cve_ids": [],
-      "evidence": {
-        "template_id": "http-missing-security-headers",
-        "matched_at": "http://192.168.1.73:3000/",
-        "tags": [
-          "misconfig",
-          "headers",
-          "generic",
-          "vuln"
-        ]
-      }
-    },
-    {
-      "title": "[info] FingerprintHub Technology Fingerprint",
-      "severity": "info",
-      "source": "nuclei",
-      "cve_ids": [],
-      "evidence": {
-        "template_id": "fingerprinthub-web-fingerprints",
-        "matched_at": "http://192.168.1.73:3000/",
-        "tags": [
-          "tech",
-          "discovery"
-        ]
-      }
-    },
-    {
-      "title": "[info] Wappalyzer Technology Detection",
-      "severity": "info",
-      "source": "nuclei",
-      "cve_ids": [],
-      "evidence": {
-        "template_id": "tech-detect",
-        "matched_at": "http://192.168.1.73:3000/",
-        "tags": [
-          "tech",
-          "discovery"
         ]
       }
     },
@@ -1808,6 +1908,2918 @@
       }
     },
     {
+      "title": "cpe on port 8090: |     \tCVE-2026-44631\t9.8\thttps://vulners.com/cve/CVE-2026-44631",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-44631",
+        "CVE-2026-44631"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-44631\t9.8\thttps://vulners.com/cve/CVE-2026-44631"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-28780\t9.8\thttps://vulners.com/cve/CVE-2026-28780",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-28780",
+        "CVE-2026-28780"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-28780\t9.8\thttps://vulners.com/cve/CVE-2026-28780"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-38476\t9.8\thttps://vulners.com/cve/CVE-2024-38476",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38476",
+        "CVE-2024-38476"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38476\t9.8\thttps://vulners.com/cve/CVE-2024-38476"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-38474\t9.8\thttps://vulners.com/cve/CVE-2024-38474",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38474",
+        "CVE-2024-38474"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38474\t9.8\thttps://vulners.com/cve/CVE-2024-38474"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2023-25690\t9.8\thttps://vulners.com/cve/CVE-2023-25690",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2023-25690",
+        "CVE-2023-25690"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2023-25690\t9.8\thttps://vulners.com/cve/CVE-2023-25690"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-31813\t9.8\thttps://vulners.com/cve/CVE-2022-31813",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-31813",
+        "CVE-2022-31813"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-31813\t9.8\thttps://vulners.com/cve/CVE-2022-31813"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-23943\t9.8\thttps://vulners.com/cve/CVE-2022-23943",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-23943",
+        "CVE-2022-23943"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-23943\t9.8\thttps://vulners.com/cve/CVE-2022-23943"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-22720\t9.8\thttps://vulners.com/cve/CVE-2022-22720",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-22720",
+        "CVE-2022-22720"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-22720\t9.8\thttps://vulners.com/cve/CVE-2022-22720"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2021-44790\t9.8\thttps://vulners.com/cve/CVE-2021-44790",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-44790",
+        "CVE-2021-44790"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-44790\t9.8\thttps://vulners.com/cve/CVE-2021-44790"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2021-39275\t9.8\thttps://vulners.com/cve/CVE-2021-39275",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-39275",
+        "CVE-2021-39275"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-39275\t9.8\thttps://vulners.com/cve/CVE-2021-39275"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2021-26691\t9.8\thttps://vulners.com/cve/CVE-2021-26691",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-26691",
+        "CVE-2021-26691"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-26691\t9.8\thttps://vulners.com/cve/CVE-2021-26691"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2018-1312\t9.8\thttps://vulners.com/cve/CVE-2018-1312",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-1312",
+        "CVE-2018-1312"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-1312\t9.8\thttps://vulners.com/cve/CVE-2018-1312"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2017-7679\t9.8\thttps://vulners.com/cve/CVE-2017-7679",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-7679",
+        "CVE-2017-7679"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-7679\t9.8\thttps://vulners.com/cve/CVE-2017-7679"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2017-3169\t9.8\thttps://vulners.com/cve/CVE-2017-3169",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-3169",
+        "CVE-2017-3169"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-3169\t9.8\thttps://vulners.com/cve/CVE-2017-3169"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2017-3167\t9.8\thttps://vulners.com/cve/CVE-2017-3167",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-3167",
+        "CVE-2017-3167"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-3167\t9.8\thttps://vulners.com/cve/CVE-2017-3167"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-40898\t9.1\thttps://vulners.com/cve/CVE-2024-40898",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-40898",
+        "CVE-2024-40898"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-40898\t9.1\thttps://vulners.com/cve/CVE-2024-40898"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-38475\t9.1\thttps://vulners.com/cve/CVE-2024-38475",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38475",
+        "CVE-2024-38475"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38475\t9.1\thttps://vulners.com/cve/CVE-2024-38475"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-28615\t9.1\thttps://vulners.com/cve/CVE-2022-28615",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-28615",
+        "CVE-2022-28615"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-28615\t9.1\thttps://vulners.com/cve/CVE-2022-28615"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-22721\t9.1\thttps://vulners.com/cve/CVE-2022-22721",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-22721",
+        "CVE-2022-22721"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-22721\t9.1\thttps://vulners.com/cve/CVE-2022-22721"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2019-10082\t9.1\thttps://vulners.com/cve/CVE-2019-10082",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-10082",
+        "CVE-2019-10082"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-10082\t9.1\thttps://vulners.com/cve/CVE-2019-10082"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2017-9788\t9.1\thttps://vulners.com/cve/CVE-2017-9788",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-9788",
+        "CVE-2017-9788"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-9788\t9.1\thttps://vulners.com/cve/CVE-2017-9788"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-36760\t9.0\thttps://vulners.com/cve/CVE-2022-36760",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-36760",
+        "CVE-2022-36760"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-36760\t9.0\thttps://vulners.com/cve/CVE-2022-36760"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2021-40438\t9.0\thttps://vulners.com/cve/CVE-2021-40438",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-40438",
+        "CVE-2021-40438"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-40438\t9.0\thttps://vulners.com/cve/CVE-2021-40438"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-24072\t8.8\thttps://vulners.com/cve/CVE-2026-24072",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-24072",
+        "CVE-2026-24072"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-24072\t8.8\thttps://vulners.com/cve/CVE-2026-24072"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2025-58098\t8.3\thttps://vulners.com/cve/CVE-2025-58098",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2025-58098",
+        "CVE-2025-58098"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2025-58098\t8.3\thttps://vulners.com/cve/CVE-2025-58098"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2021-44224\t8.2\thttps://vulners.com/cve/CVE-2021-44224",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-44224",
+        "CVE-2021-44224"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-44224\t8.2\thttps://vulners.com/cve/CVE-2021-44224"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-38473\t8.1\thttps://vulners.com/cve/CVE-2024-38473",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38473",
+        "CVE-2024-38473"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38473\t8.1\thttps://vulners.com/cve/CVE-2024-38473"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2017-15715\t8.1\thttps://vulners.com/cve/CVE-2017-15715",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-15715",
+        "CVE-2017-15715"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-15715\t8.1\thttps://vulners.com/cve/CVE-2017-15715"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2019-9517\t7.8\thttps://vulners.com/cve/CVE-2019-9517",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-9517",
+        "CVE-2019-9517"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-9517\t7.8\thttps://vulners.com/cve/CVE-2019-9517"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2019-0211\t7.8\thttps://vulners.com/cve/CVE-2019-0211",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-0211",
+        "CVE-2019-0211"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-0211\t7.8\thttps://vulners.com/cve/CVE-2019-0211"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-42536\t7.5\thttps://vulners.com/cve/CVE-2026-42536",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-42536",
+        "CVE-2026-42536"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-42536\t7.5\thttps://vulners.com/cve/CVE-2026-42536"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-34356\t7.5\thttps://vulners.com/cve/CVE-2026-34356",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-34356",
+        "CVE-2026-34356"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-34356\t7.5\thttps://vulners.com/cve/CVE-2026-34356"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-34355\t7.5\thttps://vulners.com/cve/CVE-2026-34355",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-34355",
+        "CVE-2026-34355"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-34355\t7.5\thttps://vulners.com/cve/CVE-2026-34355"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-34059\t7.5\thttps://vulners.com/cve/CVE-2026-34059",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-34059",
+        "CVE-2026-34059"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-34059\t7.5\thttps://vulners.com/cve/CVE-2026-34059"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-29169\t7.5\thttps://vulners.com/cve/CVE-2026-29169",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-29169",
+        "CVE-2026-29169"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-29169\t7.5\thttps://vulners.com/cve/CVE-2026-29169"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2025-59775\t7.5\thttps://vulners.com/cve/CVE-2025-59775",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2025-59775",
+        "CVE-2025-59775"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2025-59775\t7.5\thttps://vulners.com/cve/CVE-2025-59775"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2025-53020\t7.5\thttps://vulners.com/cve/CVE-2025-53020",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2025-53020",
+        "CVE-2025-53020"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2025-53020\t7.5\thttps://vulners.com/cve/CVE-2025-53020"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-47252\t7.5\thttps://vulners.com/cve/CVE-2024-47252",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-47252",
+        "CVE-2024-47252"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-47252\t7.5\thttps://vulners.com/cve/CVE-2024-47252"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-43394\t7.5\thttps://vulners.com/cve/CVE-2024-43394",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-43394",
+        "CVE-2024-43394"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-43394\t7.5\thttps://vulners.com/cve/CVE-2024-43394"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-43204\t7.5\thttps://vulners.com/cve/CVE-2024-43204",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-43204",
+        "CVE-2024-43204"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-43204\t7.5\thttps://vulners.com/cve/CVE-2024-43204"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-42516\t7.5\thttps://vulners.com/cve/CVE-2024-42516",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-42516",
+        "CVE-2024-42516"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-42516\t7.5\thttps://vulners.com/cve/CVE-2024-42516"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-39573\t7.5\thttps://vulners.com/cve/CVE-2024-39573",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-39573",
+        "CVE-2024-39573"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-39573\t7.5\thttps://vulners.com/cve/CVE-2024-39573"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-38477\t7.5\thttps://vulners.com/cve/CVE-2024-38477",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38477",
+        "CVE-2024-38477"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38477\t7.5\thttps://vulners.com/cve/CVE-2024-38477"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-38472\t7.5\thttps://vulners.com/cve/CVE-2024-38472",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38472",
+        "CVE-2024-38472"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38472\t7.5\thttps://vulners.com/cve/CVE-2024-38472"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-27316\t7.5\thttps://vulners.com/cve/CVE-2024-27316",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-27316",
+        "CVE-2024-27316"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-27316\t7.5\thttps://vulners.com/cve/CVE-2024-27316"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2023-31122\t7.5\thttps://vulners.com/cve/CVE-2023-31122",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2023-31122",
+        "CVE-2023-31122"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2023-31122\t7.5\thttps://vulners.com/cve/CVE-2023-31122"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-30556\t7.5\thttps://vulners.com/cve/CVE-2022-30556",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-30556",
+        "CVE-2022-30556"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-30556\t7.5\thttps://vulners.com/cve/CVE-2022-30556"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-29404\t7.5\thttps://vulners.com/cve/CVE-2022-29404",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-29404",
+        "CVE-2022-29404"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-29404\t7.5\thttps://vulners.com/cve/CVE-2022-29404"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-26377\t7.5\thttps://vulners.com/cve/CVE-2022-26377",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-26377",
+        "CVE-2022-26377"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-26377\t7.5\thttps://vulners.com/cve/CVE-2022-26377"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-22719\t7.5\thttps://vulners.com/cve/CVE-2022-22719",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-22719",
+        "CVE-2022-22719"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-22719\t7.5\thttps://vulners.com/cve/CVE-2022-22719"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2021-34798\t7.5\thttps://vulners.com/cve/CVE-2021-34798",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-34798",
+        "CVE-2021-34798"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-34798\t7.5\thttps://vulners.com/cve/CVE-2021-34798"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2021-33193\t7.5\thttps://vulners.com/cve/CVE-2021-33193",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-33193",
+        "CVE-2021-33193"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-33193\t7.5\thttps://vulners.com/cve/CVE-2021-33193"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2021-26690\t7.5\thttps://vulners.com/cve/CVE-2021-26690",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-26690",
+        "CVE-2021-26690"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-26690\t7.5\thttps://vulners.com/cve/CVE-2021-26690"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2020-9490\t7.5\thttps://vulners.com/cve/CVE-2020-9490",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2020-9490",
+        "CVE-2020-9490"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2020-9490\t7.5\thttps://vulners.com/cve/CVE-2020-9490"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2020-11993\t7.5\thttps://vulners.com/cve/CVE-2020-11993",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2020-11993",
+        "CVE-2020-11993"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2020-11993\t7.5\thttps://vulners.com/cve/CVE-2020-11993"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2019-10081\t7.5\thttps://vulners.com/cve/CVE-2019-10081",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-10081",
+        "CVE-2019-10081"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-10081\t7.5\thttps://vulners.com/cve/CVE-2019-10081"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2019-0217\t7.5\thttps://vulners.com/cve/CVE-2019-0217",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-0217",
+        "CVE-2019-0217"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-0217\t7.5\thttps://vulners.com/cve/CVE-2019-0217"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2018-8011\t7.5\thttps://vulners.com/cve/CVE-2018-8011",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-8011",
+        "CVE-2018-8011"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-8011\t7.5\thttps://vulners.com/cve/CVE-2018-8011"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2018-17199\t7.5\thttps://vulners.com/cve/CVE-2018-17199",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-17199",
+        "CVE-2018-17199"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-17199\t7.5\thttps://vulners.com/cve/CVE-2018-17199"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2018-1333\t7.5\thttps://vulners.com/cve/CVE-2018-1333",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-1333",
+        "CVE-2018-1333"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-1333\t7.5\thttps://vulners.com/cve/CVE-2018-1333"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2018-1303\t7.5\thttps://vulners.com/cve/CVE-2018-1303",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-1303",
+        "CVE-2018-1303"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-1303\t7.5\thttps://vulners.com/cve/CVE-2018-1303"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2017-9798\t7.5\thttps://vulners.com/cve/CVE-2017-9798",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-9798",
+        "CVE-2017-9798"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-9798\t7.5\thttps://vulners.com/cve/CVE-2017-9798"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2017-7668\t7.5\thttps://vulners.com/cve/CVE-2017-7668",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-7668",
+        "CVE-2017-7668"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-7668\t7.5\thttps://vulners.com/cve/CVE-2017-7668"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2017-7659\t7.5\thttps://vulners.com/cve/CVE-2017-7659",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-7659",
+        "CVE-2017-7659"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-7659\t7.5\thttps://vulners.com/cve/CVE-2017-7659"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2017-15710\t7.5\thttps://vulners.com/cve/CVE-2017-15710",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-15710",
+        "CVE-2017-15710"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-15710\t7.5\thttps://vulners.com/cve/CVE-2017-15710"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2006-20001\t7.5\thttps://vulners.com/cve/CVE-2006-20001",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2006-20001",
+        "CVE-2006-20001"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2006-20001\t7.5\thttps://vulners.com/cve/CVE-2006-20001"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2025-49812\t7.4\thttps://vulners.com/cve/CVE-2025-49812",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2025-49812",
+        "CVE-2025-49812"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2025-49812\t7.4\thttps://vulners.com/cve/CVE-2025-49812"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-44185\t7.3\thttps://vulners.com/cve/CVE-2026-44185",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-44185",
+        "CVE-2026-44185"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-44185\t7.3\thttps://vulners.com/cve/CVE-2026-44185"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2023-38709\t7.3\thttps://vulners.com/cve/CVE-2023-38709",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2023-38709",
+        "CVE-2023-38709"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2023-38709\t7.3\thttps://vulners.com/cve/CVE-2023-38709"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2020-35452\t7.3\thttps://vulners.com/cve/CVE-2020-35452",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2020-35452",
+        "CVE-2020-35452"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2020-35452\t7.3\thttps://vulners.com/cve/CVE-2020-35452"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-43951\t6.5\thttps://vulners.com/cve/CVE-2026-43951",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-43951",
+        "CVE-2026-43951"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-43951\t6.5\thttps://vulners.com/cve/CVE-2026-43951"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-33523\t6.5\thttps://vulners.com/cve/CVE-2026-33523",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-33523",
+        "CVE-2026-33523"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-33523\t6.5\thttps://vulners.com/cve/CVE-2026-33523"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2025-65082\t6.5\thttps://vulners.com/cve/CVE-2025-65082",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2025-65082",
+        "CVE-2025-65082"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2025-65082\t6.5\thttps://vulners.com/cve/CVE-2025-65082"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2024-24795\t6.3\thttps://vulners.com/cve/CVE-2024-24795",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-24795",
+        "CVE-2024-24795"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-24795\t6.3\thttps://vulners.com/cve/CVE-2024-24795"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-29170\t6.1\thttps://vulners.com/cve/CVE-2026-29170",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-29170",
+        "CVE-2026-29170"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-29170\t6.1\thttps://vulners.com/cve/CVE-2026-29170"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2020-1927\t6.1\thttps://vulners.com/cve/CVE-2020-1927",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2020-1927",
+        "CVE-2020-1927"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2020-1927\t6.1\thttps://vulners.com/cve/CVE-2020-1927"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2019-10098\t6.1\thttps://vulners.com/cve/CVE-2019-10098",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-10098",
+        "CVE-2019-10098"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-10098\t6.1\thttps://vulners.com/cve/CVE-2019-10098"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2019-10092\t6.1\thttps://vulners.com/cve/CVE-2019-10092",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-10092",
+        "CVE-2019-10092"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-10092\t6.1\thttps://vulners.com/cve/CVE-2019-10092"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2023-45802\t5.9\thttps://vulners.com/cve/CVE-2023-45802",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2023-45802",
+        "CVE-2023-45802"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2023-45802\t5.9\thttps://vulners.com/cve/CVE-2023-45802"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2018-1302\t5.9\thttps://vulners.com/cve/CVE-2018-1302",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-1302",
+        "CVE-2018-1302"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-1302\t5.9\thttps://vulners.com/cve/CVE-2018-1302"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2018-1301\t5.9\thttps://vulners.com/cve/CVE-2018-1301",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-1301",
+        "CVE-2018-1301"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-1301\t5.9\thttps://vulners.com/cve/CVE-2018-1301"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2018-11763\t5.9\thttps://vulners.com/cve/CVE-2018-11763",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-11763",
+        "CVE-2018-11763"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-11763\t5.9\thttps://vulners.com/cve/CVE-2018-11763"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2020-13938\t5.5\thttps://vulners.com/cve/CVE-2020-13938",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2020-13938",
+        "CVE-2020-13938"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2020-13938\t5.5\thttps://vulners.com/cve/CVE-2020-13938"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2025-66200\t5.4\thttps://vulners.com/cve/CVE-2025-66200",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2025-66200",
+        "CVE-2025-66200"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2025-66200\t5.4\thttps://vulners.com/cve/CVE-2025-66200"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-34032\t5.3\thttps://vulners.com/cve/CVE-2026-34032",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-34032",
+        "CVE-2026-34032"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-34032\t5.3\thttps://vulners.com/cve/CVE-2026-34032"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-33857\t5.3\thttps://vulners.com/cve/CVE-2026-33857",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-33857",
+        "CVE-2026-33857"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-33857\t5.3\thttps://vulners.com/cve/CVE-2026-33857"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-33007\t5.3\thttps://vulners.com/cve/CVE-2026-33007",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-33007",
+        "CVE-2026-33007"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-33007\t5.3\thttps://vulners.com/cve/CVE-2026-33007"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-37436\t5.3\thttps://vulners.com/cve/CVE-2022-37436",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-37436",
+        "CVE-2022-37436"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-37436\t5.3\thttps://vulners.com/cve/CVE-2022-37436"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-28614\t5.3\thttps://vulners.com/cve/CVE-2022-28614",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-28614",
+        "CVE-2022-28614"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-28614\t5.3\thttps://vulners.com/cve/CVE-2022-28614"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2022-28330\t5.3\thttps://vulners.com/cve/CVE-2022-28330",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-28330",
+        "CVE-2022-28330"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-28330\t5.3\thttps://vulners.com/cve/CVE-2022-28330"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2020-1934\t5.3\thttps://vulners.com/cve/CVE-2020-1934",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2020-1934",
+        "CVE-2020-1934"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2020-1934\t5.3\thttps://vulners.com/cve/CVE-2020-1934"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2019-17567\t5.3\thttps://vulners.com/cve/CVE-2019-17567",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-17567",
+        "CVE-2019-17567"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-17567\t5.3\thttps://vulners.com/cve/CVE-2019-17567"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2019-0220\t5.3\thttps://vulners.com/cve/CVE-2019-0220",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-0220",
+        "CVE-2019-0220"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-0220\t5.3\thttps://vulners.com/cve/CVE-2019-0220"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2019-0196\t5.3\thttps://vulners.com/cve/CVE-2019-0196",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-0196",
+        "CVE-2019-0196"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-0196\t5.3\thttps://vulners.com/cve/CVE-2019-0196"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2018-17189\t5.3\thttps://vulners.com/cve/CVE-2018-17189",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-17189",
+        "CVE-2018-17189"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-17189\t5.3\thttps://vulners.com/cve/CVE-2018-17189"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2018-1283\t5.3\thttps://vulners.com/cve/CVE-2018-1283",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-1283",
+        "CVE-2018-1283"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-1283\t5.3\thttps://vulners.com/cve/CVE-2018-1283"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-33006\t4.8\thttps://vulners.com/cve/CVE-2026-33006",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-33006",
+        "CVE-2026-33006"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-33006\t4.8\thttps://vulners.com/cve/CVE-2026-33006"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-49975\t0.0\thttps://vulners.com/cve/CVE-2026-49975",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-49975",
+        "CVE-2026-49975"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-49975\t0.0\thttps://vulners.com/cve/CVE-2026-49975"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-44186\t0.0\thttps://vulners.com/cve/CVE-2026-44186",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-44186",
+        "CVE-2026-44186"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-44186\t0.0\thttps://vulners.com/cve/CVE-2026-44186"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-44119\t0.0\thttps://vulners.com/cve/CVE-2026-44119",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-44119",
+        "CVE-2026-44119"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-44119\t0.0\thttps://vulners.com/cve/CVE-2026-44119"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-42535\t0.0\thttps://vulners.com/cve/CVE-2026-42535",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-42535",
+        "CVE-2026-42535"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-42535\t0.0\thttps://vulners.com/cve/CVE-2026-42535"
+      }
+    },
+    {
+      "title": "cpe on port 8090: |     \tCVE-2026-29167\t0.0\thttps://vulners.com/cve/CVE-2026-29167",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-29167",
+        "CVE-2026-29167"
+      ],
+      "evidence": {
+        "port": 8090,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-29167\t0.0\thttps://vulners.com/cve/CVE-2026-29167"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-44631\t9.8\thttps://vulners.com/cve/CVE-2026-44631",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-44631",
+        "CVE-2026-44631"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-44631\t9.8\thttps://vulners.com/cve/CVE-2026-44631"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-28780\t9.8\thttps://vulners.com/cve/CVE-2026-28780",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-28780",
+        "CVE-2026-28780"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-28780\t9.8\thttps://vulners.com/cve/CVE-2026-28780"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-38476\t9.8\thttps://vulners.com/cve/CVE-2024-38476",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38476",
+        "CVE-2024-38476"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38476\t9.8\thttps://vulners.com/cve/CVE-2024-38476"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-38474\t9.8\thttps://vulners.com/cve/CVE-2024-38474",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38474",
+        "CVE-2024-38474"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38474\t9.8\thttps://vulners.com/cve/CVE-2024-38474"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2023-25690\t9.8\thttps://vulners.com/cve/CVE-2023-25690",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2023-25690",
+        "CVE-2023-25690"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2023-25690\t9.8\thttps://vulners.com/cve/CVE-2023-25690"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-31813\t9.8\thttps://vulners.com/cve/CVE-2022-31813",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-31813",
+        "CVE-2022-31813"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-31813\t9.8\thttps://vulners.com/cve/CVE-2022-31813"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-23943\t9.8\thttps://vulners.com/cve/CVE-2022-23943",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-23943",
+        "CVE-2022-23943"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-23943\t9.8\thttps://vulners.com/cve/CVE-2022-23943"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-22720\t9.8\thttps://vulners.com/cve/CVE-2022-22720",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-22720",
+        "CVE-2022-22720"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-22720\t9.8\thttps://vulners.com/cve/CVE-2022-22720"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2021-44790\t9.8\thttps://vulners.com/cve/CVE-2021-44790",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-44790",
+        "CVE-2021-44790"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-44790\t9.8\thttps://vulners.com/cve/CVE-2021-44790"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2021-39275\t9.8\thttps://vulners.com/cve/CVE-2021-39275",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-39275",
+        "CVE-2021-39275"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-39275\t9.8\thttps://vulners.com/cve/CVE-2021-39275"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2021-26691\t9.8\thttps://vulners.com/cve/CVE-2021-26691",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-26691",
+        "CVE-2021-26691"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-26691\t9.8\thttps://vulners.com/cve/CVE-2021-26691"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2018-1312\t9.8\thttps://vulners.com/cve/CVE-2018-1312",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-1312",
+        "CVE-2018-1312"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-1312\t9.8\thttps://vulners.com/cve/CVE-2018-1312"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2017-7679\t9.8\thttps://vulners.com/cve/CVE-2017-7679",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-7679",
+        "CVE-2017-7679"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-7679\t9.8\thttps://vulners.com/cve/CVE-2017-7679"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2017-3169\t9.8\thttps://vulners.com/cve/CVE-2017-3169",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-3169",
+        "CVE-2017-3169"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-3169\t9.8\thttps://vulners.com/cve/CVE-2017-3169"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2017-3167\t9.8\thttps://vulners.com/cve/CVE-2017-3167",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-3167",
+        "CVE-2017-3167"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-3167\t9.8\thttps://vulners.com/cve/CVE-2017-3167"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-40898\t9.1\thttps://vulners.com/cve/CVE-2024-40898",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-40898",
+        "CVE-2024-40898"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-40898\t9.1\thttps://vulners.com/cve/CVE-2024-40898"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-38475\t9.1\thttps://vulners.com/cve/CVE-2024-38475",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38475",
+        "CVE-2024-38475"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38475\t9.1\thttps://vulners.com/cve/CVE-2024-38475"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-28615\t9.1\thttps://vulners.com/cve/CVE-2022-28615",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-28615",
+        "CVE-2022-28615"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-28615\t9.1\thttps://vulners.com/cve/CVE-2022-28615"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-22721\t9.1\thttps://vulners.com/cve/CVE-2022-22721",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-22721",
+        "CVE-2022-22721"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-22721\t9.1\thttps://vulners.com/cve/CVE-2022-22721"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2017-9788\t9.1\thttps://vulners.com/cve/CVE-2017-9788",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-9788",
+        "CVE-2017-9788"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-9788\t9.1\thttps://vulners.com/cve/CVE-2017-9788"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-36760\t9.0\thttps://vulners.com/cve/CVE-2022-36760",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-36760",
+        "CVE-2022-36760"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-36760\t9.0\thttps://vulners.com/cve/CVE-2022-36760"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2021-40438\t9.0\thttps://vulners.com/cve/CVE-2021-40438",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-40438",
+        "CVE-2021-40438"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-40438\t9.0\thttps://vulners.com/cve/CVE-2021-40438"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-24072\t8.8\thttps://vulners.com/cve/CVE-2026-24072",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-24072",
+        "CVE-2026-24072"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-24072\t8.8\thttps://vulners.com/cve/CVE-2026-24072"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2025-58098\t8.3\thttps://vulners.com/cve/CVE-2025-58098",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2025-58098",
+        "CVE-2025-58098"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2025-58098\t8.3\thttps://vulners.com/cve/CVE-2025-58098"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2021-44224\t8.2\thttps://vulners.com/cve/CVE-2021-44224",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-44224",
+        "CVE-2021-44224"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-44224\t8.2\thttps://vulners.com/cve/CVE-2021-44224"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-38473\t8.1\thttps://vulners.com/cve/CVE-2024-38473",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38473",
+        "CVE-2024-38473"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38473\t8.1\thttps://vulners.com/cve/CVE-2024-38473"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2017-15715\t8.1\thttps://vulners.com/cve/CVE-2017-15715",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-15715",
+        "CVE-2017-15715"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-15715\t8.1\thttps://vulners.com/cve/CVE-2017-15715"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2016-5387\t8.1\thttps://vulners.com/cve/CVE-2016-5387",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2016-5387",
+        "CVE-2016-5387"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2016-5387\t8.1\thttps://vulners.com/cve/CVE-2016-5387"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-42536\t7.5\thttps://vulners.com/cve/CVE-2026-42536",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-42536",
+        "CVE-2026-42536"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-42536\t7.5\thttps://vulners.com/cve/CVE-2026-42536"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-34356\t7.5\thttps://vulners.com/cve/CVE-2026-34356",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-34356",
+        "CVE-2026-34356"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-34356\t7.5\thttps://vulners.com/cve/CVE-2026-34356"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-34355\t7.5\thttps://vulners.com/cve/CVE-2026-34355",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-34355",
+        "CVE-2026-34355"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-34355\t7.5\thttps://vulners.com/cve/CVE-2026-34355"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-34059\t7.5\thttps://vulners.com/cve/CVE-2026-34059",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-34059",
+        "CVE-2026-34059"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-34059\t7.5\thttps://vulners.com/cve/CVE-2026-34059"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-29169\t7.5\thttps://vulners.com/cve/CVE-2026-29169",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-29169",
+        "CVE-2026-29169"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-29169\t7.5\thttps://vulners.com/cve/CVE-2026-29169"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2025-59775\t7.5\thttps://vulners.com/cve/CVE-2025-59775",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2025-59775",
+        "CVE-2025-59775"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2025-59775\t7.5\thttps://vulners.com/cve/CVE-2025-59775"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-47252\t7.5\thttps://vulners.com/cve/CVE-2024-47252",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-47252",
+        "CVE-2024-47252"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-47252\t7.5\thttps://vulners.com/cve/CVE-2024-47252"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-43394\t7.5\thttps://vulners.com/cve/CVE-2024-43394",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-43394",
+        "CVE-2024-43394"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-43394\t7.5\thttps://vulners.com/cve/CVE-2024-43394"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-43204\t7.5\thttps://vulners.com/cve/CVE-2024-43204",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-43204",
+        "CVE-2024-43204"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-43204\t7.5\thttps://vulners.com/cve/CVE-2024-43204"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-42516\t7.5\thttps://vulners.com/cve/CVE-2024-42516",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-42516",
+        "CVE-2024-42516"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-42516\t7.5\thttps://vulners.com/cve/CVE-2024-42516"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-39573\t7.5\thttps://vulners.com/cve/CVE-2024-39573",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-39573",
+        "CVE-2024-39573"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-39573\t7.5\thttps://vulners.com/cve/CVE-2024-39573"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-38477\t7.5\thttps://vulners.com/cve/CVE-2024-38477",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38477",
+        "CVE-2024-38477"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38477\t7.5\thttps://vulners.com/cve/CVE-2024-38477"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-38472\t7.5\thttps://vulners.com/cve/CVE-2024-38472",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-38472",
+        "CVE-2024-38472"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-38472\t7.5\thttps://vulners.com/cve/CVE-2024-38472"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2023-31122\t7.5\thttps://vulners.com/cve/CVE-2023-31122",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2023-31122",
+        "CVE-2023-31122"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2023-31122\t7.5\thttps://vulners.com/cve/CVE-2023-31122"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-30556\t7.5\thttps://vulners.com/cve/CVE-2022-30556",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-30556",
+        "CVE-2022-30556"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-30556\t7.5\thttps://vulners.com/cve/CVE-2022-30556"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-29404\t7.5\thttps://vulners.com/cve/CVE-2022-29404",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-29404",
+        "CVE-2022-29404"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-29404\t7.5\thttps://vulners.com/cve/CVE-2022-29404"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-26377\t7.5\thttps://vulners.com/cve/CVE-2022-26377",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-26377",
+        "CVE-2022-26377"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-26377\t7.5\thttps://vulners.com/cve/CVE-2022-26377"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-22719\t7.5\thttps://vulners.com/cve/CVE-2022-22719",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-22719",
+        "CVE-2022-22719"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-22719\t7.5\thttps://vulners.com/cve/CVE-2022-22719"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2021-34798\t7.5\thttps://vulners.com/cve/CVE-2021-34798",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-34798",
+        "CVE-2021-34798"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-34798\t7.5\thttps://vulners.com/cve/CVE-2021-34798"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2021-33193\t7.5\thttps://vulners.com/cve/CVE-2021-33193",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-33193",
+        "CVE-2021-33193"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-33193\t7.5\thttps://vulners.com/cve/CVE-2021-33193"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2021-26690\t7.5\thttps://vulners.com/cve/CVE-2021-26690",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2021-26690",
+        "CVE-2021-26690"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2021-26690\t7.5\thttps://vulners.com/cve/CVE-2021-26690"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2019-0217\t7.5\thttps://vulners.com/cve/CVE-2019-0217",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-0217",
+        "CVE-2019-0217"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-0217\t7.5\thttps://vulners.com/cve/CVE-2019-0217"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2018-8011\t7.5\thttps://vulners.com/cve/CVE-2018-8011",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-8011",
+        "CVE-2018-8011"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-8011\t7.5\thttps://vulners.com/cve/CVE-2018-8011"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2018-17199\t7.5\thttps://vulners.com/cve/CVE-2018-17199",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-17199",
+        "CVE-2018-17199"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-17199\t7.5\thttps://vulners.com/cve/CVE-2018-17199"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2018-1303\t7.5\thttps://vulners.com/cve/CVE-2018-1303",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-1303",
+        "CVE-2018-1303"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-1303\t7.5\thttps://vulners.com/cve/CVE-2018-1303"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2017-9798\t7.5\thttps://vulners.com/cve/CVE-2017-9798",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-9798",
+        "CVE-2017-9798"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-9798\t7.5\thttps://vulners.com/cve/CVE-2017-9798"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2017-15710\t7.5\thttps://vulners.com/cve/CVE-2017-15710",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2017-15710",
+        "CVE-2017-15710"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2017-15710\t7.5\thttps://vulners.com/cve/CVE-2017-15710"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2016-8743\t7.5\thttps://vulners.com/cve/CVE-2016-8743",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2016-8743",
+        "CVE-2016-8743"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2016-8743\t7.5\thttps://vulners.com/cve/CVE-2016-8743"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2016-2161\t7.5\thttps://vulners.com/cve/CVE-2016-2161",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2016-2161",
+        "CVE-2016-2161"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2016-2161\t7.5\thttps://vulners.com/cve/CVE-2016-2161"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2016-0736\t7.5\thttps://vulners.com/cve/CVE-2016-0736",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2016-0736",
+        "CVE-2016-0736"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2016-0736\t7.5\thttps://vulners.com/cve/CVE-2016-0736"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2006-20001\t7.5\thttps://vulners.com/cve/CVE-2006-20001",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2006-20001",
+        "CVE-2006-20001"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2006-20001\t7.5\thttps://vulners.com/cve/CVE-2006-20001"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2025-49812\t7.4\thttps://vulners.com/cve/CVE-2025-49812",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2025-49812",
+        "CVE-2025-49812"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2025-49812\t7.4\thttps://vulners.com/cve/CVE-2025-49812"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-44185\t7.3\thttps://vulners.com/cve/CVE-2026-44185",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-44185",
+        "CVE-2026-44185"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-44185\t7.3\thttps://vulners.com/cve/CVE-2026-44185"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2023-38709\t7.3\thttps://vulners.com/cve/CVE-2023-38709",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2023-38709",
+        "CVE-2023-38709"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2023-38709\t7.3\thttps://vulners.com/cve/CVE-2023-38709"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2020-35452\t7.3\thttps://vulners.com/cve/CVE-2020-35452",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2020-35452",
+        "CVE-2020-35452"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2020-35452\t7.3\thttps://vulners.com/cve/CVE-2020-35452"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2014-0226\t6.8\thttps://vulners.com/cve/CVE-2014-0226",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2014-0226",
+        "CVE-2014-0226"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2014-0226\t6.8\thttps://vulners.com/cve/CVE-2014-0226"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-43951\t6.5\thttps://vulners.com/cve/CVE-2026-43951",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-43951",
+        "CVE-2026-43951"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-43951\t6.5\thttps://vulners.com/cve/CVE-2026-43951"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-33523\t6.5\thttps://vulners.com/cve/CVE-2026-33523",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-33523",
+        "CVE-2026-33523"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-33523\t6.5\thttps://vulners.com/cve/CVE-2026-33523"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2025-65082\t6.5\thttps://vulners.com/cve/CVE-2025-65082",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2025-65082",
+        "CVE-2025-65082"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2025-65082\t6.5\thttps://vulners.com/cve/CVE-2025-65082"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2024-24795\t6.3\thttps://vulners.com/cve/CVE-2024-24795",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2024-24795",
+        "CVE-2024-24795"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2024-24795\t6.3\thttps://vulners.com/cve/CVE-2024-24795"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-29170\t6.1\thttps://vulners.com/cve/CVE-2026-29170",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-29170",
+        "CVE-2026-29170"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-29170\t6.1\thttps://vulners.com/cve/CVE-2026-29170"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2020-1927\t6.1\thttps://vulners.com/cve/CVE-2020-1927",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2020-1927",
+        "CVE-2020-1927"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2020-1927\t6.1\thttps://vulners.com/cve/CVE-2020-1927"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2019-10098\t6.1\thttps://vulners.com/cve/CVE-2019-10098",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-10098",
+        "CVE-2019-10098"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-10098\t6.1\thttps://vulners.com/cve/CVE-2019-10098"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2019-10092\t6.1\thttps://vulners.com/cve/CVE-2019-10092",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-10092",
+        "CVE-2019-10092"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-10092\t6.1\thttps://vulners.com/cve/CVE-2019-10092"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2016-4975\t6.1\thttps://vulners.com/cve/CVE-2016-4975",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2016-4975",
+        "CVE-2016-4975"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2016-4975\t6.1\thttps://vulners.com/cve/CVE-2016-4975"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2018-1302\t5.9\thttps://vulners.com/cve/CVE-2018-1302",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-1302",
+        "CVE-2018-1302"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-1302\t5.9\thttps://vulners.com/cve/CVE-2018-1302"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2018-1301\t5.9\thttps://vulners.com/cve/CVE-2018-1301",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-1301",
+        "CVE-2018-1301"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-1301\t5.9\thttps://vulners.com/cve/CVE-2018-1301"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2020-13938\t5.5\thttps://vulners.com/cve/CVE-2020-13938",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2020-13938",
+        "CVE-2020-13938"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2020-13938\t5.5\thttps://vulners.com/cve/CVE-2020-13938"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2025-66200\t5.4\thttps://vulners.com/cve/CVE-2025-66200",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2025-66200",
+        "CVE-2025-66200"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2025-66200\t5.4\thttps://vulners.com/cve/CVE-2025-66200"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-34032\t5.3\thttps://vulners.com/cve/CVE-2026-34032",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-34032",
+        "CVE-2026-34032"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-34032\t5.3\thttps://vulners.com/cve/CVE-2026-34032"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-33857\t5.3\thttps://vulners.com/cve/CVE-2026-33857",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-33857",
+        "CVE-2026-33857"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-33857\t5.3\thttps://vulners.com/cve/CVE-2026-33857"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-33007\t5.3\thttps://vulners.com/cve/CVE-2026-33007",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-33007",
+        "CVE-2026-33007"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-33007\t5.3\thttps://vulners.com/cve/CVE-2026-33007"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-37436\t5.3\thttps://vulners.com/cve/CVE-2022-37436",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-37436",
+        "CVE-2022-37436"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-37436\t5.3\thttps://vulners.com/cve/CVE-2022-37436"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-28614\t5.3\thttps://vulners.com/cve/CVE-2022-28614",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-28614",
+        "CVE-2022-28614"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-28614\t5.3\thttps://vulners.com/cve/CVE-2022-28614"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2022-28330\t5.3\thttps://vulners.com/cve/CVE-2022-28330",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2022-28330",
+        "CVE-2022-28330"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2022-28330\t5.3\thttps://vulners.com/cve/CVE-2022-28330"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2020-1934\t5.3\thttps://vulners.com/cve/CVE-2020-1934",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2020-1934",
+        "CVE-2020-1934"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2020-1934\t5.3\thttps://vulners.com/cve/CVE-2020-1934"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2020-11985\t5.3\thttps://vulners.com/cve/CVE-2020-11985",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2020-11985",
+        "CVE-2020-11985"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2020-11985\t5.3\thttps://vulners.com/cve/CVE-2020-11985"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2019-17567\t5.3\thttps://vulners.com/cve/CVE-2019-17567",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-17567",
+        "CVE-2019-17567"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-17567\t5.3\thttps://vulners.com/cve/CVE-2019-17567"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2019-0220\t5.3\thttps://vulners.com/cve/CVE-2019-0220",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2019-0220",
+        "CVE-2019-0220"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2019-0220\t5.3\thttps://vulners.com/cve/CVE-2019-0220"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2018-1283\t5.3\thttps://vulners.com/cve/CVE-2018-1283",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2018-1283",
+        "CVE-2018-1283"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2018-1283\t5.3\thttps://vulners.com/cve/CVE-2018-1283"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2015-3183\t5.0\thttps://vulners.com/cve/CVE-2015-3183",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2015-3183",
+        "CVE-2015-3183"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2015-3183\t5.0\thttps://vulners.com/cve/CVE-2015-3183"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2015-0228\t5.0\thttps://vulners.com/cve/CVE-2015-0228",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2015-0228",
+        "CVE-2015-0228"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2015-0228\t5.0\thttps://vulners.com/cve/CVE-2015-0228"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2014-3581\t5.0\thttps://vulners.com/cve/CVE-2014-3581",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2014-3581",
+        "CVE-2014-3581"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2014-3581\t5.0\thttps://vulners.com/cve/CVE-2014-3581"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2014-3523\t5.0\thttps://vulners.com/cve/CVE-2014-3523",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2014-3523",
+        "CVE-2014-3523"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2014-3523\t5.0\thttps://vulners.com/cve/CVE-2014-3523"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2014-0231\t5.0\thttps://vulners.com/cve/CVE-2014-0231",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2014-0231",
+        "CVE-2014-0231"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2014-0231\t5.0\thttps://vulners.com/cve/CVE-2014-0231"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2014-0098\t5.0\thttps://vulners.com/cve/CVE-2014-0098",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2014-0098",
+        "CVE-2014-0098"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2014-0098\t5.0\thttps://vulners.com/cve/CVE-2014-0098"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2013-6438\t5.0\thttps://vulners.com/cve/CVE-2013-6438",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2013-6438",
+        "CVE-2013-6438"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2013-6438\t5.0\thttps://vulners.com/cve/CVE-2013-6438"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2013-5704\t5.0\thttps://vulners.com/cve/CVE-2013-5704",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2013-5704",
+        "CVE-2013-5704"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2013-5704\t5.0\thttps://vulners.com/cve/CVE-2013-5704"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-33006\t4.8\thttps://vulners.com/cve/CVE-2026-33006",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-33006",
+        "CVE-2026-33006"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-33006\t4.8\thttps://vulners.com/cve/CVE-2026-33006"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2016-8612\t4.3\thttps://vulners.com/cve/CVE-2016-8612",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2016-8612",
+        "CVE-2016-8612"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2016-8612\t4.3\thttps://vulners.com/cve/CVE-2016-8612"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2015-3185\t4.3\thttps://vulners.com/cve/CVE-2015-3185",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2015-3185",
+        "CVE-2015-3185"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2015-3185\t4.3\thttps://vulners.com/cve/CVE-2015-3185"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2014-8109\t4.3\thttps://vulners.com/cve/CVE-2014-8109",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2014-8109",
+        "CVE-2014-8109"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2014-8109\t4.3\thttps://vulners.com/cve/CVE-2014-8109"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2014-0118\t4.3\thttps://vulners.com/cve/CVE-2014-0118",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2014-0118",
+        "CVE-2014-0118"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2014-0118\t4.3\thttps://vulners.com/cve/CVE-2014-0118"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2014-0117\t4.3\thttps://vulners.com/cve/CVE-2014-0117",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2014-0117",
+        "CVE-2014-0117"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2014-0117\t4.3\thttps://vulners.com/cve/CVE-2014-0117"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-44186\t0.0\thttps://vulners.com/cve/CVE-2026-44186",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-44186",
+        "CVE-2026-44186"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-44186\t0.0\thttps://vulners.com/cve/CVE-2026-44186"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-44119\t0.0\thttps://vulners.com/cve/CVE-2026-44119",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-44119",
+        "CVE-2026-44119"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-44119\t0.0\thttps://vulners.com/cve/CVE-2026-44119"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |     \tCVE-2026-42535\t0.0\thttps://vulners.com/cve/CVE-2026-42535",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-42535",
+        "CVE-2026-42535"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|     \tCVE-2026-42535\t0.0\thttps://vulners.com/cve/CVE-2026-42535"
+      }
+    },
+    {
+      "title": "cpe on port 8091: |_    \tCVE-2026-29167\t0.0\thttps://vulners.com/cve/CVE-2026-29167",
+      "severity": "high",
+      "source": "nmap_vuln",
+      "cve_ids": [
+        "CVE-2026-29167",
+        "CVE-2026-29167"
+      ],
+      "evidence": {
+        "port": 8091,
+        "script": "cpe",
+        "line": "|_    \tCVE-2026-29167\t0.0\thttps://vulners.com/cve/CVE-2026-29167"
+      }
+    },
+    {
       "title": "[FAIL] Unable to connect to 192.168.1.73:3000.",
       "severity": "low",
       "source": "nikto",
@@ -1826,7 +4838,7 @@
     "nikto",
     "header_vuln_check"
   ],
-  "duration_s": 459.593469500076,
+  "duration_s": 475.60242145787925,
   "replans": 4,
   "decisions": [
     {

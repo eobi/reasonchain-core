@@ -2,9 +2,15 @@
 
 Reference implementation of **ReasonChain** — a closed-loop LLM architecture for autonomous multi-tool cybersecurity assessment — and the empirical evaluation that backs the research paper:
 
-> **Obi Ebuka David, Sayed Erfan Arefin.** *PENTAGON: Can Closed-Loop LLM Reasoning Achieve Autonomous Multi-Tool Cybersecurity Assessment?* (in submission).
->
+> **Obi Ebuka David, Sayed Erfan Arefin.**
+> *PENTAGON: Can Closed-Loop LLM Reasoning Achieve Autonomous Multi-Tool Cybersecurity Assessment?* (in submission).
 > University of Dayton, Department of Computer Science.
+
+**📄 [Read the paper (PDF)](paper/paper.pdf)** · 📊 [Matrix report](reports/matrix_report.pdf) · 🔍 [Live deep scan](reports/juiceshop_deep.pdf) · 📓 [Analysis notebook](notebooks/h1_h2_h3_analysis.ipynb)
+
+## TL;DR
+
+Across 17 OWASP-class web targets and 68 ablation cells, the closed-loop condition surfaces **+2375%** more findings than no-replan (Wilcoxon p=0.0001, Cohen d=52.9 with one outlier excluded). Cross-tool fusion contributes a further **+213%** lift via fact-coupled NSE invocation. Live, the agent surfaces **CVE-2024-38476** (Apache mod_rewrite SSRF, CVSS 9.8) and 313 other real CVE-class findings against an Apache 2.4.7 on the test LAN. Every number in the paper is regenerable from a clean `git clone`.
 
 This repo is the **public, MIT-licensed core** of the architecture. Production extensions, premium engines, multi-tenant auth, SSH-to-Kali execution, and other commercial-only features live in a separate private repository (Pentagon).
 
