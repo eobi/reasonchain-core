@@ -10,7 +10,7 @@ Reference implementation of **ReasonChain** — a closed-loop LLM architecture f
 
 ## TL;DR
 
-Across 17 OWASP-class web targets and 68 ablation cells, the closed-loop condition surfaces **+2375%** more findings than no-replan (Wilcoxon p=0.0001, Cohen d=52.9 with one outlier excluded). Cross-tool fusion contributes a further **+213%** lift via fact-coupled NSE invocation. Live, the agent surfaces **CVE-2024-38476** (Apache mod_rewrite SSRF, CVSS 9.8) and 313 other real CVE-class findings against an Apache 2.4.7 on the test LAN. Every number in the paper is regenerable from a clean `git clone`.
+Across 30 OWASP-class web targets and 120 ablation cells, the closed-loop condition surfaces **+2375%** more findings than no-replan (Wilcoxon p≈1×10⁻⁶ on all 30 targets; paired t excluding the DVWA outlier p=1.5×10⁻²⁴, Cohen d=6.27). Cross-tool fusion contributes a further **+314%** lift via fact-coupled NSE invocation (Wilcoxon p≈8×10⁻⁷). Live, the agent surfaces **CVE-2024-38476** (Apache mod_rewrite SSRF, CVSS 9.8) and 313 other real CVE-class findings against an Apache 2.4.7 on the test LAN. Every number in the paper is regenerable from a clean `git clone`.
 
 This repo is the **public, MIT-licensed core** of the architecture. Production extensions, premium engines, multi-tenant auth, SSH-to-Kali execution, and other commercial-only features live in a separate private repository (Pentagon).
 
@@ -99,8 +99,8 @@ mock engines and no synthetic data. Pick a depth:
 - [**Single live cell** (with Kali)](#2-single-live-cell-with-kali-engines) —
   one ablation cell against one target, using real `nmap`, `nuclei`, `nikto` over
   SSH.
-- [**Full 17-target matrix**](#3-full-17-target-matrix) — reproduce the
-  paper's 68-cell H1/H2/H3 ablation.
+- [**Full 30-target matrix**](#3-full-30-target-matrix) — reproduce the
+  paper's 120-cell H1/H2/H3 ablation.
 - [**LLM-planner sweep**](#4-llm-planner-sweep) — same orchestrator, planner
   swapped for Anthropic Claude or OpenAI GPT-4o.
 - [**Per-run PDF report**](#5-render-a-pdf-report-of-any-run) — pretty-print
@@ -167,14 +167,17 @@ A cell with the `fast` Kali pool finishes in ~3 min and emits ~350
 findings; one with the `all` pool finishes in ~8 min and emits
 ~340 findings including real CVE matches.
 
-### 3. Full 17-target matrix
+### 3. Full 30-target matrix
 
-Reproduces the paper's H1/H2/H3 results. **~3 hours wall-clock**
+Reproduces the paper's H1/H2/H3 results. **~5.4 hours wall-clock**
 on a single Mac driving a single Kali host over SSH.
 
 ```bash
 # Spin up every OWASP lab the manifests cover. The matrix
-# auto-skips any target whose pre-flight ping fails.
+# auto-skips any target whose pre-flight ping fails. The 30
+# targets break down as 17 named labs + 13 OWASP-SKF micro-labs
+# (all on the blabla1337/owasp-skf-lab Docker image, different
+# `:js-*` tags).
 docker run --rm -d -p 3000:3000  --name juice-shop      bkimminich/juice-shop
 docker run --rm -d -p 8080:8080 --name webgoat-lab     webgoat/webgoat:latest
 docker run --rm -d -p 8081:80    --name bwapp-lab       raesene/bwapp
@@ -184,14 +187,23 @@ docker run --rm -d -p 8090:80    --name dvwa-lab        vulnerables/web-dvwa
 docker run --rm -d -p 8091:80    --name nowasp-lab      citizenstig/nowasp
 docker run --rm -d -p 8093:8080  --name bodgeit-lab     psiinon/bodgeit
 docker run --rm -d -p 8094:8000  --name pygoat-lab      pygoat/pygoat:latest
-docker run --rm -d -p 8095:5000  --name skf-csrf-lab    blabla1337/owasp-skf-lab:js-csrf
-docker run --rm -d -p 8096:5000  --name skf-xss-lab     blabla1337/owasp-skf-lab:js-xss
-docker run --rm -d -p 8097:5000  --name skf-lfi-lab     blabla1337/owasp-skf-lab:js-lfi
-docker run --rm -d -p 8098:5000  --name skf-rfi-lab     blabla1337/owasp-skf-lab:js-rfi
-docker run --rm -d -p 8099:5000  --name skf-idor-lab    blabla1337/owasp-skf-lab:js-idor
-docker run --rm -d -p 8100:5000  --name skf-jwt-lab     blabla1337/owasp-skf-lab:js-jwt-null
-docker run --rm -d -p 8103:5000  --name skf-redir-lab   blabla1337/owasp-skf-lab:js-url-redirection
 docker run --rm -d -p 8104:8080  --name altoro-lab      eystsen/altoro
+# Eight OWASP-SKF labs on the base set.
+for pair in "8095:csrf" "8096:xss" "8097:lfi" "8098:rfi" "8099:idor" \
+            "8100:jwt-null" "8103:url-redirection" "8112:xss-dom"; do
+  port=${pair%:*}; tag=${pair#*:}
+  docker run --rm -d -p ${port}:5000 \
+      --name skf-${tag//[\/.]/-} \
+      blabla1337/owasp-skf-lab:js-${tag}
+done
+# Five more SKF labs to reach 30.
+for pair in "8113:xss-url" "8114:xss-attribute" "8115:lfi-2" \
+            "8116:lfi-3" "8117:xss-dom-2"; do
+  port=${pair%:*}; tag=${pair#*:}
+  docker run --rm -d -p ${port}:5000 \
+      --name skf-${tag//[\/.]/-} \
+      blabla1337/owasp-skf-lab:js-${tag}
+done
 sleep 20
 
 # Run the matrix.

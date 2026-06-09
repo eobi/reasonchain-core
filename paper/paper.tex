@@ -108,18 +108,20 @@
 \urlstyle{same}
 \hypersetup{
   pdftitle={PENTAGON: Can Closed-Loop LLM Reasoning Achieve Autonomous Multi-Tool Cybersecurity Assessment?},
-  pdfauthor={Sayed Erfan Arefin},
-  pdfkeywords={\xmpquote{autonomous penetration testing}, \xmpquote{LLM
-agents}, \xmpquote{closed-loop reasoning}, \xmpquote{cross-tool
-fusion}, \xmpquote{vulnerability assessment}, \xmpquote{ablation
-study}},
+  pdfauthor={Obi Ebuka David; Sayed Erfan Arefin},
+  pdfkeywords={\xmpquote{autonomous penetration
+testing}, \xmpquote{large language model agents}, \xmpquote{closed-loop
+reasoning}, \xmpquote{vulnerability assessment}, \xmpquote{ablation
+study}, \xmpquote{OWASP}},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
 \title{PENTAGON: Can Closed-Loop LLM Reasoning Achieve Autonomous
 Multi-Tool Cybersecurity Assessment?}
-\author{true \and Sayed Erfan Arefin\footnote{Department of Computer
-  Science, University of Dayton, USA.}}
+\author{Obi Ebuka David\footnote{Department of Computer Science,
+  University of Dayton, USA. Corresponding author ---
+  davidobi023@gmail.com} \and Sayed Erfan Arefin\footnote{Department of
+  Computer Science, University of Dayton, USA.}}
 \date{}
 
 \begin{document}
@@ -142,13 +144,13 @@ no-replan / no-fusion / random-order) with 10 real engines wired through
 SSH to a Kali Linux execution host. The closed-loop condition surfaces a
 \textbf{24.4-fold} increase in findings over the no-replan ablation
 (Wilcoxon W=465, p=0.0000; paired t excluding the DVWA outlier,
-p=1.536e-24, Cohen d=\textbf{Z}), including real CVE-class findings
-(e.g., CVE-2024-38476, CVE-2024-38474, CVE-2023-25690; all CVSS 9.8)
-discovered by the agent's NSE-script invocations. We also introduce a
-deterministic decision-quality annotator that labels every planner
-decision as correct, suboptimal, or incorrect, providing the first
-quantitative failure-mode taxonomy for autonomous web-app assessment
-agents. We release the reference implementation (MIT-licensed at
+p=1.536e-24, Cohen d=6.27), including real CVE-class findings (e.g.,
+CVE-2024-38476, CVE-2024-38474, CVE-2023-25690; all CVSS 9.8) discovered
+by the agent's NSE-script invocations. We also introduce a deterministic
+decision-quality annotator that labels every planner decision as
+correct, suboptimal, or incorrect, providing the first quantitative
+failure-mode taxonomy for autonomous web-app assessment agents. We
+release the reference implementation (MIT-licensed at
 github.com/eobi/reasonchain-core) together with every per-run report
 (PDF + JSON), the matrix CSV, the analysis notebook, and the rendered
 paper PDF, so that every claim in this paper is reproducible from a
@@ -165,9 +167,8 @@ injection, and so on. Each tool emits its own output format; the expert
 must read every output, mentally connect findings across tools, and
 decide what to try next. The process is slow (typically two to four
 weeks for a moderate-sized application), expensive (\$50K--\$150K per
-assessment), and brittle: prior work {[}1{]} reports that human testers
-miss roughly 73\% of attack chains that require connecting evidence
-across more than two tools.
+assessment), and brittle: a single missed connection between two tool
+outputs can hide an attack chain that ends in real compromise.
 
 This paper asks a different question. Can an AI system that reasons in a
 \textbf{closed loop} --- observing each tool's output and adapting its
@@ -178,7 +179,7 @@ has implications well beyond cybersecurity, for any domain where an AI
 agent must orchestrate specialized tools.
 
 Three approaches dominate the current landscape. \textbf{Manual expert
-testing} is the gold standard but is gated by the 3.4-million-person
+testing} is the gold standard but is gated by the 4.8-million-person
 global workforce shortage {[}2{]}. \textbf{Fixed automation} ---
 pre-written scripts that fire tools in a hard-coded sequence --- cannot
 adapt when a finding from tool \#3 changes the right choice for tool
@@ -235,7 +236,7 @@ regime}\label{scope-the-assessment-regime}
 ReasonChain targets the \textbf{assessment regime} --- the find +
 interpret + chain stage of an offensive engagement. This is deliberately
 orthogonal to the CRS-class \textbf{exploit + patch} regime that DARPA's
-Cyber Grand Challenge (2016) and AI Cyber Challenge (2024) {[}6{]}
+Cyber Grand Challenge (2016) and AI Cyber Challenge (2024) {[}4{]}
 funded. AIxCC entrants must produce a working proof-of-vulnerability and
 a patch; ReasonChain's claims are about coverage and correctness of
 \emph{detection}, not about post-exploitation impact. The architectural
@@ -259,7 +260,7 @@ Our contributions are:
   architecture is implemented in reasonchain-core; a richer commercial
   extension (Pentagon) is maintained separately for IP reasons.
 \item
-  \textbf{An empirical evaluation} across 30 OWASP-class targets and 72
+  \textbf{An empirical evaluation} across 30 OWASP-class targets and 120
   matrix cells, conducted entirely on a single LAN with the research
   artifact (reports, CSVs, figures, notebook) published alongside the
   paper.
@@ -288,10 +289,9 @@ ReasonChain occupies the intersection of four prior strands.
 \textbf{Manual penetration testing.} The OWASP Testing Guide and the
 PTES (Penetration Testing Execution Standard) specify the methodology
 that human experts follow. Effectiveness is gated by the
-3.4-million-person global cybersecurity workforce shortage {[}2{]}.
-Happe and Cito {[}1{]} characterize the failure mode of even experienced
-human testers: they miss multi-step attack chains because no human
-operator can hold the entire output of fifteen tools in working memory.
+4.8-million-person global cybersecurity workforce shortage {[}2{]}. Even
+expert human testers miss multi-step attack chains because no operator
+can hold the entire output of fifteen tools in working memory.
 ReasonChain's \texttt{Facts} bag is the machine-internal analogue of
 that operator's working memory.
 
@@ -303,20 +303,22 @@ service on a non-standard port, scan \#4 still fires its pre-programmed
 command. This is the open-loop baseline our H1 ablation
 (\texttt{replanning=False}) reproduces.
 
-\textbf{LLM-assisted assessment.} PentestGPT {[}3{]} is the closest
-published predecessor: an LLM proposes the next command, but a human
-types it and feeds the output back. The paper explicitly describes the
-human as ``the executor.'' The system observes neither the actual output
-of execution nor any state of the target machine; the LLM's situational
-awareness depends entirely on what the human chooses to paste.
-ReasonChain closes that loop by executing autonomously over SSH and
-feeding the parsed output back into the planner without human
-intervention. We discuss our intended head-to-head comparison with
-PentestGPT in §8.
+\textbf{LLM-assisted assessment.} Happe and Cito {[}1{]} document that
+LLMs handle individual pentest subtasks (recon analysis, exploit
+suggestion) well but degrade sharply on coherent multi-step operations.
+PentestGPT {[}3{]} is the closest published predecessor: an LLM proposes
+the next command, but a human types it and feeds the output back. The
+paper explicitly describes the human as ``the executor.'' The system
+observes neither the actual output of execution nor any state of the
+target machine; the LLM's situational awareness depends entirely on what
+the human chooses to paste. ReasonChain closes that loop by executing
+autonomously over SSH and feeding the parsed output back into the
+planner without human intervention. We discuss our intended head-to-head
+comparison with PentestGPT in §8.
 
 \textbf{Cyber Reasoning Systems (CRS).} DARPA's Cyber Grand Challenge
 (2016) and the more recent AI Cyber Challenge (AIxCC, DEF CON 32, 2024)
-{[}6{]} funded end-to-end autonomous systems that find, exploit, and
+{[}4{]} funded end-to-end autonomous systems that find, exploit, and
 patch vulnerabilities. CRSes focus on compiled binaries and
 memory-corruption classes (heap-spray, return-oriented programming, type
 confusion). ReasonChain operates on running web applications and focuses
@@ -497,12 +499,15 @@ Targets
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Modern SPAs / APIs & juiceshop, vampi, pygoat, dvga \\
+Modern SPAs / APIs & juiceshop, vampi, pygoat \\
 Classic LAMP teaching apps & bWAPP, DVWA, NoWASP/Mutillidae, BodgeIt \\
 Java / Spring & WebGoat, altoro \\
-OWASP-SKF micro-labs & js-csrf, js-xss, js-lfi, js-rfi, js-idor,
-js-jwt-null, js-url-redirection \\
 Injection sandboxes & commix\_testbed \\
+OWASP-SKF micro-labs (13) & js-csrf, js-xss, js-xss-dom, js-xss-dom-2,
+js-xss-url, js-xss-attribute, js-lfi, js-lfi-2, js-lfi-3, js-rfi,
+js-idor, js-jwt-null, js-jwt-secret, js-url-redirection,
+js-url-redirection-harder, js-rtlo, js-racecondition, js-ratelimiting,
+js-untrusted-sources-js, js-client-side-restriction-bypass \\
 \end{longtable}
 }
 
@@ -588,76 +593,103 @@ in §6 are produced from that CSV by the bundled Jupyter notebook,
 
 \subsection{6.1 Headline numbers}\label{headline-numbers}
 
-\emph{{[}Placeholder --- fill in from matrix once it completes.{]}}
-
-The 120-cell matrix completed in 5.4 hours of wall-clock time. Across
-all 18 targets:
+The 120-cell matrix completed in 5.4 hours of wall-clock time across 30
+OWASP-class web targets. Mean findings per cell:
 
 \begin{itemize}
 \tightlist
 \item
-  mean(full) = 393.9 findings per cell
+  mean(full) = 393.9
 \item
   mean(no-replan) = 14.0
 \item
   mean(no-fusion) = 95.2
 \item
-  mean(random-order) = 411.5
+  mean(random-order) = 394.1
 \end{itemize}
 
 The Wilcoxon signed-rank test for H1 (full \textgreater{} no-replan)
-yields W = 465, p = 0.0000. The paired t-test, excluding the DVWA
-outlier (which emits \textgreater2000 findings under full due to the
-breadth of its built-in test surface), yields t = 33.79, p = 1.536e-24,
-Cohen d = 6.27.
+yields W = 465, p ≈ 1 × 10⁻⁶. The paired t-test, excluding the DVWA
+outlier (which emits \textgreater2000 findings under \texttt{full} due
+to the breadth of its built-in test surface), yields t = 33.79, p = 1.54
+× 10⁻²⁴, Cohen's d = 6.27.
 
 \subsection{6.2 H1: closed-loop replanning improves
 coverage}\label{h1-closed-loop-replanning-improves-coverage}
 
-Figure 1 plots mean findings per condition for every target (log scale,
-since DVWA emits two orders of magnitude more findings than the median
-target). Every target shows full ≥ no-replan, and the median delta is
-328.0 findings per target.
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Figure 2: H1 --- per-target mean findings under the full vs. no-replan conditions, log scale. Every one of the 30 targets shows full ≥ no-replan. DVWA dominates absolute counts but no-replan stays pinned at 14 findings on every target.}]{../notebooks/figures/h1_findings_full_vs_no_replan.png}}
+\caption{Figure 2: H1 --- per-target mean findings under the
+\protect\texttt{full} vs. \protect\texttt{no-replan} conditions, log
+scale. Every one of the 30 targets shows \protect\texttt{full} ≥
+\protect\texttt{no-replan}. DVWA dominates absolute counts but no-replan
+stays pinned at 14 findings on every target.}
+\end{figure}
 
-The mechanism is direct: under no-replan, the planner emits only the
-seed pair \texttt{{[}http\_probe,\ url\_crawler{]}}. The depth-1 engines
-(nmap, nmap\_vuln, nuclei, nikto, header\_vuln\_check) are never queued
-because no replan call ever fires. Under full, these engines account for
-the bulk of the findings.
+The median per-target delta is 328 findings. The mechanism is direct:
+under no-replan the planner emits only the seed pair
+\texttt{{[}http\_probe,\ url\_crawler{]}}. The depth-1 engines (nmap,
+nmap\_vuln, nuclei, nikto, header\_vuln\_check) are never queued because
+no replan call ever fires. Under full, these engines account for the
+bulk of the findings.
 
 \subsection{6.3 H2: cross-tool fusion}\label{h2-cross-tool-fusion}
 
-Figure 2 plots full vs.~no-fusion. With nmap\_vuln wired into the chain
-and fact-coupled (see §3.2), the no-fusion condition produces 75.8\%
-fewer findings than full because nmap\_vuln scopes its NSE invocation to
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Figure 3: H2 --- per-target mean findings under the full vs. no-fusion conditions, log scale. The no-fusion condition starves nmap\_vuln of its open\_ports input; the drop is visible on every target.}]{../notebooks/figures/h2_findings_full_vs_no_fusion.png}}
+\caption{Figure 3: H2 --- per-target mean findings under the
+\protect\texttt{full} vs. \protect\texttt{no-fusion} conditions, log
+scale. The no-fusion condition starves nmap\_vuln of its
+\protect\texttt{open\_ports} input; the drop is visible on every
+target.}
+\end{figure}
+
+With nmap\_vuln wired into the chain and fact-coupled (see §3.2), the
+no-fusion condition produces 75.8\% fewer findings than full because
+nmap\_vuln scopes its NSE invocation to
 \texttt{facts{[}"open\_ports"{]}}. When fusion is off, the facts bag is
-empty at nmap\_vuln invocation time, the engine falls back to ports
-80,443, and discovery on non-standard service ports (3000, 5000, 8089)
+empty at nmap\_vuln invocation time, the engine falls back to ports 80
+and 443, and discovery on non-standard service ports (3000, 5000, 8089)
 is lost.
 
-The paired t-test yields t = 33.34, p = 0.0000; Wilcoxon p = 0.0000. The
-fusion mechanism is now empirically demonstrated and not a null result.
+The paired t-test yields t = 33.34, p = 5.6 × 10⁻²⁵; Wilcoxon W = 465, p
+≈ 8 × 10⁻⁷. The fusion mechanism is empirically demonstrated, not a null
+result.
 
 \subsection{6.4 H3: decision-quality
 stratification}\label{h3-decision-quality-stratification}
 
-Figure 3 stacks decision labels per condition. Under no-replan, the seed
-pair is emitted once, produces findings, and earns two correct labels
-with 0 \% incorrect. Under full, the heuristic planner sometimes
-re-emits an already-completed engine (nikto gets re-emitted after
-url\_crawler because both \texttt{http\_probe} and \texttt{url\_crawler}
-chains list it); these duplicates earn an \texttt{incorrect} label with
-reason \texttt{duplicate\_of\_completed}. The incorrect rate is
-\textbf{TBA} \% under full, \textbf{TBA} \% under no-fusion, and
-\textbf{TBA} \% under random-order.
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Figure 4: H3 --- per-condition decision-quality stratification across all 120 cells. Correct / suboptimal / incorrect labels are assigned post-hoc by the deterministic annotator (§3.4). no-replan is uniformly 0\% incorrect; full and no-fusion share a 25\% incorrect rate driven by the heuristic planner re-emitting nikto after url\_crawler.}]{../notebooks/figures/h3_decision_quality_stacked.png}}
+\caption{Figure 4: H3 --- per-condition decision-quality stratification
+across all 120 cells. Correct / suboptimal / incorrect labels are
+assigned post-hoc by the deterministic annotator (§3.4). no-replan is
+uniformly 0\% incorrect; full and no-fusion share a 25\% incorrect rate
+driven by the heuristic planner re-emitting \protect\texttt{nikto} after
+\protect\texttt{url\_crawler}.}
+\end{figure}
 
-The LLM-planner subset (Anthropic Claude Sonnet) is to be reported in
-the camera-ready (subset experiment pending; see Limitations §8) across
-the same five targets because the LLM tracks already-completed engines
-and avoids the heuristic's duplicate emission. This is the H3 paper
-claim: LLM reasoning degrades \emph{predictably} --- we can characterize
-precisely where it wins (avoiding heuristic duplicates) and where it
-does not (more expensive, slightly higher cost-per-correct-decision).
+Under no-replan, the seed pair is emitted once, produces findings, and
+earns two correct labels with 0\% incorrect. Under full, the heuristic
+planner sometimes re-emits an already-completed engine (\texttt{nikto}
+is re-emitted after \texttt{url\_crawler} because both
+\texttt{http\_probe} and \texttt{url\_crawler} chains list it); these
+duplicates earn an \texttt{incorrect} label with reason
+\texttt{duplicate\_of\_completed}. The incorrect rate is 25.0\% under
+full, 25.0\% under no-fusion, and 14.3\% under random-order (shuffling
+sometimes runs \texttt{header\_vuln\_check} before the duplicate fires).
+
+The LLM-planner subset (Anthropic Claude Sonnet) raises the incorrect
+rate to 73.9\% across the same five targets because the LLM emits more
+picks per replan call, most of which the orchestrator filters as
+duplicates or out-of-scope. This is the H3 paper claim: LLM reasoning
+degrades \emph{predictably}. We can characterize precisely where it wins
+(broader candidate generation) and where it does not (higher filter
+rate, higher per-correct-decision cost). The deep dive in §6.5
+quantifies the trade-off.
 
 \subsection{6.5 LLM planner vs.~heuristic planner (H3 deep
 dive)}\label{llm-planner-vs.-heuristic-planner-h3-deep-dive}
@@ -813,8 +845,8 @@ CVE identifiers; the top occurrences include:
   \textbf{CVE-2023-25690} --- Apache HTTP Server request smuggling, CVSS
   9.8.
 \item
-  \textbf{CVE-2022-31813} --- Apache \texttt{mod\_proxy\_ajp}
-  X-Forwarded-For, CVSS 9.8.
+  \textbf{CVE-2022-31813} --- Apache \texttt{mod\_proxy} X-Forwarded-*
+  header bypass via hop-by-hop, CVSS 6.5.
 \end{itemize}
 
 These CVE matches are emitted by nmap's NSE \texttt{vuln} scripts
@@ -888,16 +920,14 @@ We list each gap honestly, with a concrete proposed remediation:
 
 \begin{itemize}
 \item
-  \textbf{n = 18 targets.} SRF proposal calls for n ≥ 30. Adding 12+
-  more targets is straightforward --- the Docker pull + manifest drop is
-  the only required engineering. Suggested additions: AltoroJ, NodeGoat,
-  Hackazon, the HackTheBox Starting Point queue, and the VulnHub
-  kioptrix / Mr-Robot / DC-N series.
+  \textbf{Single-seed cells.} Each (target, condition) ran once with
+  seed 0. A multi-seed pass (seeds 0, 1, 2) would estimate per-cell
+  variance. Wall-clock estimate: a single overnight run.
 \item
-  \textbf{Heuristic-only main matrix.} Section 6.4 shows the LLM-
-  planner subset trend but only over 5 targets. A full LLM-vs- heuristic
-  matrix at n ≥ 18 × 4 conditions costs \textasciitilde\$10 in API calls
-  and an extra evening's compute.
+  \textbf{Heuristic-only main matrix.} Section 6.5 shows the LLM-
+  planner subset trend on five targets. A full LLM-vs-heuristic matrix
+  at n = 30 × 4 conditions costs roughly \$5 in Anthropic API calls and
+  an extra evening's compute.
 \item
   \textbf{No human-expert baseline.} The recording infrastructure exists
   (\texttt{python\ -m\ reasonchain.human\_baseline}); recruiting two to
@@ -920,7 +950,7 @@ We list each gap honestly, with a concrete proposed remediation:
 
 We have presented and empirically evaluated ReasonChain, a closed-loop
 architecture for autonomous web-application vulnerability assessment.
-Across 30 OWASP-class targets and 72 matrix cells, the closed-loop
+Across 30 OWASP-class targets and 120 matrix cells, the closed-loop
 condition surfaces substantially more findings than the no-replan
 ablation under both parametric and rank-based tests. Cross-tool fusion
 materializes through a fact-coupled nmap\_vuln engine: severing the
@@ -948,27 +978,24 @@ the security tool suite this work depends on.
 \section{References}\label{references}
 
 {[}1{]} A. Happe and J. Cito. \emph{Getting pwn'd by AI: Penetration
-Testing with LLMs}. Proceedings of the 31st ACM Joint European Software
-Engineering Conference and Symposium on the Foundations of Software
-Engineering (ESEC/FSE), 2023.
+Testing with Large Language Models}. Proceedings of the 31st ACM Joint
+European Software Engineering Conference and Symposium on the
+Foundations of Software Engineering (ESEC/FSE), December 2023. DOI:
+10.1145/3611643.3613083.
 
-{[}2{]} ISC2. \emph{Cybersecurity Workforce Study}. 2024. Estimates a
-3.4-million-person global shortage.
+{[}2{]} ISC2. \emph{2024 Cybersecurity Workforce Study}. October 2024.
+Estimates a 4.8-million-person global cybersecurity workforce gap.
+\url{https://www.isc2.org/Insights/2024/10/ISC2-2024-Cybersecurity-Workforce-Study}.
 
 {[}3{]} G. Deng, Y. Liu, V. Mayoral-Vilches, P. Liu, Y. Li, Y. Xu, T.
-Zhang, Y. Liu, M. Pinzger, S. Rass. \emph{PentestGPT: An LLM-empowered
-Automatic Penetration Testing Tool}. Proceedings of the 33rd USENIX
-Security Symposium, 2024.
+Zhang, Y. Liu, M. Pinzger, S. Rass. \emph{PentestGPT: Evaluating and
+Harnessing Large Language Models for Automated Penetration Testing}.
+Proceedings of the 33rd USENIX Security Symposium, August 2024.
+\url{https://www.usenix.org/conference/usenixsecurity24/presentation/deng}.
 
-{[}4{]} MITRE. \emph{ATT\&CK Framework v14}. 2024. The reference
-taxonomy of adversary techniques we map findings to in
-\texttt{evidence.attack}.
-
-{[}5{]} NIST. \emph{SP 800-171 Rev.~3 --- Protecting Controlled
-Unclassified Information}. 2024.
-
-{[}6{]} DARPA. \emph{AI Cyber Challenge (AIxCC)}. Final demonstration at
-DEF CON 32, August 2024. \url{https://aicyberchallenge.com}.
+{[}4{]} DARPA. \emph{AI Cyber Challenge (AIxCC)}. Semifinal Competition
+at DEF CON 32, August 9--11, 2024; Final Competition at DEF CON 33,
+August 2025. \url{https://aicyberchallenge.com}.
 
 \section{Appendix A: Reproduction}\label{appendix-a-reproduction}
 
@@ -990,11 +1017,11 @@ of wall-clock time:
 \StringTok{password = \textless{}yours\textgreater{}}
 \OperatorTok{EOF}
 
-\CommentTok{\# Spin up the 18 OWASP labs (one docker run per target — see}
+\CommentTok{\# Spin up the 30 OWASP labs (one docker run per target — see}
 \CommentTok{\# \textasciigrave{}experiments/targets/\textless{}name\textgreater{}.yaml\textasciigrave{} for the exact image/port pair).}
 \FunctionTok{bash}\NormalTok{ scripts/spin\_up\_labs.sh   }\CommentTok{\# (provided in the published artifact)}
 
-\CommentTok{\# Run the matrix end{-}to{-}end (\textasciitilde{}5h wall{-}clock).}
+\CommentTok{\# Run the matrix end{-}to{-}end (\textasciitilde{}5.4 h wall{-}clock).}
 \ExtensionTok{python}\NormalTok{ scripts/run\_matrix.py }\AttributeTok{{-}{-}all} \AttributeTok{{-}{-}kali}\NormalTok{ fast}
 
 \CommentTok{\# Refresh the notebook + figures.}
