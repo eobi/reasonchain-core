@@ -157,73 +157,61 @@ def render_fig5() -> None:
             color=COL_FUSION_EDGE, fontweight="bold")
     _arrow(ax, 5.5, 7.45, 5.5, 7.15, color=COL_FUSION_EDGE)
 
-    # Iteration rows: y from 6.65 (top) down to 2.7 (bottom of last)
-    # Each row: EXECUTE → PARSE → KG UPDATE  + REPLAN annotation
+    # Iteration rows. Spacing tuned so iter labels sit fully above the
+    # EXECUTE box top and the box bottom sits clearly above the next
+    # iter's label. REPLAN content moved to the caption (was an
+    # in-figure annotation, but the yellow tooltip crowded the next
+    # iter's label band).
     iter_specs = [
-        # (y_top, label, exec, parse, kg, replan)
-        (6.55,
+        # (y_top, label, exec, parse, kg)
+        (6.20,
          "iter 1: http_probe",
          "urllib GET\nhttp://...:3000/",
          "200 OK · Server: nginx/1.18.0\nX-Powered-By: Express",
-         "+ {server_header, x_powered_by}",
-         "_CHAINS[http_probe] → [nmap, header_vuln_check, nikto]"),
-        (5.40,
+         "+ {server_header, x_powered_by}"),
+        (4.85,
          "iter 2: nmap (over SSH→Kali)",
          "ssh kali 'nmap -sV -p- 192.168.1.73'",
          "10 open ports:  80, 443, 3000, 5000, 8080,\n"
          "8089, 8090, 8091, 8093, 8094",
          "+ {open_ports: [80,443,3000,5000,8080,\n"
-         "  8089,8090,8091,8093,8094]}",
-         "_CHAINS[nmap] → [nmap_vuln, nuclei]"),
-        (4.25,
+         "  8089,8090,8091,8093,8094]}"),
+        (3.50,
          "iter 3: nmap_vuln  (★ fact-coupled)",
          "ssh kali 'nmap --script vuln\n"
          "-p {facts[open_ports]} 192.168.1.73'",
          "317 findings · port 8089 → CVE-2024-38476 (9.8)\n"
          "  CVE-2024-38474 (9.8) · CVE-2023-25690 (9.8)",
          "+ {vulnerable_ports: [8089,8090,8091],\n"
-         "  cve_matches: [CVE-2024-38476, ...]}",
-         "_CHAINS[nmap_vuln] → []  (terminal)"),
+         "  cve_matches: [CVE-2024-38476, ...]}"),
     ]
 
-    for y_top, label, ex, pa, kg, rp in iter_specs:
-        # Iteration label band
-        ax.text(0.6, y_top + 0.4, label,
+    for y_top, label, ex, pa, kg in iter_specs:
+        # Iteration label (well above the box top to avoid edge overlap)
+        ax.text(0.6, y_top + 0.55, label,
                 ha="left", va="center", fontsize=8.5,
                 color="#7c2d12", fontweight="bold")
         # Three execution blocks
-        _box(ax, 0.55, y_top - 0.55, 2.85, 0.85,
+        _box(ax, 0.55, y_top - 0.55, 2.85, 0.95,
              "EXECUTE", sub=ex,
              edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
              label_size=8, sub_size=6.5)
-        _box(ax, 3.65, y_top - 0.55, 3.6, 0.85,
+        _box(ax, 3.65, y_top - 0.55, 3.6, 0.95,
              "PARSE → findings", sub=pa,
              edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
              label_size=8, sub_size=6.5)
-        _box(ax, 7.45, y_top - 0.55, 3.2, 0.85,
+        _box(ax, 7.45, y_top - 0.55, 3.2, 0.95,
              "KG UPDATE (Facts.merge)", sub=kg,
              edge=COL_FUSION_EDGE, face=COL_FUSION_FACE,
              label_size=8, sub_size=6.5)
-        _arrow(ax, 3.4, y_top - 0.13, 3.65, y_top - 0.13,
+        _arrow(ax, 3.4, y_top - 0.08, 3.65, y_top - 0.08,
                color=COL_NEUTRAL_EDGE, lw=1.0)
-        _arrow(ax, 7.25, y_top - 0.13, 7.45, y_top - 0.13,
+        _arrow(ax, 7.25, y_top - 0.08, 7.45, y_top - 0.08,
                color=COL_NEUTRAL_EDGE, lw=1.0)
 
-        # Replan annotation (right of KG update, leftward arrow loops back)
-        ax.text(5.5, y_top - 0.85, "REPLAN: " + rp,
-                ha="center", va="center", fontsize=7.5,
-                color="#475569", style="italic",
-                bbox=dict(boxstyle="round,pad=0.25",
-                          facecolor="#fefce8",
-                          edgecolor="#facc15", linewidth=0.8))
-
-    # Highlight the fusion arrow on iter 3 (KG bag → cmd_builder)
-    _arrow(ax, 8.05, 4.85, 5.5, 4.55, color=COL_FUSION_EDGE,
-           lw=1.6, curve=-0.3, style="-|>")
-    ax.text(7.7, 4.95,
-            "★ facts['open_ports'] read by\ncmd_builder at invocation time",
-            ha="center", va="center", fontsize=7,
-            color=COL_FUSION_EDGE, fontweight="bold")
+    # (fusion star annotation removed — was overlapping iter 3 label
+    # band; caption + the iter 3 box content already make the fact-
+    # coupling visible.)
 
     # ── Output panel ──
     _arrow(ax, 5.5, 2.4, 5.5, 2.1, color=COL_OUTPUT_EDGE)
@@ -265,20 +253,20 @@ def render_fig5() -> None:
 
 
 def render_fig6() -> None:
-    fig, ax = plt.subplots(figsize=(11, 10))
+    fig, ax = plt.subplots(figsize=(11, 11))
     ax.set_xlim(0, 11)
-    ax.set_ylim(0, 10)
+    ax.set_ylim(0, 11)
     ax.axis("off")
     ax.set_aspect("equal")
 
-    ax.text(5.5, 9.65,
+    ax.text(5.5, 10.6,
             "Figure 6 — DVWA full run: scale on a teaching-app surface "
             "(2347 findings, the matrix outlier)",
             ha="center", va="center", fontsize=11,
             fontweight="bold", color="#0f172a")
 
     # Input panel
-    _box(ax, 0.3, 8.6, 10.4, 0.8,
+    _box(ax, 0.3, 9.55, 10.4, 0.8,
          "TARGET + TOOLS + CVE INTEL",
          sub="target='http://192.168.1.73:8081/' (DVWA, web_api)  ·  "
              "engines: nmap, nmap_vuln, nuclei, nikto, "
@@ -286,19 +274,19 @@ def render_fig6() -> None:
              "max_steps=25, max_depth=3  ·  "
              "AblationFlags(replanning=True, fusion=True)",
          edge=COL_INPUT_EDGE, face=COL_INPUT_FACE)
-    _arrow(ax, 5.5, 8.6, 5.5, 8.25)
+    _arrow(ax, 5.5, 9.55, 5.5, 9.2)
 
     # Context assembly
-    _box(ax, 1.5, 7.55, 8.0, 0.7,
+    _box(ax, 1.5, 8.5, 8.0, 0.7,
          "CONTEXT ASSEMBLY  (Facts={} at run start)",
          sub="available_engines=[6 enabled in 'fast' Kali pool] passed "
              "to HeuristicPlanner",
          edge=COL_INPUT_EDGE, face=COL_INPUT_FACE,
          label_size=9, sub_size=7)
-    _arrow(ax, 5.5, 7.55, 5.5, 7.25)
+    _arrow(ax, 5.5, 8.5, 5.5, 8.2)
 
     # Planning
-    _box(ax, 1.5, 6.5, 8.0, 0.7,
+    _box(ax, 1.5, 7.45, 8.0, 0.7,
          "PLANNING (HeuristicPlanner.plan_initial)",
          sub="DVWA's content surface fans out: seed pair "
              "[http_probe, url_crawler] + nmap front-loaded "
@@ -306,88 +294,82 @@ def render_fig6() -> None:
          edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
          label_size=9, sub_size=7)
 
-    # Closed loop container
+    # Closed loop container (expanded to fit the four iter rows
+    # comfortably; spans y=1.6 to y=7.0)
     ax.add_patch(FancyBboxPatch(
-        (0.25, 2.1), 10.5, 4.25, boxstyle="round,pad=0.05",
+        (0.25, 1.6), 10.5, 5.4, boxstyle="round,pad=0.05",
         linewidth=1.4, edgecolor=COL_FUSION_EDGE,
         facecolor="#fff7ed", linestyle="solid", alpha=0.35,
     ))
-    ax.text(5.5, 6.15, "CLOSED LOOP  (P1) — 4 decision steps",
+    ax.text(5.5, 6.85, "CLOSED LOOP  (P1) — 4 decision steps",
             ha="center", va="center", fontsize=10,
             color=COL_FUSION_EDGE, fontweight="bold")
-    _arrow(ax, 5.5, 6.5, 5.5, 6.25, color=COL_FUSION_EDGE)
+    _arrow(ax, 5.5, 7.45, 5.5, 7.0, color=COL_FUSION_EDGE)
 
-    # Iter 1 — nmap
+    # Iter rows — spacing widened (1.3 units between rows) so iter
+    # labels sit clearly above box tops and don't collide with the
+    # previous iter's bottom annotations. REPLAN annotations dropped
+    # in favour of the caption explaining the chain map.
     iter_specs = [
-        (5.70,
+        (5.85,
          "iter 1: nmap (Kali)",
          "ssh kali 'nmap -sV -p- 192.168.1.73'",
          "12 open ports: 22, 80, 443, 3000, 8080,\n"
          "8081 (DVWA), 8089, 8090, ...",
          "+ {open_ports: [22, 80, 443, ..., 8081, 8089, ...],\n"
-         "  tech_versions: [...nginx, Apache 2.4.7, ...]}",
-         "_CHAINS[nmap] → [nmap_vuln, nikto]"),
-        (4.50,
+         "  tech_versions: [...nginx, Apache 2.4.7, ...]}"),
+        (4.55,
          "iter 2: http_probe (local urllib)",
          "urllib GET http://...:8081/",
          "200 OK · Server: Apache/2.4.7 (Ubuntu)\n"
          "PHP/5.5.9-1ubuntu4.29",
-         "+ {server_header: 'Apache/2.4.7', php_version}",
-         "_CHAINS[http_probe] → [url_crawler, header_vuln_check]"),
-        (3.30,
-         "iter 3: url_crawler + nmap_vuln + nikto (parallel-equivalent)",
+         "+ {server_header: 'Apache/2.4.7', php_version}"),
+        (3.25,
+         "iter 3: nmap_vuln + nikto (parallel-equivalent)",
          "nmap --script vuln -p {facts[open_ports]}\n"
          "nikto -h http://...:8081/  -timeout 120",
          "nmap_vuln → 314 findings (Apache CVE chain)\n"
          "nikto    → 2012 findings (DVWA endpoint enum)",
-         "+ {vulnerable_ports, cve_matches, discovered_paths}",
-         "_CHAINS[url_crawler] → [header_vuln_check]"),
+         "+ {vulnerable_ports, cve_matches,\n"
+         "  discovered_paths: [40+ DVWA endpoints]}"),
         (2.30,
          "iter 4: header_vuln_check (terminal)",
          "urllib HEAD http://...:8081/",
          "Missing: CSP, STS, X-Frame-Options,\n"
          "X-Content-Type-Options (7 findings)",
-         "+ {missing_headers: [...]}",
-         "(queue empty → loop exits)"),
+         "+ {missing_headers: [4 entries]}"),
     ]
-    for y_top, label, ex, pa, kg, rp in iter_specs:
-        ax.text(0.6, y_top + 0.30, label,
+    for y_top, label, ex, pa, kg in iter_specs:
+        ax.text(0.6, y_top + 0.55, label,
                 ha="left", va="center", fontsize=8.5,
                 color="#7c2d12", fontweight="bold")
-        _box(ax, 0.55, y_top - 0.50, 2.85, 0.75,
+        _box(ax, 0.55, y_top - 0.45, 2.85, 0.90,
              "EXECUTE", sub=ex,
              edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
              label_size=8, sub_size=6.5)
-        _box(ax, 3.65, y_top - 0.50, 3.6, 0.75,
+        _box(ax, 3.65, y_top - 0.45, 3.6, 0.90,
              "PARSE → findings", sub=pa,
              edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
              label_size=8, sub_size=6.5)
-        _box(ax, 7.45, y_top - 0.50, 3.2, 0.75,
+        _box(ax, 7.45, y_top - 0.45, 3.2, 0.90,
              "KG UPDATE", sub=kg,
              edge=COL_FUSION_EDGE, face=COL_FUSION_FACE,
              label_size=8, sub_size=6.5)
-        _arrow(ax, 3.4, y_top - 0.13, 3.65, y_top - 0.13,
+        _arrow(ax, 3.4, y_top, 3.65, y_top,
                color=COL_NEUTRAL_EDGE, lw=1.0)
-        _arrow(ax, 7.25, y_top - 0.13, 7.45, y_top - 0.13,
+        _arrow(ax, 7.25, y_top, 7.45, y_top,
                color=COL_NEUTRAL_EDGE, lw=1.0)
-        # Replan annotation (small text below each row)
-        ax.text(5.5, y_top - 0.78, "REPLAN: " + rp,
-                ha="center", va="center", fontsize=7.5,
-                color="#475569", style="italic",
-                bbox=dict(boxstyle="round,pad=0.2",
-                          facecolor="#fefce8",
-                          edgecolor="#facc15", linewidth=0.7))
 
-    # Output panel
-    _arrow(ax, 5.5, 2.1, 5.5, 1.75, color=COL_OUTPUT_EDGE)
-    _box(ax, 0.3, 0.6, 10.4, 1.15,
+    # Output panel (sits below the expanded closed-loop container)
+    _arrow(ax, 5.5, 1.6, 5.5, 1.30, color=COL_OUTPUT_EDGE)
+    _box(ax, 0.3, 0.15, 10.4, 1.15,
          "OUTPUT — AssessmentResult",
          sub=("findings=2347 (314 critical, 566 high, 1453 medium, "
               "14 low, 6 info)  ·  duration_s=293.2\n"
               "engine breakdown:  nikto=2012  ·  nmap_vuln=314  ·  "
               "nmap=12  ·  header_vuln_check=7  ·  http_probe=1  ·  "
               "url_crawler=1\n"
-              "DVWA's deliberately exposed endpoint surface (≈40 unauth "
+              "DVWA's deliberately exposed endpoint surface (~40 unauth "
               "teaching pages) is what nikto's content-discovery list is "
               "calibrated against → the matrix outlier."),
          edge=COL_OUTPUT_EDGE, face=COL_OUTPUT_FACE,
@@ -406,20 +388,20 @@ def render_fig6() -> None:
 
 
 def render_fig7() -> None:
-    fig, ax = plt.subplots(figsize=(11, 10))
+    fig, ax = plt.subplots(figsize=(11, 11))
     ax.set_xlim(0, 11)
-    ax.set_ylim(0, 10)
+    ax.set_ylim(0, 11)
     ax.axis("off")
     ax.set_aspect("equal")
 
-    ax.text(5.5, 9.65,
+    ax.text(5.5, 10.6,
             "Figure 7 — VAMPI full run: thinner API surface "
             "(133 findings, nmap_vuln dominates)",
             ha="center", va="center", fontsize=11,
             fontweight="bold", color="#0f172a")
 
     # Input panel
-    _box(ax, 0.3, 8.6, 10.4, 0.8,
+    _box(ax, 0.3, 9.55, 10.4, 0.8,
          "TARGET + TOOLS + CVE INTEL",
          sub="target='http://192.168.1.73:5000/' (VAMPI, web_api)  ·  "
              "engines: nmap, nmap_vuln, nuclei, nikto, "
@@ -427,99 +409,89 @@ def render_fig7() -> None:
              "max_steps=25, max_depth=3  ·  "
              "AblationFlags(replanning=True, fusion=True)",
          edge=COL_INPUT_EDGE, face=COL_INPUT_FACE)
-    _arrow(ax, 5.5, 8.6, 5.5, 8.25)
+    _arrow(ax, 5.5, 9.55, 5.5, 9.2)
 
     # Context assembly
-    _box(ax, 1.5, 7.55, 8.0, 0.7,
+    _box(ax, 1.5, 8.5, 8.0, 0.7,
          "CONTEXT ASSEMBLY  (Facts={} at run start)",
          sub="available_engines=[6 in fast Kali pool]  ·  "
-             "VAMPI exposes only the /api/* tree — no static teaching "
-             "pages",
+             "VAMPI exposes only the api endpoint tree — no static "
+             "teaching pages",
          edge=COL_INPUT_EDGE, face=COL_INPUT_FACE,
          label_size=9, sub_size=7)
-    _arrow(ax, 5.5, 7.55, 5.5, 7.25)
+    _arrow(ax, 5.5, 8.5, 5.5, 8.2)
 
     # Planning
-    _box(ax, 1.5, 6.5, 8.0, 0.7,
+    _box(ax, 1.5, 7.45, 8.0, 0.7,
          "PLANNING (HeuristicPlanner.plan_initial)",
-         sub="_SEEDS['web_api'] → [nmap, http_probe, url_crawler]",
+         sub="_SEEDS[web_api] → [nmap, http_probe, url_crawler]",
          edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
          label_size=9, sub_size=7)
 
-    # Closed loop container
+    # Closed loop container (expanded for 4 iter rows)
     ax.add_patch(FancyBboxPatch(
-        (0.25, 2.1), 10.5, 4.25, boxstyle="round,pad=0.05",
+        (0.25, 1.6), 10.5, 5.4, boxstyle="round,pad=0.05",
         linewidth=1.4, edgecolor=COL_FUSION_EDGE,
         facecolor="#fff7ed", linestyle="solid", alpha=0.35,
     ))
-    ax.text(5.5, 6.15, "CLOSED LOOP  (P1) — 4 decision steps",
+    ax.text(5.5, 6.85, "CLOSED LOOP  (P1) — 4 decision steps",
             ha="center", va="center", fontsize=10,
             color=COL_FUSION_EDGE, fontweight="bold")
-    _arrow(ax, 5.5, 6.5, 5.5, 6.25, color=COL_FUSION_EDGE)
+    _arrow(ax, 5.5, 7.45, 5.5, 7.0, color=COL_FUSION_EDGE)
 
     iter_specs = [
-        (5.70,
+        (5.85,
          "iter 1: nmap (Kali)",
          "ssh kali 'nmap -sV -p- 192.168.1.73'",
          "12 open ports surfaced: 22, 80, 443,\n"
          "3000, 5000 (VAMPI), 8080, ...",
          "+ {open_ports: [22, 80, 443, ...,\n"
-         "  5000, 8080, ...], tech_versions: [...]}",
-         "_CHAINS[nmap] → [nmap_vuln, nikto]"),
-        (4.50,
+         "  5000, 8080, ...], tech_versions: [...]}"),
+        (4.55,
          "iter 2: http_probe (local urllib)",
          "urllib GET http://...:5000/",
          "200 OK · Server: Werkzeug/2.0.3 Python/3.8\n"
          "Content-Type: application/json",
-         "+ {server_header, content_type='application/json'}",
-         "_CHAINS[http_probe] → [url_crawler, header_vuln_check]"),
-        (3.30,
-         "iter 3: nmap_vuln + nikto (fact-coupled NSE invocation)",
+         "+ {server_header, content_type='application/json'}"),
+        (3.25,
+         "iter 3: nmap_vuln + nikto (fact-coupled)",
          "nmap --script vuln -p {facts[open_ports]}\n"
          "nikto -h http://...:5000/ -timeout 120",
          "nmap_vuln → 102 findings (CVE chain on sibling\n"
          "  Apache containers reachable via Kali host)\n"
          "nikto    → 12 findings (thin API surface)",
-         "+ {vulnerable_ports, cve_matches}",
-         "_CHAINS[url_crawler] → [header_vuln_check]"),
+         "+ {vulnerable_ports, cve_matches}"),
         (2.30,
          "iter 4: header_vuln_check (terminal)",
          "urllib HEAD http://...:5000/",
          "Missing: CSP, STS, X-Frame-Options,\n"
          "X-Content-Type-Options, Referrer-Policy",
-         "+ {missing_headers: [5 entries]}",
-         "(queue empty → loop exits)"),
+         "+ {missing_headers: [5 entries]}"),
     ]
-    for y_top, label, ex, pa, kg, rp in iter_specs:
-        ax.text(0.6, y_top + 0.30, label,
+    for y_top, label, ex, pa, kg in iter_specs:
+        ax.text(0.6, y_top + 0.55, label,
                 ha="left", va="center", fontsize=8.5,
                 color="#7c2d12", fontweight="bold")
-        _box(ax, 0.55, y_top - 0.50, 2.85, 0.75,
+        _box(ax, 0.55, y_top - 0.45, 2.85, 0.90,
              "EXECUTE", sub=ex,
              edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
              label_size=8, sub_size=6.5)
-        _box(ax, 3.65, y_top - 0.50, 3.6, 0.75,
+        _box(ax, 3.65, y_top - 0.45, 3.6, 0.90,
              "PARSE → findings", sub=pa,
              edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
              label_size=8, sub_size=6.5)
-        _box(ax, 7.45, y_top - 0.50, 3.2, 0.75,
+        _box(ax, 7.45, y_top - 0.45, 3.2, 0.90,
              "KG UPDATE", sub=kg,
              edge=COL_FUSION_EDGE, face=COL_FUSION_FACE,
              label_size=8, sub_size=6.5)
-        _arrow(ax, 3.4, y_top - 0.13, 3.65, y_top - 0.13,
+        _arrow(ax, 3.4, y_top, 3.65, y_top,
                color=COL_NEUTRAL_EDGE, lw=1.0)
-        _arrow(ax, 7.25, y_top - 0.13, 7.45, y_top - 0.13,
+        _arrow(ax, 7.25, y_top, 7.45, y_top,
                color=COL_NEUTRAL_EDGE, lw=1.0)
-        ax.text(5.5, y_top - 0.78, "REPLAN: " + rp,
-                ha="center", va="center", fontsize=7.5,
-                color="#475569", style="italic",
-                bbox=dict(boxstyle="round,pad=0.2",
-                          facecolor="#fefce8",
-                          edgecolor="#facc15", linewidth=0.7))
 
-    # Output panel
-    _arrow(ax, 5.5, 2.1, 5.5, 1.75, color=COL_OUTPUT_EDGE)
-    _box(ax, 0.3, 0.6, 10.4, 1.15,
+    # Output panel (sits below the expanded closed-loop container)
+    _arrow(ax, 5.5, 1.6, 5.5, 1.30, color=COL_OUTPUT_EDGE)
+    _box(ax, 0.3, 0.15, 10.4, 1.15,
          "OUTPUT — AssessmentResult",
          sub=("findings=133 (102 critical, 2 high, 15 medium, 14 low)  ·  "
               "duration_s=218.2\n"
