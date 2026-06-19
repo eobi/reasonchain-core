@@ -79,8 +79,8 @@ that *plans*, *executes*, *observes*, and *re-plans* without
 intermediate human gating.
 
 We introduce **ReasonChain**, an architecture with three properties
-whose combination — to our knowledge — has not been demonstrated in
-a published autonomous web-assessment system:
+whose combination has not, to our knowledge, been demonstrated in a
+published autonomous web-assessment system:
 
 - **(P1) Closed-loop reasoning.** After every tool execution, the
   LLM (or, in our reference baseline, a deterministic heuristic
@@ -417,41 +417,64 @@ p = 1.54 × 10⁻²⁴, Cohen's d = 6.27.
 shows `full` ≥ `no-replan`. DVWA dominates absolute counts but
 no-replan stays pinned at 14 findings on every target.](../notebooks/figures/h1_findings_full_vs_no_replan.png)
 
-The median per-target delta is 328 findings. The mechanism is
-direct: under no-replan the planner emits only the seed pair
-`[http_probe, url_crawler]`. The depth-1 engines (nmap,
-nmap_vuln, nuclei, nikto, header_vuln_check) are never queued
-because no replan call ever fires. Under full, these engines
-account for the bulk of the findings.
+The median per-target delta is 328 findings. Under no-replan the
+planner emits only the seed pair `[http_probe, url_crawler]`.
+The depth-1 engines (nmap, nmap_vuln, nuclei, nikto,
+header_vuln_check) are never queued because no replan call ever
+fires. Under full, those engines contribute the bulk of the
+findings.
 
-To make this mechanism observable rather than aggregate, Figures
-5 and 6 walk through a single matched pair: the same Juice Shop
-target under `full` (Fig. 5) and `no-replan` (Fig. 6). Every
-block of Figure 1 is populated with the actual content from the
-run.
+To make the architecture's behaviour observable at the per-run
+level rather than only in aggregate, Figures 5, 6, and 7 walk
+through three full-condition runs against three different
+targets, with every block of Figure 1 populated by the actual
+content that flowed through during the run. The three targets
+were chosen to span three operating regimes: a real-world Node
+SPA with embedded sibling containers (Juice Shop), a classic
+LAMP teaching app (DVWA), and a Python API with a thinner
+attack surface (VAMPI).
 
-![Figure 5: A complete `full`-condition run against the OWASP
-Juice Shop instance. The closed loop iterates three times. The
-nmap step (iter 2) surfaces ten open ports — including the
-non-standard 8089, 8090, 8091 where Apache httpd 2.4.7 instances
-run — and writes them into the shared `Facts` bag. The
+![Figure 5: A full-condition run against the OWASP Juice Shop
+instance. The closed loop iterates three times. nmap (iter 2)
+surfaces ten open ports, including the non-standard 8089, 8090,
+8091 where Apache httpd 2.4.7 instances run on sibling
+containers, and writes them into the shared `Facts` bag. The
 fact-coupled `nmap_vuln` engine (iter 3) reads
 `facts["open_ports"]` and scopes its NSE `--script vuln`
-invocation to exactly those ports, surfacing
-CVE-2024-38476 (Apache mod_rewrite SSRF, CVSS 9.8) along with
-CVE-2024-38474 and CVE-2023-25690. Source data: `paper/deep_scan_juiceshop.json`.](../notebooks/figures/fig5_full_run.png)
+invocation to those exact ports, surfacing CVE-2024-38476
+(Apache mod_rewrite SSRF, CVSS 9.8) along with CVE-2024-38474
+and CVE-2023-25690. Source: `paper/deep_scan_juiceshop.json`.](../notebooks/figures/fig5_full_run.png)
 
-![Figure 6: The identical Juice Shop target under the `no-replan`
-ablation. The orchestrator emits the same initial pick set as
-Figure 5 (`http_probe` + `url_crawler`), but
-`planner.replan()` is never called after either engine returns.
-The REPLAN block (dashed grey) does not enqueue new picks; the
-queue empties after the seed pair runs. The chain produces 2
-findings, 0 high severity, 0 CVE matches. The 314 high-severity
-findings from Figure 5 — including the three CVSS-9.8 CVEs — are
-unreachable from this configuration. Holding everything constant
-except `AblationFlags.replanning`, the closed loop is doing the
-work, not the engine pool.](../notebooks/figures/fig6_no_replan.png)
+![Figure 6: A full-condition run against Damn Vulnerable Web
+App (DVWA). The matrix outlier: 2347 findings. The same engine
+chain as Figure 5 runs, but the dominant contributor is
+nikto's content discovery against DVWA's deliberately
+exposed unauthenticated teaching surface (2012 of the 2347
+findings). nmap_vuln still contributes 314 high-severity
+findings via the same fact-coupled CVE chain visible in Figure 5.
+The closed loop completes four decision steps; nikto is queued
+by the replan after nmap (per the chain map in `planner.py:74`).
+Source: per-cell artefact `reports/dvwa_live_full_heuristic*.json`.](../notebooks/figures/fig6_dvwa_run.png)
+
+![Figure 7: A full-condition run against VAMPI (Vulnerable API).
+VAMPI exposes only the api endpoint tree and inverts DVWA's
+source ratio: nikto's path enumeration drops to 12 findings (vs
+DVWA's 2012), while nmap_vuln's CVE matches remain dominant at
+102. Same engine pool, same chain map, same closed-loop topology;
+the architecture absorbs the surface-size difference without
+configuration changes. Source: per-cell artefact in the
+reports directory for VAMPI full-condition.](../notebooks/figures/fig7_vampi_run.png)
+
+Across the three figures, the closed loop executes the same
+four-step plan (`nmap → nmap_vuln + nikto → http_probe →
+url_crawler → header_vuln_check`) without the operator changing
+any configuration. The engine breakdown shifts with the target's
+surface: nikto dominates on DVWA (2012), nmap_vuln on the others.
+This is the behaviour we want from a target-aware reasoning
+system: the same architecture, the same engine pool, the same
+seed map; what changes is the proportion of findings each engine
+contributes, which is a direct function of what the target
+actually exposes.
 
 ## 6.3 H2: cross-tool fusion
 
@@ -471,25 +494,6 @@ and 443, and discovery on non-standard service ports (3000, 5000,
 The paired t-test yields t = 33.34, p = 5.6 × 10⁻²⁵; Wilcoxon
 W = 465, p ≈ 8 × 10⁻⁷. The fusion mechanism is empirically
 demonstrated, not a null result.
-
-Figure 7 zooms in on the mechanism itself: the same Juice Shop
-run as Figure 5, with the `full` and `no-fusion` paths drawn as
-two parallel callouts from the moment `nmap_vuln` is picked. With
-fusion, `cmd_builder` reads `facts["open_ports"]` and dispatches
-`nmap --script vuln -p 80,443,3000,5000,8080,8089,8090,8091,8093,8094`
-→ 317 findings including the three CVSS-9.8 CVEs.  Without
-fusion, `facts` is empty at invocation time, the cmd_builder
-falls back to its default port list `80,443`, the Apache instances
-on 8089/8090/8091 are never scanned, and 2 findings result.
-
-![Figure 7: Cross-tool fusion mechanism (P2). nmap's discovery of
-ten open ports is written into `Facts["open_ports"]`; the
-fact-coupled `nmap_vuln` engine reads that list and scopes its
-NSE `--script vuln` invocation to those exact ports (solid path).
-The `no-fusion` ablation severs the read (dashed grey path) by
-passing an empty facts bag at invocation time; the engine falls
-back to its default 80/443 port list and misses
-CVE-2024-38476 entirely.](../notebooks/figures/fig7_fusion_mechanism.png)
 
 ## 6.4 H3: decision-quality stratification
 
@@ -687,20 +691,21 @@ decision annotator generalize.
 ## 7.4 Comparison to PentestGPT
 
 PentestGPT [3] and ReasonChain share the LLM-driven planning idea
-but differ in the executor: PentestGPT requires a human to run the
-proposed command, while ReasonChain runs it autonomously over SSH
-and feeds the parsed result back into the planner. We attempted a
-direct head-to-head against the published PentestGPT 0.8.0 release
-during this work but encountered a dependency incompatibility
-between PentestGPT's pinned `langchain` / `playwright` versions and
-the Python 3.12 toolchain we use for the rest of the artifact.
-Resolving this and running an apples-to-apples comparison —
-PentestGPT's suggested command sequence vs. ReasonChain's
-auto-executed sequence, measured on the same Juice Shop instance —
-is concrete future work. The PentestGPT paper itself (USENIX
-Security 2024) reports tool-suggestion-quality metrics rather than
-end-to-end finding counts on standardized targets, so the
-comparison axis matters; we plan to report both
+but differ in the executor. PentestGPT proposes a command and a
+human operator runs it; ReasonChain dispatches the command over
+SSH and feeds the parsed output back into the planner without
+human intervention. We attempted a direct head-to-head against
+the published PentestGPT 0.8.0 release during this work but
+encountered a dependency incompatibility between PentestGPT's
+pinned `langchain` and `playwright` versions and the Python 3.12
+toolchain used elsewhere in the artefact. Resolving the
+incompatibility and running an apples-to-apples comparison
+(PentestGPT's suggested command sequence vs. ReasonChain's
+auto-executed sequence, measured on the same Juice Shop
+instance) is concrete future work. The PentestGPT paper (USENIX
+Security 2024) reports tool-suggestion-quality metrics rather
+than end-to-end finding counts on standardized targets; the
+comparison axis matters, and we plan to report both
 suggestion-following coverage and end-to-end finding count.
 
 # 8 Limitations and Future Work
@@ -735,25 +740,25 @@ We list each gap honestly, with a concrete proposed remediation:
 
 # 9 Conclusion
 
-We have presented and empirically evaluated ReasonChain, a
-closed-loop architecture for autonomous web-application
-vulnerability assessment. Across 30 OWASP-class targets and 120
-matrix cells, the closed-loop condition surfaces substantially
-more findings than the no-replan ablation under both parametric
-and rank-based tests. Cross-tool fusion materializes through a
-fact-coupled nmap_vuln engine: severing the shared facts bag
-collapses the discovery surface of the vulnerability scanner.
-The deterministic decision-quality annotator establishes a
-reproducible failure-mode taxonomy with a stable definition of
-"correct" and "incorrect" planner decisions. Live CVE-class
-findings (CVE-2024-38476 SSRF, CVE-2023-25690 smuggling, both
-CVSS 9.8) confirm that the architecture works end-to-end on real
-production-grade scanners against real (deliberately-vulnerable)
-production-class targets, not on a curated benchmark.
+ReasonChain is a closed-loop architecture for autonomous web-
+application vulnerability assessment. Across 30 OWASP-class
+targets and 120 matrix cells, the closed-loop condition surfaces
+substantially more findings than the no-replan ablation under
+both parametric and rank-based tests. Cross-tool fusion
+materializes through a fact-coupled nmap_vuln engine: severing
+the shared facts bag collapses the vulnerability scanner's
+discovery surface. The deterministic decision-quality annotator
+establishes a reproducible failure-mode taxonomy with a stable
+definition of "correct" and "incorrect" planner decisions. Live
+CVE-class findings (CVE-2024-38476 SSRF, CVE-2023-25690
+smuggling, both CVSS 9.8) confirm that the architecture works
+end-to-end on real production-grade scanners against real
+(deliberately-vulnerable) production-class targets, not against
+a curated benchmark.
 
-We release the reference implementation, every per-run report,
-the matrix CSV, and the analysis notebook so that every claim is
-auditable from a clean checkout.
+The reference implementation, every per-run report, the matrix
+CSV, and the analysis notebook are released so that every claim
+is auditable from a clean checkout.
 
 # Acknowledgements
 

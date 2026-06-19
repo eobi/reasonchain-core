@@ -54,3 +54,6 @@ reports/*_random-order_*_kali-*_seed*.pdf
 reports/*_random-order_*_kali-*_seed*.json
 TODO.md
 logs/
+
+# Backup folder — do not push (per operator)
+paper/Updated paper*/

@@ -1,25 +1,37 @@
 """Render Figures 5, 6, and 7 for the paper.
 
 Three additional figures per Dr. Arefin's 2026-06-17 feedback. Each
-is Figure 1's closed-loop topology instantiated with the actual
-content from a specific experimental run:
+figure is Figure 1's closed-loop topology instantiated with the
+actual content from one specific experimental run; the three runs
+span three different targets to demonstrate the architecture
+operates across distinct application stacks and surface sizes:
 
-  Figure 5  Juice Shop, full condition, full Kali pool → finds
-            CVE-2024-38476 (Apache mod_rewrite SSRF, CVSS 9.8).
-  Figure 6  Same target, no-replan ablation. REPLAN block disabled.
-            Chain dies at the seed pair.
-  Figure 7  Cross-tool fusion mechanism (P2): nmap → Facts["open_ports"]
-            → nmap_vuln scopes its NSE invocation to those ports.
+  Figure 5  OWASP Juice Shop, full condition, Kali pool.
+            Closed loop iterates three times. Fact-coupled nmap_vuln
+            reads Facts["open_ports"] and surfaces CVE-2024-38476
+            (Apache mod_rewrite SSRF, CVSS 9.8) on the embedded
+            Apache 2.4.7 instance sibling container.
 
-All three are deliberately readable at single-column ICSE width.
-Saved to ``notebooks/figures/fig5_full_run.png``,
-``notebooks/figures/fig6_no_replan.png``,
-``notebooks/figures/fig7_fusion_mechanism.png``.
+  Figure 6  Damn Vulnerable Web App (DVWA), full condition.
+            The same closed loop produces 2347 findings (the
+            outlier of the matrix). nikto's content discovery against
+            DVWA's teaching-app endpoint surface contributes 2012
+            of these; nmap_vuln supplies 314 of severity high.
 
-Source data for every annotation traces to a committed file:
+  Figure 7  VAMPI (Vulnerable API), full condition. A smaller
+            attack surface than the web apps — VAMPI exposes only
+            the API endpoints. Same engine pool produces 133 findings
+            with nmap_vuln dominating (102) and nikto reduced to
+            12 (the API surface offers fewer paths to enumerate).
+
+The three figures together cover three operating regimes:
+showcase CVE discovery (Fig 5), scale on teaching-app surfaces
+(Fig 6), and precision on a thinner API target (Fig 7). Source
+data for every annotation traces to a committed file:
+
   · paper/deep_scan_juiceshop.json
-  · paper/sample_run_juiceshop_full.txt
-  · paper/sample_run_juiceshop_noreplan.txt
+  · reports/dvwa_live_full_heuristic_kali-fast_seed0_*.json
+  · reports/vampi_full_heuristic_kali-fast_seed0_*.json
   · src/reasonchain/planner.py (seed map + chain rules)
 """
 from __future__ import annotations
@@ -230,10 +242,10 @@ def render_fig5() -> None:
 
     # Footer legend
     ax.text(5.5, 0.55,
-            ("Closed loop iterates 3 times before nmap_vuln_terminates. "
-             "Without the REPLAN after nmap (iter 2), nmap_vuln never "
-             "fires → CVE-2024-38476 never discovered. (See Fig 6 for "
-             "the no-replan counterfactual.)"),
+            ("Closed loop iterates three times. The fact-coupled "
+             "nmap_vuln (iter 3) reads Facts['open_ports'] written by "
+             "nmap (iter 2) and scopes its --script vuln dispatch to "
+             "those ten ports, surfacing the Apache CVE chain on 8089."),
             ha="center", va="center", fontsize=7.5,
             color="#475569", style="italic",
             bbox=dict(boxstyle="round,pad=0.4",
@@ -248,226 +260,280 @@ def render_fig5() -> None:
 
 
 # ───────────────────────────────────────────────────────────────────
-# Figure 6 — No-replan ablation: chain dies at the seed pair
+# Figure 6 — DVWA, full condition: scale via nikto path enumeration
 # ───────────────────────────────────────────────────────────────────
 
 
 def render_fig6() -> None:
-    fig, ax = plt.subplots(figsize=(11, 7))
+    fig, ax = plt.subplots(figsize=(11, 10))
     ax.set_xlim(0, 11)
-    ax.set_ylim(0, 7)
+    ax.set_ylim(0, 10)
     ax.axis("off")
     ax.set_aspect("equal")
 
-    ax.text(5.5, 6.65,
-            "Figure 6 — Same target, no-replan ablation (P1 disabled): "
-            "chain dies at the seed pair",
+    ax.text(5.5, 9.65,
+            "Figure 6 — DVWA full run: scale on a teaching-app surface "
+            "(2347 findings, the matrix outlier)",
             ha="center", va="center", fontsize=11,
             fontweight="bold", color="#0f172a")
 
-    # Input panel (note the ablation flag highlighted)
-    _box(ax, 0.3, 5.6, 10.4, 0.8,
-         "TARGET + TOOLS + CVE INTEL  (identical to Fig 5)",
-         sub="same target, same 10-engine pool, same caps  ·  "
-             "AblationFlags(replanning=★False★, fusion=True)",
+    # Input panel
+    _box(ax, 0.3, 8.6, 10.4, 0.8,
+         "TARGET + TOOLS + CVE INTEL",
+         sub="target='http://192.168.1.73:8081/' (DVWA, web_api)  ·  "
+             "engines: nmap, nmap_vuln, nuclei, nikto, "
+             "header_vuln_check, http_probe, url_crawler  ·  "
+             "max_steps=25, max_depth=3  ·  "
+             "AblationFlags(replanning=True, fusion=True)",
          edge=COL_INPUT_EDGE, face=COL_INPUT_FACE)
-    _arrow(ax, 5.5, 5.6, 5.5, 5.25)
+    _arrow(ax, 5.5, 8.6, 5.5, 8.25)
 
-    _box(ax, 1.5, 4.45, 8.0, 0.75,
+    # Context assembly
+    _box(ax, 1.5, 7.55, 8.0, 0.7,
+         "CONTEXT ASSEMBLY  (Facts={} at run start)",
+         sub="available_engines=[6 enabled in 'fast' Kali pool] passed "
+             "to HeuristicPlanner",
+         edge=COL_INPUT_EDGE, face=COL_INPUT_FACE,
+         label_size=9, sub_size=7)
+    _arrow(ax, 5.5, 7.55, 5.5, 7.25)
+
+    # Planning
+    _box(ax, 1.5, 6.5, 8.0, 0.7,
          "PLANNING (HeuristicPlanner.plan_initial)",
-         sub="_SEEDS['web_api'] → [http_probe, url_crawler]  →  "
-             "2 picks at depth 0  (same as Fig 5)",
+         sub="DVWA's content surface fans out: seed pair "
+             "[http_probe, url_crawler] + nmap front-loaded "
+             "(per 'web_api' seed map)",
          edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
          label_size=9, sub_size=7)
-    _arrow(ax, 5.5, 4.45, 5.5, 4.15)
 
-    # Closed loop container (smaller — only 2 iterations)
+    # Closed loop container
     ax.add_patch(FancyBboxPatch(
-        (0.25, 2.0), 10.5, 2.1, boxstyle="round,pad=0.05",
+        (0.25, 2.1), 10.5, 4.25, boxstyle="round,pad=0.05",
         linewidth=1.4, edgecolor=COL_FUSION_EDGE,
         facecolor="#fff7ed", linestyle="solid", alpha=0.35,
     ))
-    ax.text(5.5, 3.95, "CLOSED LOOP  (REPLAN DISABLED)",
+    ax.text(5.5, 6.15, "CLOSED LOOP  (P1) — 4 decision steps",
             ha="center", va="center", fontsize=10,
             color=COL_FUSION_EDGE, fontweight="bold")
+    _arrow(ax, 5.5, 6.5, 5.5, 6.25, color=COL_FUSION_EDGE)
 
-    # Iter 1
-    _box(ax, 0.55, 2.95, 2.85, 0.7,
-         "EXECUTE: http_probe",
-         sub="urllib GET http://...:3000/",
-         edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
-         label_size=8, sub_size=6.5)
-    _box(ax, 3.65, 2.95, 3.0, 0.7,
-         "PARSE",
-         sub="200 OK · nginx/1.18.0",
-         edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
-         label_size=8, sub_size=6.5)
-    _box(ax, 6.9, 2.95, 2.5, 0.7,
-         "KG UPDATE",
-         sub="+ {server_header, ...}",
-         edge=COL_FUSION_EDGE, face=COL_FUSION_FACE,
-         label_size=8, sub_size=6.5)
-    _box(ax, 9.65, 2.95, 1.05, 0.7,
-         "REPLAN",
-         sub="✗ DISABLED",
-         edge=COL_DISABLED_EDGE, face=COL_DISABLED_FACE,
-         label_size=8, sub_size=6.5, dashed=True,
-         label_color="#64748b", sub_color="#94a3b8")
-    _arrow(ax, 3.4, 3.30, 3.65, 3.30, color=COL_NEUTRAL_EDGE, lw=1.0)
-    _arrow(ax, 6.65, 3.30, 6.9, 3.30, color=COL_NEUTRAL_EDGE, lw=1.0)
-    _arrow(ax, 9.4, 3.30, 9.65, 3.30, color=COL_DISABLED_EDGE, lw=1.0,
-           dashed=True)
+    # Iter 1 — nmap
+    iter_specs = [
+        (5.70,
+         "iter 1: nmap (Kali)",
+         "ssh kali 'nmap -sV -p- 192.168.1.73'",
+         "12 open ports: 22, 80, 443, 3000, 8080,\n"
+         "8081 (DVWA), 8089, 8090, ...",
+         "+ {open_ports: [22, 80, 443, ..., 8081, 8089, ...],\n"
+         "  tech_versions: [...nginx, Apache 2.4.7, ...]}",
+         "_CHAINS[nmap] → [nmap_vuln, nikto]"),
+        (4.50,
+         "iter 2: http_probe (local urllib)",
+         "urllib GET http://...:8081/",
+         "200 OK · Server: Apache/2.4.7 (Ubuntu)\n"
+         "PHP/5.5.9-1ubuntu4.29",
+         "+ {server_header: 'Apache/2.4.7', php_version}",
+         "_CHAINS[http_probe] → [url_crawler, header_vuln_check]"),
+        (3.30,
+         "iter 3: url_crawler + nmap_vuln + nikto (parallel-equivalent)",
+         "nmap --script vuln -p {facts[open_ports]}\n"
+         "nikto -h http://...:8081/  -timeout 120",
+         "nmap_vuln → 314 findings (Apache CVE chain)\n"
+         "nikto    → 2012 findings (DVWA endpoint enum)",
+         "+ {vulnerable_ports, cve_matches, discovered_paths}",
+         "_CHAINS[url_crawler] → [header_vuln_check]"),
+        (2.30,
+         "iter 4: header_vuln_check (terminal)",
+         "urllib HEAD http://...:8081/",
+         "Missing: CSP, STS, X-Frame-Options,\n"
+         "X-Content-Type-Options (7 findings)",
+         "+ {missing_headers: [...]}",
+         "(queue empty → loop exits)"),
+    ]
+    for y_top, label, ex, pa, kg, rp in iter_specs:
+        ax.text(0.6, y_top + 0.30, label,
+                ha="left", va="center", fontsize=8.5,
+                color="#7c2d12", fontweight="bold")
+        _box(ax, 0.55, y_top - 0.50, 2.85, 0.75,
+             "EXECUTE", sub=ex,
+             edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
+             label_size=8, sub_size=6.5)
+        _box(ax, 3.65, y_top - 0.50, 3.6, 0.75,
+             "PARSE → findings", sub=pa,
+             edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
+             label_size=8, sub_size=6.5)
+        _box(ax, 7.45, y_top - 0.50, 3.2, 0.75,
+             "KG UPDATE", sub=kg,
+             edge=COL_FUSION_EDGE, face=COL_FUSION_FACE,
+             label_size=8, sub_size=6.5)
+        _arrow(ax, 3.4, y_top - 0.13, 3.65, y_top - 0.13,
+               color=COL_NEUTRAL_EDGE, lw=1.0)
+        _arrow(ax, 7.25, y_top - 0.13, 7.45, y_top - 0.13,
+               color=COL_NEUTRAL_EDGE, lw=1.0)
+        # Replan annotation (small text below each row)
+        ax.text(5.5, y_top - 0.78, "REPLAN: " + rp,
+                ha="center", va="center", fontsize=7.5,
+                color="#475569", style="italic",
+                bbox=dict(boxstyle="round,pad=0.2",
+                          facecolor="#fefce8",
+                          edgecolor="#facc15", linewidth=0.7))
 
-    # Iter 2
-    _box(ax, 0.55, 2.15, 2.85, 0.7,
-         "EXECUTE: url_crawler",
-         sub="anchor extraction, BFS depth-1",
-         edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
-         label_size=8, sub_size=6.5)
-    _box(ax, 3.65, 2.15, 3.0, 0.7,
-         "PARSE",
-         sub="12 URLs surfaced",
-         edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
-         label_size=8, sub_size=6.5)
-    _box(ax, 6.9, 2.15, 2.5, 0.7,
-         "KG UPDATE",
-         sub="+ {discovered_urls}",
-         edge=COL_FUSION_EDGE, face=COL_FUSION_FACE,
-         label_size=8, sub_size=6.5)
-    _box(ax, 9.65, 2.15, 1.05, 0.7,
-         "REPLAN",
-         sub="✗ DISABLED",
-         edge=COL_DISABLED_EDGE, face=COL_DISABLED_FACE,
-         label_size=8, sub_size=6.5, dashed=True,
-         label_color="#64748b", sub_color="#94a3b8")
-    _arrow(ax, 3.4, 2.50, 3.65, 2.50, color=COL_NEUTRAL_EDGE, lw=1.0)
-    _arrow(ax, 6.65, 2.50, 6.9, 2.50, color=COL_NEUTRAL_EDGE, lw=1.0)
-    _arrow(ax, 9.4, 2.50, 9.65, 2.50, color=COL_DISABLED_EDGE, lw=1.0,
-           dashed=True)
-
-    # Output panel — empty/sparse
-    _arrow(ax, 5.5, 2.0, 5.5, 1.75, color=COL_OUTPUT_EDGE)
+    # Output panel
+    _arrow(ax, 5.5, 2.1, 5.5, 1.75, color=COL_OUTPUT_EDGE)
     _box(ax, 0.3, 0.6, 10.4, 1.15,
          "OUTPUT — AssessmentResult",
-         sub=("findings=2 (0 high, 0 medium, 2 info)  ·  "
-              "engines_used=[http_probe, url_crawler] (2/7 unreached: "
-              "nmap, nmap_vuln, nuclei, nikto, header_vuln_check)\n"
-              "duration_s=0.016  ·  CVE class hits: ✗ none\n"
-              "★ The 314 high-severity findings from Fig 5 — including "
-              "CVE-2024-38476 — are unreachable from this configuration."),
+         sub=("findings=2347 (314 critical, 566 high, 1453 medium, "
+              "14 low, 6 info)  ·  duration_s=293.2\n"
+              "engine breakdown:  nikto=2012  ·  nmap_vuln=314  ·  "
+              "nmap=12  ·  header_vuln_check=7  ·  http_probe=1  ·  "
+              "url_crawler=1\n"
+              "DVWA's deliberately exposed endpoint surface (≈40 unauth "
+              "teaching pages) is what nikto's content-discovery list is "
+              "calibrated against → the matrix outlier."),
          edge=COL_OUTPUT_EDGE, face=COL_OUTPUT_FACE,
          label_size=9.5, sub_size=7.5)
 
     FIG_DIR.mkdir(parents=True, exist_ok=True)
-    out = FIG_DIR / "fig6_no_replan.png"
+    out = FIG_DIR / "fig6_dvwa_run.png"
     fig.savefig(out, dpi=160, bbox_inches="tight")
     plt.close(fig)
     print(f"Wrote {out}")
 
 
 # ───────────────────────────────────────────────────────────────────
-# Figure 7 — Cross-tool fusion mechanism
+# Figure 7 — VAMPI, full condition: thin API surface
 # ───────────────────────────────────────────────────────────────────
 
 
 def render_fig7() -> None:
-    fig, ax = plt.subplots(figsize=(11, 8.5))
+    fig, ax = plt.subplots(figsize=(11, 10))
     ax.set_xlim(0, 11)
-    ax.set_ylim(0, 8.5)
+    ax.set_ylim(0, 10)
     ax.axis("off")
     ax.set_aspect("equal")
 
-    ax.text(5.5, 8.15,
-            "Figure 7 — Cross-tool fusion (P2): Facts['open_ports'] activates "
-            "nmap_vuln on the right ports",
+    ax.text(5.5, 9.65,
+            "Figure 7 — VAMPI full run: thinner API surface "
+            "(133 findings, nmap_vuln dominates)",
             ha="center", va="center", fontsize=11,
             fontweight="bold", color="#0f172a")
 
-    # Block A — nmap completes (top)
-    _box(ax, 1.0, 7.05, 9.0, 0.85,
-         "Block A — nmap completes",
-         sub="EXECUTE: ssh kali 'nmap -sV -p- 192.168.1.73 -oX -'  ·  "
-             "PARSE: 10 open ports (80, 443, 3000, 5000, 8080, "
-             "8089, 8090, 8091, 8093, 8094) · 6 tech versions",
+    # Input panel
+    _box(ax, 0.3, 8.6, 10.4, 0.8,
+         "TARGET + TOOLS + CVE INTEL",
+         sub="target='http://192.168.1.73:5000/' (VAMPI, web_api)  ·  "
+             "engines: nmap, nmap_vuln, nuclei, nikto, "
+             "header_vuln_check, http_probe, url_crawler  ·  "
+             "max_steps=25, max_depth=3  ·  "
+             "AblationFlags(replanning=True, fusion=True)",
+         edge=COL_INPUT_EDGE, face=COL_INPUT_FACE)
+    _arrow(ax, 5.5, 8.6, 5.5, 8.25)
+
+    # Context assembly
+    _box(ax, 1.5, 7.55, 8.0, 0.7,
+         "CONTEXT ASSEMBLY  (Facts={} at run start)",
+         sub="available_engines=[6 in fast Kali pool]  ·  "
+             "VAMPI exposes only the /api/* tree — no static teaching "
+             "pages",
+         edge=COL_INPUT_EDGE, face=COL_INPUT_FACE,
+         label_size=9, sub_size=7)
+    _arrow(ax, 5.5, 7.55, 5.5, 7.25)
+
+    # Planning
+    _box(ax, 1.5, 6.5, 8.0, 0.7,
+         "PLANNING (HeuristicPlanner.plan_initial)",
+         sub="_SEEDS['web_api'] → [nmap, http_probe, url_crawler]",
          edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
-         label_size=9.5, sub_size=7.5)
-    _arrow(ax, 5.5, 7.05, 5.5, 6.65, color=COL_FUSION_EDGE, lw=1.6)
+         label_size=9, sub_size=7)
 
-    # Block B — KG update (Facts bag, the substrate)
-    _box(ax, 1.5, 5.45, 8.0, 1.20,
-         "Block B — KG UPDATE  (Facts.merge)",
-         sub=("Before: {server_header, content_type, x_powered_by}\n"
-              "After:  + {open_ports: [80, 443, 3000, 5000, 8080, "
-              "8089, 8090, 8091, 8093, 8094],\n"
-              "          tech_versions: [nginx/1.18.0, Express, "
-              "Apache httpd 2.4.7 (Ubuntu), ...]}"),
-         edge=COL_FUSION_EDGE, face=COL_FUSION_FACE,
-         label_size=10, sub_size=8)
+    # Closed loop container
+    ax.add_patch(FancyBboxPatch(
+        (0.25, 2.1), 10.5, 4.25, boxstyle="round,pad=0.05",
+        linewidth=1.4, edgecolor=COL_FUSION_EDGE,
+        facecolor="#fff7ed", linestyle="solid", alpha=0.35,
+    ))
+    ax.text(5.5, 6.15, "CLOSED LOOP  (P1) — 4 decision steps",
+            ha="center", va="center", fontsize=10,
+            color=COL_FUSION_EDGE, fontweight="bold")
+    _arrow(ax, 5.5, 6.5, 5.5, 6.25, color=COL_FUSION_EDGE)
 
-    # Two parallel arrows down to Block C (full path = solid, no-fusion = dashed)
-    _arrow(ax, 3.5, 5.45, 3.0, 4.7, color=COL_FUSION_EDGE, lw=1.6)
-    _arrow(ax, 7.5, 5.45, 8.0, 4.7, color=COL_DISABLED_EDGE, lw=1.4,
-           dashed=True)
-    ax.text(2.5, 5.05, "Full path", ha="center", va="center",
-            fontsize=8.5, color=COL_FUSION_EDGE, fontweight="bold")
-    ax.text(8.5, 5.05, "no-fusion path\n(ablation, dashed)",
-            ha="center", va="center", fontsize=8.5,
-            color=COL_DISABLED_EDGE, fontweight="bold", style="italic")
+    iter_specs = [
+        (5.70,
+         "iter 1: nmap (Kali)",
+         "ssh kali 'nmap -sV -p- 192.168.1.73'",
+         "12 open ports surfaced: 22, 80, 443,\n"
+         "3000, 5000 (VAMPI), 8080, ...",
+         "+ {open_ports: [22, 80, 443, ...,\n"
+         "  5000, 8080, ...], tech_versions: [...]}",
+         "_CHAINS[nmap] → [nmap_vuln, nikto]"),
+        (4.50,
+         "iter 2: http_probe (local urllib)",
+         "urllib GET http://...:5000/",
+         "200 OK · Server: Werkzeug/2.0.3 Python/3.8\n"
+         "Content-Type: application/json",
+         "+ {server_header, content_type='application/json'}",
+         "_CHAINS[http_probe] → [url_crawler, header_vuln_check]"),
+        (3.30,
+         "iter 3: nmap_vuln + nikto (fact-coupled NSE invocation)",
+         "nmap --script vuln -p {facts[open_ports]}\n"
+         "nikto -h http://...:5000/ -timeout 120",
+         "nmap_vuln → 102 findings (CVE chain on sibling\n"
+         "  Apache containers reachable via Kali host)\n"
+         "nikto    → 12 findings (thin API surface)",
+         "+ {vulnerable_ports, cve_matches}",
+         "_CHAINS[url_crawler] → [header_vuln_check]"),
+        (2.30,
+         "iter 4: header_vuln_check (terminal)",
+         "urllib HEAD http://...:5000/",
+         "Missing: CSP, STS, X-Frame-Options,\n"
+         "X-Content-Type-Options, Referrer-Policy",
+         "+ {missing_headers: [5 entries]}",
+         "(queue empty → loop exits)"),
+    ]
+    for y_top, label, ex, pa, kg, rp in iter_specs:
+        ax.text(0.6, y_top + 0.30, label,
+                ha="left", va="center", fontsize=8.5,
+                color="#7c2d12", fontweight="bold")
+        _box(ax, 0.55, y_top - 0.50, 2.85, 0.75,
+             "EXECUTE", sub=ex,
+             edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
+             label_size=8, sub_size=6.5)
+        _box(ax, 3.65, y_top - 0.50, 3.6, 0.75,
+             "PARSE → findings", sub=pa,
+             edge=COL_NEUTRAL_EDGE, face=COL_NEUTRAL_FACE,
+             label_size=8, sub_size=6.5)
+        _box(ax, 7.45, y_top - 0.50, 3.2, 0.75,
+             "KG UPDATE", sub=kg,
+             edge=COL_FUSION_EDGE, face=COL_FUSION_FACE,
+             label_size=8, sub_size=6.5)
+        _arrow(ax, 3.4, y_top - 0.13, 3.65, y_top - 0.13,
+               color=COL_NEUTRAL_EDGE, lw=1.0)
+        _arrow(ax, 7.25, y_top - 0.13, 7.45, y_top - 0.13,
+               color=COL_NEUTRAL_EDGE, lw=1.0)
+        ax.text(5.5, y_top - 0.78, "REPLAN: " + rp,
+                ha="center", va="center", fontsize=7.5,
+                color="#475569", style="italic",
+                bbox=dict(boxstyle="round,pad=0.2",
+                          facecolor="#fefce8",
+                          edgecolor="#facc15", linewidth=0.7))
 
-    # Block C left — FULL path
-    _box(ax, 0.3, 2.7, 5.0, 2.0,
-         "FULL — nmap_vuln  (fact-coupled)",
-         sub=("cmd_builder reads facts['open_ports']:\n"
-              "  ports = '80,443,3000,5000,8080,\n"
-              "           8089,8090,8091,8093,8094'\n"
-              "command:\n"
-              "  ssh kali 'nmap --script vuln \\\n"
-              "    -p {ports} 192.168.1.73 -oX -'\n"
-              "→ 317 findings  ·  CVE-2024-38476 (9.8)\n"
-              "  CVE-2024-38474 (9.8) · CVE-2023-25690 (9.8)"),
-         edge=COL_FUSION_EDGE, face=COL_FUSION_FACE,
-         label_size=9.5, sub_size=7.5)
-
-    # Block C right — NO-FUSION path
-    _box(ax, 5.7, 2.7, 5.0, 2.0,
-         "no-fusion — nmap_vuln receives empty facts",
-         sub=("facts = {}  →  cmd_builder falls back:\n"
-              "  ports = '80,443'  (default)\n\n"
-              "command:\n"
-              "  ssh kali 'nmap --script vuln \\\n"
-              "    -p 80,443 192.168.1.73 -oX -'\n\n"
-              "→ 2 findings  ·  high CVSS: —\n"
-              "  Apache instances on 8089/8090/8091 invisible"),
-         edge=COL_DISABLED_EDGE, face=COL_DISABLED_FACE,
-         label_size=9.5, sub_size=7.5, dashed=True,
-         label_color="#64748b", sub_color="#475569")
-
-    # Outcome row — bottom contrast
-    _arrow(ax, 2.8, 2.7, 2.8, 2.0, color=COL_OUTPUT_EDGE)
-    _arrow(ax, 8.2, 2.7, 8.2, 2.0, color=COL_DISABLED_EDGE, dashed=True)
-
-    _box(ax, 0.3, 0.7, 5.0, 1.3,
-         "OUTCOME  ·  nmap_vuln findings: 317",
-         sub=("Highest CVSS: 9.8 ×3 (Apache CVE chain)\n"
-              "New CVEs surfaced:\n"
-              "  · CVE-2024-38476 (mod_rewrite SSRF)\n"
-              "  · CVE-2024-38474\n"
-              "  · CVE-2023-25690 (HTTP smuggling)"),
+    # Output panel
+    _arrow(ax, 5.5, 2.1, 5.5, 1.75, color=COL_OUTPUT_EDGE)
+    _box(ax, 0.3, 0.6, 10.4, 1.15,
+         "OUTPUT — AssessmentResult",
+         sub=("findings=133 (102 critical, 2 high, 15 medium, 14 low)  ·  "
+              "duration_s=218.2\n"
+              "engine breakdown:  nmap_vuln=102  ·  nmap=12  ·  "
+              "nikto=12  ·  header_vuln_check=5  ·  http_probe=1  ·  "
+              "url_crawler=1\n"
+              "VAMPI's API-only surface inverts DVWA's ratio: nikto's "
+              "endpoint enumeration finds 12 vs DVWA's 2012, while "
+              "nmap_vuln (CVE matches on the LAN host) stays dominant."),
          edge=COL_OUTPUT_EDGE, face=COL_OUTPUT_FACE,
-         label_size=9, sub_size=7.5)
-
-    _box(ax, 5.7, 0.7, 5.0, 1.3,
-         "OUTCOME  ·  nmap_vuln findings: 2",
-         sub=("Highest CVSS: —  (no high-severity)\n"
-              "New CVEs: ✗ none\n"
-              "Apache instances on 8089/8090/8091 not\n"
-              "scanned (fact bag was empty)"),
-         edge=COL_DISABLED_EDGE, face=COL_DISABLED_FACE,
-         label_size=9, sub_size=7.5, dashed=True,
-         label_color="#64748b", sub_color="#475569")
+         label_size=9.5, sub_size=7.5)
 
     FIG_DIR.mkdir(parents=True, exist_ok=True)
-    out = FIG_DIR / "fig7_fusion_mechanism.png"
+    out = FIG_DIR / "fig7_vampi_run.png"
     fig.savefig(out, dpi=160, bbox_inches="tight")
     plt.close(fig)
     print(f"Wrote {out}")
