@@ -424,6 +424,35 @@ nmap_vuln, nuclei, nikto, header_vuln_check) are never queued
 because no replan call ever fires. Under full, these engines
 account for the bulk of the findings.
 
+To make this mechanism observable rather than aggregate, Figures
+5 and 6 walk through a single matched pair: the same Juice Shop
+target under `full` (Fig. 5) and `no-replan` (Fig. 6). Every
+block of Figure 1 is populated with the actual content from the
+run.
+
+![Figure 5: A complete `full`-condition run against the OWASP
+Juice Shop instance. The closed loop iterates three times. The
+nmap step (iter 2) surfaces ten open ports — including the
+non-standard 8089, 8090, 8091 where Apache httpd 2.4.7 instances
+run — and writes them into the shared `Facts` bag. The
+fact-coupled `nmap_vuln` engine (iter 3) reads
+`facts["open_ports"]` and scopes its NSE `--script vuln`
+invocation to exactly those ports, surfacing
+CVE-2024-38476 (Apache mod_rewrite SSRF, CVSS 9.8) along with
+CVE-2024-38474 and CVE-2023-25690. Source data: `paper/deep_scan_juiceshop.json`.](../notebooks/figures/fig5_full_run.png)
+
+![Figure 6: The identical Juice Shop target under the `no-replan`
+ablation. The orchestrator emits the same initial pick set as
+Figure 5 (`http_probe` + `url_crawler`), but
+`planner.replan()` is never called after either engine returns.
+The REPLAN block (dashed grey) does not enqueue new picks; the
+queue empties after the seed pair runs. The chain produces 2
+findings, 0 high severity, 0 CVE matches. The 314 high-severity
+findings from Figure 5 — including the three CVSS-9.8 CVEs — are
+unreachable from this configuration. Holding everything constant
+except `AblationFlags.replanning`, the closed loop is doing the
+work, not the engine pool.](../notebooks/figures/fig6_no_replan.png)
+
 ## 6.3 H2: cross-tool fusion
 
 ![Figure 3: H2 — per-target mean findings under the `full` vs.
@@ -442,6 +471,25 @@ and 443, and discovery on non-standard service ports (3000, 5000,
 The paired t-test yields t = 33.34, p = 5.6 × 10⁻²⁵; Wilcoxon
 W = 465, p ≈ 8 × 10⁻⁷. The fusion mechanism is empirically
 demonstrated, not a null result.
+
+Figure 7 zooms in on the mechanism itself: the same Juice Shop
+run as Figure 5, with the `full` and `no-fusion` paths drawn as
+two parallel callouts from the moment `nmap_vuln` is picked. With
+fusion, `cmd_builder` reads `facts["open_ports"]` and dispatches
+`nmap --script vuln -p 80,443,3000,5000,8080,8089,8090,8091,8093,8094`
+→ 317 findings including the three CVSS-9.8 CVEs.  Without
+fusion, `facts` is empty at invocation time, the cmd_builder
+falls back to its default port list `80,443`, the Apache instances
+on 8089/8090/8091 are never scanned, and 2 findings result.
+
+![Figure 7: Cross-tool fusion mechanism (P2). nmap's discovery of
+ten open ports is written into `Facts["open_ports"]`; the
+fact-coupled `nmap_vuln` engine reads that list and scopes its
+NSE `--script vuln` invocation to those exact ports (solid path).
+The `no-fusion` ablation severs the read (dashed grey path) by
+passing an empty facts bag at invocation time; the engine falls
+back to its default 80/443 port list and misses
+CVE-2024-38476 entirely.](../notebooks/figures/fig7_fusion_mechanism.png)
 
 ## 6.4 H3: decision-quality stratification
 
